@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "wuxp.captcha",
+      "type": "com.wuxp.security.captcha.configuration.WuxpCaptchaProperties",
+      "sourceType": "com.wuxp.security.captcha.configuration.WuxpCaptchaProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "wuxp.captcha.picture.length",
+      "type": "java.lang.Integer",
+      "description": "图片验证码相关配置",
+      "sourceType": "com.wuxp.security.captcha.configuration.WuxpCaptchaProperties"
+    }
+  ],
+  "hints": []
+}

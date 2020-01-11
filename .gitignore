@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+target
+*.iml
+node_modules
+yarn.lock
+service-support-processor.utf8.properties
