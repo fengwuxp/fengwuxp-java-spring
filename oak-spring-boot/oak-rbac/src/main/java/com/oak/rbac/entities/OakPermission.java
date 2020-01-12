@@ -30,7 +30,7 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Schema(description = "权限编码")
+    @Schema(description = "权限编码(资源标识加资源操作的组合)")
     @Column(name = "code", length = 128, nullable = false)
     private String code;
 
@@ -46,9 +46,8 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @Column(name = "resource_id", length = 128, nullable = false)
     private String resourceId;
 
-
     //配置多对多
-    @ManyToMany(mappedBy = "permissions")  //配置多表关系
+    @ManyToMany(mappedBy = "permissions")
     private Set<OakRole> roles;
 
 

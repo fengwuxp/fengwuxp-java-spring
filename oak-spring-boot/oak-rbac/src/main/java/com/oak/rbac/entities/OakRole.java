@@ -28,9 +28,6 @@ public class OakRole extends AbstractNamedEntityObject<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-//    @Schema(description = "包涵的角色")
-//    @Column(name = "include_roles", nullable = false)
-//    private String includeRoles;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -43,5 +40,10 @@ public class OakRole extends AbstractNamedEntityObject<Long> {
     )
     @Schema(description = "关联的权限列表")
     private Set<OakPermission> permissions;
+
+
+    //配置多对多
+    @ManyToMany(mappedBy = "roles")
+    private Set<OakAdminUser> roles;
 
 }

@@ -23,10 +23,12 @@ public class OpenIdAuthenticationToken extends AbstractAuthenticationToken {
         super.setAuthenticated(true); // must use super, as we override
     }
 
+    @Override
     public Object getCredentials() {
         return null;
     }
 
+    @Override
     public Object getPrincipal() {
         return this.principal;
     }
@@ -35,6 +37,7 @@ public class OpenIdAuthenticationToken extends AbstractAuthenticationToken {
         return providerId;
     }
 
+    @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         if (isAuthenticated) {
             throw new IllegalArgumentException(

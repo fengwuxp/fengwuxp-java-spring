@@ -34,6 +34,7 @@ public class PermissionServiceImpl implements PermissionService {
                 .setName(req.getName())
                 .setOrderCode(req.getOrderCode())
                 .setEnable(true)
+                .setRemark()
                 .setCreateTime(createTime)
                 .setLastUpdateTime(createTime);
 

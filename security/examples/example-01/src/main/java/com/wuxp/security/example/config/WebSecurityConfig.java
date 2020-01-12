@@ -1,5 +1,6 @@
 package com.wuxp.security.example.config;
 
+import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.PasswordAuthenticationProvider;
 import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
@@ -21,8 +22,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor;
 import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -121,23 +124,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(new RequestUrlAccessDeniedHandler())
                 //匿名用户访问无权限资源时的异常处理
                 .authenticationEntryPoint(new RestfulAuthenticationEntryPoint("请先登陆"))
-                // 授权配置
-                .and()
-                .authorizeRequests()
-                /* 所有静态文件可以访问 */
-                .antMatchers(
-                        "/js/**",
-                        "/css/**",
-                        "/images/**",
-                        "/swagger-ui.html"
-                ).permitAll()
-                /* 所有 以/captcha 开头的 验证码页面可以访问 */
-                .antMatchers(
-                        "/captcha/**",
-                        "/scan_code/**",
-                        "/log/**",
-                        "/login")
-                .permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest()
@@ -150,6 +136,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //静态资源不拦截
         // http://localhost:8090/api/swagger-ui.html
         web.ignoring().antMatchers(
+                "/captcha/**",
+                "/scan_code/**",
+                "/log/**",
+                "/login",
+
                 "/js/**",
                 "/css/**",
                 "/images/**",
@@ -179,6 +170,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AffirmativeBased affirmativeBased() {
         List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
         decisionVoters.add(new RequestUrlAccessDecisionVoter());
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy("ROLE_");
+        decisionVoters.add(new RoleHierarchyVoter(hierarchy));
         return new AffirmativeBased(decisionVoters);
     }
 
@@ -188,6 +182,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return new RequestUrlSecurityMetadataSource();
 //    }
 
+    @Bean
+    public SpringContextHolder springContextHolder(){
+        return new SpringContextHolder();
+    }
 
 }
 

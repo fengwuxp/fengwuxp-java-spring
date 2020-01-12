@@ -7,7 +7,9 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Table(name = "t_rbac_user_role")
+@Table(name = "t_rbac_user_role", indexes = {
+        @Index(columnList = "user_id")
+})
 @Entity
 @Schema(description = "用户角色关联表")
 @Accessors(chain = true)
@@ -36,17 +38,19 @@ public class OakUserRole implements Serializable {
 
         private static final long serialVersionUID = 7839437693500065818L;
 
-        @Schema(description = "角色id")
-        @Column(name = "role_id", length = 20, nullable = false)
-        private Long roleId;
 
         @Schema(description = "用户id")
         @Column(name = "user_id", length = 20, nullable = false)
         private Long userId;
 
-        public OakUserRolePrimaryKey(Long roleId, Long userId) {
-            this.roleId = roleId;
+        @Schema(description = "角色id")
+        @Column(name = "role_id", length = 20, nullable = false)
+        private Long roleId;
+
+
+        public OakUserRolePrimaryKey(Long userId, Long roleId) {
             this.userId = userId;
+            this.roleId = roleId;
         }
 
         public OakUserRolePrimaryKey() {

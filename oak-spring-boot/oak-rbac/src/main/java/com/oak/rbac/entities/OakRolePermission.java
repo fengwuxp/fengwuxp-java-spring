@@ -7,7 +7,9 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Table(name = "t_rbac_role_permission")
+@Table(name = "t_rbac_role_permission", indexes = {
+        @Index(columnList = "role_id")
+})
 @Entity
 @Schema(description = "角色权限关联表")
 @Data

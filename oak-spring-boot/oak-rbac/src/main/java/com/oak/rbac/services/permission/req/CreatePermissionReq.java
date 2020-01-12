@@ -1,10 +1,13 @@
 package com.oak.rbac.services.permission.req;
 
+
 import com.oak.api.model.ApiBaseReq;
 import com.oak.rbac.enums.PermissionType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+
 
 
 @Data
@@ -29,4 +32,7 @@ public class CreatePermissionReq extends ApiBaseReq {
 
     @Schema(description = "排序")
     private Integer orderCode = 0;
+
+    @Schema(description = "备注")
+    protected String remark;
 }

@@ -25,6 +25,7 @@ public class OpenIdAuthenticationFilter extends AbstractAuthenticationProcessing
         super(new AntPathRequestMatcher("/social/openid", HttpMethod.POST.name()));
     }
 
+    @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         if (postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {

@@ -26,6 +26,7 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
      * @see org.springframework.security.authentication.AuthenticationProvider#
      * authenticate(org.springframework.security.core.Authentication)
      */
+    @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         OpenIdAuthenticationToken authenticationToken = (OpenIdAuthenticationToken) authentication;
@@ -59,6 +60,7 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
      * @see org.springframework.security.authentication.AuthenticationProvider#
      * supports(java.lang.Class)
      */
+    @Override
     public boolean supports(Class<?> authentication) {
         return OpenIdAuthenticationToken.class.isAssignableFrom(authentication);
     }
