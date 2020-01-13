@@ -38,6 +38,9 @@ public class CreateResourceReq extends ApiBaseReq {
     @Schema(description = "排序索引")
     private Integer orderIndex;
 
+    @Schema(description = "介绍")
+    private String remark;
+
     @Schema(description = "权限列表")
     private CreatePermissionReq[] permissions;
 

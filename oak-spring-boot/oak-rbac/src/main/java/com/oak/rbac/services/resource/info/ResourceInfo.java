@@ -15,13 +15,14 @@ public class ResourceInfo implements Serializable {
 
     private static final long serialVersionUID = 7823885583221539301L;
 
-    @Schema(description = "资源名称")
-    @NotNull
-    private String name;
 
     @Schema(description = "资源编码")
     @NotNull
-    private String code;
+    private String id;
+
+    @Schema(description = "资源名称")
+    @NotNull
+    private String name;
 
     @Schema(description = "资源类型")
     @NotNull

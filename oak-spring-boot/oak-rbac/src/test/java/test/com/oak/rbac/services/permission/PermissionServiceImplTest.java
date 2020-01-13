@@ -8,6 +8,9 @@ import com.oak.rbac.services.permission.PermissionService;
 import com.oak.rbac.services.permission.info.PermissionInfo;
 import com.oak.rbac.services.permission.req.CreatePermissionReq;
 import com.oak.rbac.services.permission.req.QueryPermissionReq;
+import com.oak.rbac.services.resource.ResourceService;
+import com.oak.rbac.services.resource.info.ResourceInfo;
+import com.oak.rbac.services.resource.req.QueryResourceReq;
 import com.wuxp.api.model.Pagination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -42,6 +45,10 @@ public class PermissionServiceImplTest {
     private PermissionService permissionService;
 
     @Autowired
+    private ResourceService resourceService;
+
+
+    @Autowired
     private JpaDao jpaDao;
 
     private Faker faker = new Faker();
@@ -60,17 +67,23 @@ public class PermissionServiceImplTest {
     @Test
     public void testCreatePermission() throws Exception {
 
-//        for (int i = 0; i < 200; i++) {
-//            CreatePermissionReq req = new CreatePermissionReq();
-//            req.setName(faker.name().name());
-//            req.setValue("/log/test");
-//            req.setResourceId("log");
-//            req.setOrderCode(0);
-//            Long permissionId = permissionService.createPermission(req);
-//
-//            Assert.assertNotNull(permissionId);
-//            log.debug("--测试创建权限-->{}", permissionId);
-//        }
+        QueryResourceReq queryResourceReq = new QueryResourceReq();
+        Pagination<ResourceInfo> resource = resourceService.queryResource(queryResourceReq);
+        ResourceInfo resourceInfo = resource.getFirst();
+        if (resourceInfo == null) {
+            return;
+        }
+//        Assert.assertNotNull(resourceInfo);
+
+        CreatePermissionReq req = new CreatePermissionReq();
+        req.setResourceId(resourceInfo.getId());
+        req.setValue(resourceInfo.getOrderCode() + "/create");
+        req.setName("创建" + resourceInfo.getId());
+        req.setOrderCode(0);
+        Long permissionId = permissionService.createPermission(req);
+
+        Assert.assertNotNull(permissionId);
+        log.debug("--测试创建权限-->{}", permissionId);
 
     }
 

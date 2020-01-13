@@ -42,6 +42,7 @@ public class ResourceServiceImpl implements ResourceService {
                 .setEditable(false)
                 .setEnable(true)
                 .setOrderCode(req.getOrderIndex())
+                .setRemark(req.getRemark())
                 .setLastUpdateTime(time)
                 .setCreateTime(time);
         CreatePermissionReq[] permissions = req.getPermissions();

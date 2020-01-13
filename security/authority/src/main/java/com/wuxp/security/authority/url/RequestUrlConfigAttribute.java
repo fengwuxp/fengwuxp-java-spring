@@ -2,6 +2,7 @@ package com.wuxp.security.authority.url;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.util.Assert;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Slf4j
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class RequestUrlConfigAttribute implements ConfigAttribute {
 
@@ -23,6 +25,9 @@ public class RequestUrlConfigAttribute implements ConfigAttribute {
      * examples: ==> /demo/create,/demo/edit,/demo/list
      */
     private String attribute;
+
+
+
 
 
     public static List<ConfigAttribute> createList(String... attributeNames) {
