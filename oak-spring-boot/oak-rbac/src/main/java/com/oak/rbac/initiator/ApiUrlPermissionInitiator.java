@@ -10,6 +10,7 @@ import com.wuxp.api.initiator.AbstractBaseInitiator;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.model.QueryType;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,11 @@ public class ApiUrlPermissionInitiator extends AbstractBaseInitiator<CreatePermi
             for (Map.Entry<RequestMappingInfo, HandlerMethod> requestMappingInfoHandlerMethodEntry : handlerMethods.entrySet()) {
                 RequestMappingInfo requestMappingInfo = requestMappingInfoHandlerMethodEntry.getKey();
                 HandlerMethod handlerMethod = requestMappingInfoHandlerMethodEntry.getValue();
-                resolveControllerToReq(requestMappingInfo, handlerMethod);
+                CreatePermissionReq req = resolveControllerToReq(requestMappingInfo, handlerMethod);
+                if (req != null) {
+                    reqs.add(req);
+                }
+
             }
         });
 
@@ -85,6 +90,15 @@ public class ApiUrlPermissionInitiator extends AbstractBaseInitiator<CreatePermi
 
 
     private CreatePermissionReq resolveControllerToReq(RequestMappingInfo mappingInfo, HandlerMethod handlerMethod) {
+        Operation methodAnnotation = handlerMethod.getMethodAnnotation(Operation.class);
+        if (methodAnnotation == null) {
+            return null;
+        }
+
+        Tag tag = handlerMethod.getBeanType().getAnnotation(Tag.class);
+        if (tag == null) {
+            return null;
+        }
 
         String[] patterns = mappingInfo.getPatternsCondition().getPatterns().toArray(new String[0]);
         String uri = patterns[0];
@@ -97,13 +111,9 @@ public class ApiUrlPermissionInitiator extends AbstractBaseInitiator<CreatePermi
         req.setType(PermissionType.API);
         req.setValue(uri);
         req.setCode(code);
-        Operation methodAnnotation = handlerMethod.getMethodAnnotation(Operation.class);
-        if (methodAnnotation == null) {
-            req.setName(handlerMethod.getMethod().getName());
-        } else {
-            req.setName(methodAnnotation.summary());
-            req.setRemark(methodAnnotation.description());
-        }
+        req.setName(methodAnnotation.summary());
+        req.setRemark(methodAnnotation.description());
+
         return req;
     }
 

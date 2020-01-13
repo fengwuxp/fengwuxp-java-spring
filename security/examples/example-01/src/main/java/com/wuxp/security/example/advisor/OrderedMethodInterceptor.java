@@ -1,8 +1,6 @@
 package com.wuxp.security.example.advisor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.MethodBeforeAdvice;
 
 import java.lang.reflect.Method;

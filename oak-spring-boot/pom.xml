@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <springdoc.version>1.2.21</springdoc.version>
+        <springdoc.version>1.2.26</springdoc.version>
         <wuxp-security.version>1.0.0-SNAPSHOT</wuxp-security.version>
         <levin.dao.version>2.0.0-SNAPSHOT</levin.dao.version>
     </properties>
@@ -28,6 +28,7 @@
         <module>oak-api-support</module>
         <module>oak-rbac</module>
         <module>oak-spring-codegen</module>
+        <module>codegen-controller</module>
     </modules>
 
     <dependencies>
@@ -93,6 +94,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.61</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

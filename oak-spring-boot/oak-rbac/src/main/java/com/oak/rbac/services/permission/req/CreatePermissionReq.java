@@ -15,10 +15,10 @@ import lombok.EqualsAndHashCode;
 @Schema(description = "创建权限")
 public class CreatePermissionReq extends ApiBaseReq {
 
-    @Schema(description = "资源名称")
+    @Schema(description = "权限名称")
     private String name;
 
-    @Schema(description = "资源code")
+    @Schema(description = "权限code")
     private String code;
 
     @Schema(description = "权限类型")

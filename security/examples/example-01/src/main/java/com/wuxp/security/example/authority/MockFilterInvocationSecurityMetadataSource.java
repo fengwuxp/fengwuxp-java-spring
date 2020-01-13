@@ -1,7 +1,6 @@
 package com.wuxp.security.example.authority;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 
 @Component

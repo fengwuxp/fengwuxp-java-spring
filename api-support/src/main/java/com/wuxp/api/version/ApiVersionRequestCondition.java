@@ -37,7 +37,8 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     @Override
     public ApiVersionRequestCondition getMatchingCondition(HttpServletRequest request) {
         // 正则匹配请求的uri，看是否有版本号 v1
-        Matcher matcher = VERSION_PATTERN.matcher(request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        Matcher matcher = VERSION_PATTERN.matcher(requestURI);
         if (matcher.find()) {
             String versionNo = matcher.group(1);
             int version = Integer.parseInt(versionNo);

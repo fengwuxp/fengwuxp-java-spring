@@ -11,9 +11,6 @@ import com.wuxp.security.authenticate.restful.RestfulAuthenticationEntryPoint;
 import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationSecurityConfig;
 import com.wuxp.security.authority.url.RequestUrlAccessDecisionVoter;
 import com.wuxp.security.authority.url.RequestUrlAccessDeniedHandler;
-import com.wuxp.security.authority.url.RequestUrlSecurityMetadataSource;
-import com.wuxp.security.example.authority.MockAccessDecisionManager;
-import com.wuxp.security.example.authority.MockAuthoritySecurityInterceptor;
 import com.wuxp.security.example.authority.MockFilterInvocationSecurityMetadataSource;
 import com.wuxp.security.example.security.StudyUserDetailsService;
 import com.wuxp.security.example.security.handlers.LoginSuccessHandler;
@@ -23,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
@@ -139,6 +135,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/captcha/**",
                 "/scan_code/**",
                 "/log/**",
+                "/version/**",
+                "/example/**",
                 "/login",
 
                 "/js/**",
@@ -183,7 +181,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
 
     @Bean
-    public SpringContextHolder springContextHolder(){
+    public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
 
