@@ -5,8 +5,7 @@ import com.levin.commons.dao.annotation.Like;
 import com.levin.commons.service.domain.Desc;
 import com.levin.commons.service.domain.InjectDomain;
 import com.levin.commons.service.domain.Secured;
-import com.oaknt.common.service.support.enums.EnumInf;
-import com.oaknt.common.service.support.utils.EnumUtil;
+import com.wuxp.basic.enums.DescriptiveEnum;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
@@ -15,9 +14,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -291,7 +290,7 @@ public final class ServiceModelUtil {
         //params.put("serialVersionUID", serialVersionUID);
         params.put("entityName", entityClass.getSimpleName());
         params.put("entityClassName", entityClass.getPackage().getName() + "." + entityClass.getSimpleName());
-        params.put("fields", filter(fields,"createTime"));
+        params.put("fields", filter(fields, "createTime"));
         params.put("pkField", pkField);
 
         String dir = target + "/" + (packageName.replace(".", "/")) + "/";
@@ -542,7 +541,7 @@ public final class ServiceModelUtil {
                 } else if (fieldModel.getName().equals("areaId")) {
                     fieldModel.setTestValue("\"1\"");
                 } else if (fieldModel.enums) {
-                    fieldModel.setTestValue(fieldType.getSimpleName() + "." + EnumUtil.getEnumByVal(fieldType, 0).name());
+                    fieldModel.setTestValue(fieldType.getSimpleName() + "." + getEnumByVal(fieldType, 0).name());
                 } else if (fieldModel.getClassType().equals(Boolean.class)) {
                     fieldModel.setTestValue("true");
                 } else if (fieldModel.getClassType().equals(String.class)) {
@@ -565,10 +564,17 @@ public final class ServiceModelUtil {
     }
 
 
-    public static String getFieldValue(String field, Object obj)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        if (field == null || obj == null) return null;
-        return BeanUtils.getProperty(obj, field);
+    public static String getFieldValue(String fieldName, Object obj) {
+        if (fieldName == null || obj == null) {
+            return null;
+        }
+        Field field = ReflectionUtils.findField(obj.getClass(), fieldName);
+        assert field != null;
+        Object value = ReflectionUtils.getField(field, obj);
+        if (value == null) {
+            return null;
+        }
+        return value.toString();
     }
 
     private static void buildExcess(FieldModel fieldModel) {
@@ -577,7 +583,7 @@ public final class ServiceModelUtil {
         Class type = fieldModel.getClassType();
 
         if (fieldModel.getEnums()
-                && EnumInf.class.isAssignableFrom(type)) {
+                && DescriptiveEnum.class.isAssignableFrom(type)) {
             //枚举描述
             fieldModel.setExcessSuffix("Desc");
             fieldModel.setExcessReturnType("String");
@@ -616,10 +622,25 @@ public final class ServiceModelUtil {
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_0);
         configuration.setObjectWrapper(new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_0).build());
         configuration.setDefaultEncoding("UTF-8");
-        configuration.setClassForTemplateLoading(ServiceModelUtil.class.getClassLoader().getClass(), "/tool");
+        configuration.setClassForTemplateLoading(ServiceModelUtil.class.getClassLoader().getClass(), "/template");
 
         //获取页面模版。
         return configuration.getTemplate(templatePath);
+    }
+
+    private static Enum getEnumByVal(Class ec, int i) {
+        Iterator iter = EnumSet.allOf(ec).iterator();
+
+        Enum e;
+        do {
+            if (!iter.hasNext()) {
+                return null;
+            }
+
+            e = (Enum) iter.next();
+        } while (e.ordinal() != i);
+
+        return e;
     }
 
     @Data
