@@ -16,8 +16,8 @@ public class CreateRoleReq extends ApiBaseReq {
     @NotNull
     private String name;
 
-    @Schema(description = "权限编码")
+    @Schema(description = "权限集合")
     @NotNull
-    private String[] permissionCodes;
+    private Long[] permissionIds;
 
 }

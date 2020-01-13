@@ -1,6 +1,8 @@
 package com.wuxp.resouces;
 
 
+import com.wuxp.resouces.enums.ResourceType;
+
 /**
  * resource
  * <p>

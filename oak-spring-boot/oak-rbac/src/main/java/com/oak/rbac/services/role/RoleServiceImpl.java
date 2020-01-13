@@ -52,7 +52,7 @@ public class RoleServiceImpl implements RoleService {
 
 
         List<OakPermission> permissions = jpaDao.selectFrom(OakPermission.class)
-                .in(E_OakPermission.code, req.getPermissionCodes())
+                .in(E_OakPermission.id, req.getPermissionIds())
                 .find();
         oakRole.setPermissions(new HashSet<>(permissions));
         jpaDao.save(oakRole);
@@ -92,30 +92,29 @@ public class RoleServiceImpl implements RoleService {
 
         Set<OakPermission> permissions = new HashSet<>(role.getPermissions());
 
-        String[] permissionCodes = req.getPermissionCodes();
-        List<String> permissionCodeList = Arrays.asList(permissionCodes);
+        List<Long> permissionIdList = Arrays.asList(req.getPermissionIds());
 
         // 删除
         permissions.forEach(oakPermission -> {
-            boolean match = permissionCodeList.stream().anyMatch(code -> code.equals(oakPermission.getCode()));
+            boolean match = permissionIdList.stream().anyMatch(id -> id.equals(oakPermission.getId()));
             if (!match) {
                 // 删除
                 role.getPermissions().remove(oakPermission);
                 if (log.isDebugEnabled()) {
-                    log.debug("给角色{}删除权限：{}", role.getName(), oakPermission.getCode());
+                    log.debug("给角色{}删除权限：{}", role.getName(), oakPermission.getName());
                 }
             }
         });
 
         // 添加
-        List<String> needAddList = permissions.isEmpty() ? permissionCodeList :
-                permissionCodeList.stream().filter(code -> permissions.stream()
-                        .anyMatch(oakPermission -> !code.equals(oakPermission.getCode())))
+        List<Long> needAddList = permissions.isEmpty() ? permissionIdList :
+                permissionIdList.stream().filter(id -> permissions.stream()
+                        .anyMatch(oakPermission -> !id.equals(oakPermission.getId())))
                         .collect(Collectors.toList());
 
         if (!needAddList.isEmpty()) {
             List<OakPermission> oakPermissions = jpaDao.selectFrom(OakPermission.class)
-                    .in(E_OakPermission.code, needAddList.toArray(new String[0]))
+                    .in(E_OakPermission.id, needAddList.toArray(new Long[0]))
                     .find();
             role.getPermissions().addAll(oakPermissions);
             if (log.isDebugEnabled()) {

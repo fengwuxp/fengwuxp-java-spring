@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import com.levin.commons.dao.JpaDao;
 import com.oak.rbac.entities.E_OakPermission;
 import com.oak.rbac.entities.OakPermission;
-import com.oak.rbac.enums.PermissionType;
 import com.oak.rbac.services.permission.PermissionService;
 import com.oak.rbac.services.permission.info.PermissionInfo;
 import com.oak.rbac.services.permission.req.CreatePermissionReq;
@@ -61,19 +60,17 @@ public class PermissionServiceImplTest {
     @Test
     public void testCreatePermission() throws Exception {
 
-        for (int i = 0; i < 200; i++) {
-            CreatePermissionReq req = new CreatePermissionReq();
-            req.setCode(RandomStringUtils.randomAlphabetic(32));
-            req.setName(faker.name().name());
-            req.setType(PermissionType.API);
-            req.setValue("/log/test");
-            req.setResourceId("log");
-            req.setOrderCode(0);
-            Long permissionId = permissionService.createPermission(req);
-
-            Assert.assertNotNull(permissionId);
-            log.debug("--测试创建权限-->{}", permissionId);
-        }
+//        for (int i = 0; i < 200; i++) {
+//            CreatePermissionReq req = new CreatePermissionReq();
+//            req.setName(faker.name().name());
+//            req.setValue("/log/test");
+//            req.setResourceId("log");
+//            req.setOrderCode(0);
+//            Long permissionId = permissionService.createPermission(req);
+//
+//            Assert.assertNotNull(permissionId);
+//            log.debug("--测试创建权限-->{}", permissionId);
+//        }
 
     }
 

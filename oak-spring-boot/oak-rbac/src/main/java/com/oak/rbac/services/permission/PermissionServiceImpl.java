@@ -27,9 +27,7 @@ public class PermissionServiceImpl implements PermissionService {
         OakPermission permission = new OakPermission();
 
         Date createTime = new Date();
-        permission.setCode(req.getCode())
-                .setType(req.getType())
-                .setResourceId(req.getResourceId())
+        permission.setResourceId(req.getResourceId())
                 .setValue(req.getValue())
                 .setName(req.getName())
                 .setOrderCode(req.getOrderCode())

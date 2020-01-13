@@ -1,6 +1,5 @@
 package com.oak.rbac.initiator;
 
-import com.oak.rbac.enums.PermissionType;
 import com.oak.rbac.services.permission.PermissionService;
 import com.oak.rbac.services.permission.info.PermissionInfo;
 import com.oak.rbac.services.permission.req.CreatePermissionReq;
@@ -14,13 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -46,7 +39,6 @@ public class ApiUrlPermissionInitiator extends AbstractBaseInitiator<CreatePermi
 
         initData.stream().filter(createPermissionReq -> {
             QueryPermissionReq req = new QueryPermissionReq();
-            req.setCode(createPermissionReq.getCode());
             req.setQueryType(QueryType.QUERY_NUM);
             Pagination<PermissionInfo> permissionInfoPagination = permissionService.queryPermission(req);
             return permissionInfoPagination.getTotal() == 0;
@@ -108,9 +100,7 @@ public class ApiUrlPermissionInitiator extends AbstractBaseInitiator<CreatePermi
 
         CreatePermissionReq req = new CreatePermissionReq();
         req.setResourceId(values[0]);
-        req.setType(PermissionType.API);
         req.setValue(uri);
-        req.setCode(code);
         req.setName(methodAnnotation.summary());
         req.setRemark(methodAnnotation.description());
 

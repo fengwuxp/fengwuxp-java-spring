@@ -1,7 +1,6 @@
 package com.oak.rbac.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
-import com.oak.rbac.enums.PermissionType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,14 +11,13 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Table(name = "t_rbac_permission", indexes = {
-        @Index(columnList = "code"),
         @Index(columnList = "resource_id")
 })
 @Entity
 @Schema(description = "权限")
 @Data
 @Accessors(chain = true)
-@ToString(exclude = "roles")
+@ToString(exclude = {"roles", "resource"})
 @EqualsAndHashCode(callSuper = true, of = {"id"})
 public class OakPermission extends AbstractNamedEntityObject<Long> {
 
@@ -30,21 +28,18 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Schema(description = "权限编码(资源标识加资源操作的组合)")
-    @Column(name = "code", length = 128, nullable = false)
-    private String code;
-
-    @Schema(description = "权限类型")
-    @Column(name = "type", length = 16, nullable = false)
-    private PermissionType type;
-
-    @Schema(description = "权限值")
+    @Schema(description = "权限值(操作代码)")
     @Column(name = "value", length = 512, nullable = false)
     private String value;
 
     @Schema(description = "资源标识")
     @Column(name = "resource_id", length = 128, nullable = false)
     private String resourceId;
+
+    @Schema(description = "资源")
+    @JoinColumn(name = "resource_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private OakResource resource;
 
     //配置多对多
     @ManyToMany(mappedBy = "permissions")

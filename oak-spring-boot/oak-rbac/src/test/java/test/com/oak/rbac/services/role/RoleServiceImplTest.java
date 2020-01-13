@@ -68,7 +68,7 @@ public class RoleServiceImplTest {
 
         CreateRoleReq req = new CreateRoleReq();
         req.setName(faker.name().title());
-        req.setPermissionCodes(records.stream().map(PermissionInfo::getCode).toArray(String[]::new));
+        req.setPermissionIds(records.stream().map(PermissionInfo::getId).toArray(Long[]::new));
         ApiResp<Long> resp = roleService.createRole(req);
 //        Assert.assertTrue(resp.isSuccess());
         log.debug("测试创建角色{}", resp);
@@ -105,7 +105,7 @@ public class RoleServiceImplTest {
         List<PermissionInfo> permissionInfos = permissions.stream().filter(permissionInfo -> permissionInfo.getId() % 2 == 0).collect(Collectors.toList());
         permissionInfos.addAll(records);
 
-        editRoleReq.setPermissionCodes(permissionInfos.stream().map(PermissionInfo::getCode).toArray(String[]::new));
+        editRoleReq.setPermissionIds(permissionInfos.stream().map(PermissionInfo::getId).toArray(Long[]::new));
         ApiResp<Void> resp = roleService.editRole(editRoleReq);
         Assert.assertTrue(resp.isSuccess());
         log.debug("测试编辑角色{} , 权限个数：{}", resp, permissionInfos.size());

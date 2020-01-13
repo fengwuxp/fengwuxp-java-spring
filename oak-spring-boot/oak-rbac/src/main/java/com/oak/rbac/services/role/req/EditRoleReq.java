@@ -1,5 +1,6 @@
 package com.oak.rbac.services.role.req;
 
+import com.levin.commons.dao.annotation.Ignore;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -21,5 +22,7 @@ public class EditRoleReq extends ApiBaseReq {
     private String name;
 
     @Schema(description = "权限编码")
-    private String[] permissionCodes;
+    @Ignore
+    @NotNull
+    private Long[] permissionIds;
 }
