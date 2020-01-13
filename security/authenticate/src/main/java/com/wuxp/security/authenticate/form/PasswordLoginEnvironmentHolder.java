@@ -1,10 +1,10 @@
 package com.wuxp.security.authenticate.form;
 
+import com.wuxp.basic.utils.IpAddressUtils;
 import com.wuxp.security.authenticate.AuthenticateType;
 import com.wuxp.security.authenticate.LoginEnvironmentContext;
 import com.wuxp.security.authenticate.LoginEnvironmentHolder;
 import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
-import com.wuxp.security.utils.IpAddressUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;

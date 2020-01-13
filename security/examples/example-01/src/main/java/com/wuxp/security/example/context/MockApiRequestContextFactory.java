@@ -1,7 +1,7 @@
 package com.wuxp.security.example.context;
 
 import com.wuxp.api.context.ApiRequestContextFactory;
-import com.wuxp.security.utils.IpAddressUtils;
+import com.wuxp.basic.utils.IpAddressUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 

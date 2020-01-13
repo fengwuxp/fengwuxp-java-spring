@@ -1,5 +1,6 @@
 package com.wuxp.security.example.entities;
 
+
 import com.levin.commons.service.domain.Desc;
 import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Table
+@Table(name = "t_example")
 @Entity
 @Schema(description = "例子")
 @Tag(name = "simple")

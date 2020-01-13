@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Table
+@Table(name = "t_demo")
 @Entity
 @Schema(description = "例子")
 @Tag(name = "simple")

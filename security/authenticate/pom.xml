@@ -20,12 +20,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.wuxp.security</groupId>
-            <artifactId>wuxp-security-common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
@@ -37,6 +31,12 @@
         <dependency>
             <groupId>com.wuxp.security</groupId>
             <artifactId>wuxp-security-social</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.wuxp.basic</groupId>
+            <artifactId>fengwuxp-java-basic</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
