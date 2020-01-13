@@ -1,7 +1,7 @@
 package com.wuxp.security.example.services.simple;
 
 import com.levin.commons.dao.JpaDao;
-import com.oak.api.helper.SimpleCommonDaoHelper;
+import com.oak.springboot.helper.SimpleCommonDaoHelper;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.security.example.entities.ExampleEntity;

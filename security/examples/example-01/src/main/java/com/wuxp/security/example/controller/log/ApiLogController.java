@@ -63,17 +63,16 @@ public class ApiLogController {
         log.info("--{}-->", name);
 
         //获取所有的RequestMapping
-        Map<String, RequestMappingHandlerMapping> requestMappingHandlerMappingMap = BeanFactoryUtils.beansOfTypeIncludingAncestors(
-                SpringContextHolder.getApplicationContext(),
-                RequestMappingHandlerMapping.class,
-                true,
-                false);
-
-        requestMappingHandlerMappingMap.forEach((s, requestMappingHandlerMapping) -> {
-            Object defaultHandler = requestMappingHandlerMapping.getDefaultHandler();
-            Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
-            System.out.println(handlerMethods.size());
-        });
+//        Map<String, RequestMappingHandlerMapping> requestMappingHandlerMappingMap = BeanFactoryUtils.beansOfTypeIncludingAncestors(
+//                SpringContextHolder.getApplicationContext(),
+//                RequestMappingHandlerMapping.class,
+//                true,
+//                false);
+//
+//        requestMappingHandlerMappingMap.forEach((s, requestMappingHandlerMapping) -> {
+//            Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
+//            System.out.println(handlerMethods.size());
+//        });
 
 
         return RestfulApiRespFactory.ok(new StudyUserDetails(name, null));
