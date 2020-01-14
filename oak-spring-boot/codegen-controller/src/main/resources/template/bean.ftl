@@ -1,8 +1,9 @@
 package ${packageName};
 
-import lombok.*;
-import lombok.experimental.*;
-import com.levin.commons.service.domain.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 <#list fields as field>
    <#if !field.baseType && field.enums>
 import ${field.classType.name};
@@ -35,22 +36,14 @@ public class ${className} implements Serializable {
 
 <#list fields as field>
     <#if field.complex>
-    @Desc(value = "${field.desc}"<#if (field.lazy)??>,code = "${field.name}"</#if>)
+    @Schema(description = "${field.desc}")
     private ${field.excessReturnType} ${field.name}${field.excessSuffix};
 
     <#else>
-    @Desc(value = "${field.desc}")
+    @Schema(description = "${field.desc}")
     private ${field.type} ${field.name};
 
     </#if>
 </#list>
 
-<#list fields as field>
-    <#if !field.complex && field.excessSuffix??>
-    public ${field.excessReturnType} get${field.name?cap_first}${field.excessSuffix}() {
-            ${field.excessReturn}
-    }
-
-    </#if>
-</#list>
 }
