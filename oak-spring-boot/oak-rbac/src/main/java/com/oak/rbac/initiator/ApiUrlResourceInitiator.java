@@ -93,12 +93,11 @@ public class ApiUrlResourceInitiator extends AbstractBaseInitiator<CreateResourc
         for (Map.Entry<RequestMappingInfo, HandlerMethod> requestMappingInfoHandlerMethodEntry : handlerMethods.entrySet()) {
             RequestMappingInfo requestMappingInfo = requestMappingInfoHandlerMethodEntry.getKey();
             HandlerMethod handlerMethod = requestMappingInfoHandlerMethodEntry.getValue();
-            this.setCreateResourceReq(req, handlerMethod);
+            this.setCreateResourceReq(req, handlerMethod, requestMappingInfo);
             CreatePermissionReq permissionReq = resolveControllerToPermission(requestMappingInfo, handlerMethod);
             if (permissionReq != null) {
                 permissionReqs.add(permissionReq);
             }
-
         }
 
         req.setPermissions(permissionReqs.toArray(new CreatePermissionReq[0]));
@@ -106,7 +105,7 @@ public class ApiUrlResourceInitiator extends AbstractBaseInitiator<CreateResourc
         return req;
     }
 
-    private void setCreateResourceReq(CreateResourceReq req, HandlerMethod handlerMethod) {
+    private void setCreateResourceReq(CreateResourceReq req, HandlerMethod handlerMethod, RequestMappingInfo requestMappingInfo) {
         if (StringUtils.hasText(req.getName())) {
             return;
         }
@@ -116,8 +115,14 @@ public class ApiUrlResourceInitiator extends AbstractBaseInitiator<CreateResourc
         if (tag == null) {
             return;
         }
+        String[] patterns = requestMappingInfo.getPatternsCondition().getPatterns().toArray(new String[0]);
+
+        // url 格式形如：/v1/xxx/xxx
+        String uri = patterns[0];
+        String[] values = uri.split("/");
         req.setName(tag.name());
         req.setRemark(tag.description());
+        req.setCode(values[1]);
     }
 
     private CreatePermissionReq resolveControllerToPermission(RequestMappingInfo mappingInfo, HandlerMethod handlerMethod) {

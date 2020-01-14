@@ -31,10 +31,8 @@ public class ApiInterceptor extends ApiAspectSupport implements MethodIntercepto
         // 参数验证
         this.tryValidationParams(target,targetClass,method, arguments);
 
-//        if () {
-//            // 签名验证
-//            this.checkApiSignature(arguments, method.getParameters());
-//        }
+        // 签名验证
+        this.checkApiSignature(arguments, method.getParameters());
 
         Object result = null;
         try {

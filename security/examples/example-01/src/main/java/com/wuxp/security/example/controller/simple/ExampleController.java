@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/example")
+@RequestMapping("/v1/example")
 @Tag(name = "用例", description = "这是一个用于演示的例子")
 @Slf4j
 public class ExampleController {

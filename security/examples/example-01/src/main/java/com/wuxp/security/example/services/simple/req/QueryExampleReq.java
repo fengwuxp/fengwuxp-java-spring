@@ -1,7 +1,7 @@
 package com.wuxp.security.example.services.simple.req;
 
 
-import com.oak.springboot.model.ApiBaseQueryReq;
+import com.oak.api.model.ApiBaseQueryReq;
 import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

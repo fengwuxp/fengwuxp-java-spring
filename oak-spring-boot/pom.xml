@@ -29,6 +29,7 @@
         <module>oak-rbac</module>
         <module>oak-spring-codegen</module>
         <module>codegen-controller</module>
+        <module>oak-admin-starter</module>
     </modules>
 
     <dependencies>
