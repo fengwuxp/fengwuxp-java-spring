@@ -1,9 +1,14 @@
 package ${packageName};
 
+import com.oak.api.model.ApiBaseReq;
+import com.wuxp.security.example.enums.Week;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.experimental.*;
-import com.levin.commons.service.domain.*;
-import com.oaknt.common.service.support.model.ServiceEvt;
+import lombok.experimental.Accessors;
+import com.levin.commons.dao.annotation.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 <#list fields as field>
     <#if !field.baseType && field.enums>
@@ -14,24 +19,20 @@ import ${imp};
     </#if>
 </#list>
 
-import javax.validation.constraints.*;
-import java.util.Date;
 
 /**
- *  创建${desc}
+ *  创建${entityName}
  *  ${.now}
  */
-@Desc(value = "创建${desc}")
+@Schema(description = "创建${className}的请求")
 @Data
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Accessors(chain = true)
-public class ${className} extends ServiceEvt {
+@EqualsAndHashCode(callSuper = true)
+public class ${className} extends ApiBaseReq {
 
 <#list fields as field>
     <#if (!field.notUpdate && !field.hasDefValue && !field.complex) || (field.identity?? && !field.identity)>
-    @Desc(value = "${field.desc}")
+    @Schema(description = "${field.desc}")
     <#list field.annotations as annotation>
     ${annotation}
     </#list>

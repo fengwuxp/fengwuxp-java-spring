@@ -1,11 +1,11 @@
 package ${packageName};
 
+import com.oak.api.model.ApiBaseReq;
+import com.wuxp.security.example.enums.Week;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.experimental.*;
-import com.levin.commons.service.domain.*;
+import lombok.experimental.Accessors;
 import com.levin.commons.dao.annotation.*;
-import com.oaknt.common.service.support.model.ServiceEvt;
-
 import javax.validation.constraints.NotNull;
 
 <#list fields as field>
@@ -22,7 +22,7 @@ import ${imp};
  *  查找${desc}
  *  ${.now}
  */
-@Desc(value = "查找${desc}")
+@Schema(description = "查找${desc}")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,9 +30,9 @@ import ${imp};
 @ToString(callSuper = true)
 @Accessors(chain = true)
 
-public class ${className} extends ServiceEvt {
+public class ${className} extends ApiBaseReq {
 
-    @Desc(value = "${pkField.desc}")
+    @Schema(description = "${pkField.desc}")
     @NotNull
     @Eq(require = true)
     private ${pkField.type} ${pkField.name};

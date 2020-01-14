@@ -1,14 +1,12 @@
 package ${packageName};
 
+import com.oak.api.model.ApiBaseQueryReq;
+import com.wuxp.security.example.enums.Week;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.experimental.*;
+import lombok.experimental.Accessors;
 import com.levin.commons.dao.annotation.*;
 import com.levin.commons.dao.annotation.misc.Fetch;
-import com.levin.commons.service.domain.*;
-import com.oaknt.common.service.support.model.ServiceQueryEvt;
-import com.levin.commons.dao.annotation.order.OrderBy;
-import java.util.Date;
-
 <#list fields as field>
     <#if !field.baseType && field.enums>
 import ${field.classType.name};
@@ -17,41 +15,41 @@ import ${imp};
         </#list>
     </#if>
 </#list>
-
+import java.util.Date;
 /**
  *  查询${desc}
  *  ${.now}
  */
-@Desc(value = "查询${desc}")
+@Schema(description = "查询${desc}")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)
 
-public class ${className} extends ServiceQueryEvt {
+public class ${className} extends ApiBaseQueryReq {
 
 <#list fields as field>
     <#if field.type=='Date'>
-    @Desc(value = "最小${field.desc}")
+    @Schema(description = "最小${field.desc}")
     @Gte("${field.name}")
     private ${field.type} min${field.name?cap_first};
 
-    @Desc(value = "最大${field.desc}")
+    @Schema(description = "最大${field.desc}")
     @Lte("${field.name}")
     private ${field.type} max${field.name?cap_first};
 
     <#elseif !field.complex>
-    @Desc(value = "${field.desc}")
+    @Schema(description = "${field.desc}")
     private ${field.type} ${field.name};
 
     <#if field.like>
-    @Desc(value = "${field.desc}")
+    @Schema(description = "${field.desc}")
     @Like("${field.name}")
     private ${field.type} ${field.name}Like;
 
     </#if>
     <#elseif field.lazy!>
-    @Desc("加载${field.desc}")
+    @Schema(description = "加载${field.desc}")
     @Fetch(value = "${field.name}", condition = "#_val==true")
     private Boolean load${field.name?cap_first};
 

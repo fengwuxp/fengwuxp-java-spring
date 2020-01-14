@@ -9,6 +9,7 @@ import com.wuxp.basic.enums.DescriptiveEnum;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -72,7 +73,10 @@ public final class ServiceModelUtil {
         String basePackageName = "com.oaknt.udf.services.sample";
 
         entity2ServiceModel(Sample.class, entityMapping, basePackageName, "d:\\temp");*/
+        /*String basePackageName = "com.oaknt.udf.services.sample";
 
+        entity2ServiceModel(.class, entityMapping, basePackageName, "d:\\temp");
+*/
     }
 
     /**
@@ -143,7 +147,7 @@ public final class ServiceModelUtil {
 
     private static void buildEvt(Class entityClass, String desc, String basePackageName, List<FieldModel> fields, String target) throws Exception {
 
-        String packageName = basePackageName + ".evt";
+        String packageName = basePackageName + ".req";
 
         FieldModel pkField = getPkField(entityClass, fields);
 
@@ -164,7 +168,7 @@ public final class ServiceModelUtil {
 
         //创建
         params.put("fields", filter(fields, "id", "createTime", "updateTime"));
-        String className = "Create" + entityClass.getSimpleName() + "Evt";
+        String className = "Create" + entityClass.getSimpleName() + "Req";
         params.put("className", className);
         String fileName = dir + className + ".java";
         Writer hWriter = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
@@ -174,7 +178,7 @@ public final class ServiceModelUtil {
         //查找
         params.put("fields", fields);
 
-        className = "Find" + entityClass.getSimpleName() + "Evt";
+        className = "Find" + entityClass.getSimpleName() + "Req";
         params.put("className", className);
         fileName = dir + className + ".java";
         hWriter = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
@@ -183,7 +187,7 @@ public final class ServiceModelUtil {
 
         //编辑
         params.put("fields", filter(fields, "createTime", "updateTime"));
-        className = "Edit" + entityClass.getSimpleName() + "Evt";
+        className = "Edit" + entityClass.getSimpleName() + "Req";
         params.put("className", className);
         fileName = dir + className + ".java";
         hWriter = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
@@ -191,7 +195,7 @@ public final class ServiceModelUtil {
         System.out.println("--------------------" + fileName);
 
         //删除
-        className = "Del" + entityClass.getSimpleName() + "Evt";
+        className = "Delete" + entityClass.getSimpleName() + "Req";
         params.put("className", className);
         fileName = dir + className + ".java";
         hWriter = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
@@ -200,7 +204,7 @@ public final class ServiceModelUtil {
 
         //查询
         params.put("fields", fields);
-        className = "Query" + entityClass.getSimpleName() + "Evt";
+        className = "Query" + entityClass.getSimpleName() + "Req";
         params.put("className", className);
         fileName = dir + className + ".java";
         hWriter = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
@@ -318,9 +322,9 @@ public final class ServiceModelUtil {
         controllerPackageName = controllerPackageName.replace("provide.", "");
 
 
-        String serviceName = packageName.substring(packageName.lastIndexOf(".") + 1);
-        serviceName = serviceName.substring(0, 1).toUpperCase() + serviceName.substring(1) + "Service";
-
+      //  String serviceName = packageName.substring(packageName.lastIndexOf(".") + 1);
+      //  serviceName = serviceName.substring(0, 1).toUpperCase() + serviceName.substring(1) + "Service";
+        String serviceName = entityClass.getSimpleName() + "Service";
         FieldModel pkField = getPkField(entityClass, fields);
 
         Map<String, Object> params = new HashMap<>();
@@ -438,8 +442,8 @@ public final class ServiceModelUtil {
 
             }
 
-            fieldModel.setDesc(field.isAnnotationPresent(Desc.class) ? field.getAnnotation(Desc.class).value() : field.getName());
-            fieldModel.setDescDetail(field.isAnnotationPresent(Desc.class) ? field.getAnnotation(Desc.class).detail() : "");
+            fieldModel.setDesc(field.isAnnotationPresent(Schema.class) ? field.getAnnotation(Schema.class).description() : field.getName());
+            fieldModel.setDescDetail(field.isAnnotationPresent(Schema.class) ? field.getAnnotation(Schema.class).description() : "");
             fieldModel.setPk(field.isAnnotationPresent(Id.class));
             fieldModel.setLike(field.isAnnotationPresent(Like.class));
             fieldModel.setNotUpdate(fieldModel.getPk() || notUpdateNames.contains(fieldModel.getName()) || fieldModel.getComplex());

@@ -22,6 +22,7 @@ public class ExampleEntity implements Serializable {
 
     private static final long serialVersionUID = -123545031462572985L;
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Schema(description = "id")
     private Long id;
 
@@ -32,7 +33,6 @@ public class ExampleEntity implements Serializable {
     private String name;
 
     @Schema(description = "年龄")
-    @NotNull
     @Size(max = 200)
     @Column(name = "aeg")
     private Integer age;
@@ -56,7 +56,7 @@ public class ExampleEntity implements Serializable {
     @Column(name = "example_id", nullable = false)
     private Long exampleId;
 
-    @Desc(value = "例子")
+    @Schema(description = "例子")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "example_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ExampleEntity exampleEntity;
