@@ -64,21 +64,6 @@ public final class ServiceModelUtil {
         notUpdateNames.add("sn");
     }
 
-    public static void main(String[] args) throws Exception {
-
-        Map<String, Class> entityMapping = new HashMap<>();
-        //需要转换的实体和Info映射
-        //  entityMapping.put("area", AreaInfo.class);
-/*
-        String basePackageName = "com.oaknt.udf.services.sample";
-
-        entity2ServiceModel(Sample.class, entityMapping, basePackageName, "d:\\temp");*/
-        /*String basePackageName = "com.oaknt.udf.services.sample";
-
-        entity2ServiceModel(.class, entityMapping, basePackageName, "d:\\temp");
-*/
-    }
-
     /**
      * 实体转服务模型
      *
