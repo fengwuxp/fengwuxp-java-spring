@@ -288,13 +288,13 @@ public final class ServiceModelUtil {
         }
 
         //创建服务测试类
-        String serviceName = entityClass.getSimpleName() + "Service";//packageName.substring(packageName.lastIndexOf(".") + 1);
+       /* String serviceName = entityClass.getSimpleName() + "Service";//packageName.substring(packageName.lastIndexOf(".") + 1);
 //        serviceName = serviceName.substring(0, 1).toUpperCase() + serviceName.substring(1) + "Service";
         params.put("className", serviceName);
         String fileName = dir + serviceName + "Test.java";
         Writer hWriter = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
         getTemplate("service_test.ftl").process(params, hWriter);
-        System.out.println("--------------------" + fileName);
+        System.out.println("--------------------" + fileName);*/
 
     }
 
