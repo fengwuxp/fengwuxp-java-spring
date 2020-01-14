@@ -1,8 +1,6 @@
 package com.oak.admin.entities;
 
-import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
 import com.levin.commons.dao.domain.support.AbstractTreeObject;
-import com.levin.commons.service.domain.Desc;
 import com.oak.admin.enums.MenuIAction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -27,8 +25,8 @@ import static javax.persistence.GenerationType.AUTO;
 @ToString(exclude = {"parent", "children"})
 public class Menu extends AbstractTreeObject<Long, Menu> {
 
-
     private static final long serialVersionUID = 4033282524978662257L;
+
     @Schema(description = "ID")
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -51,17 +49,20 @@ public class Menu extends AbstractTreeObject<Long, Menu> {
     @Column(name = "param", length = 512)
     private String param;
 
-    @Schema(description = "路径")
-    @Column(name = "path")
-    private String path;
-
-    @Schema(description = "层级")
+    @Schema(description = "层级，默认从0开始")
     @Column(name = "`level`", nullable = false)
     private Integer level;
 
     @Schema(description = "是否叶子目录")
     @Column(name = "leaf", nullable = false)
     private Boolean leaf;
+
+    @Schema(description = "是否删除")
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
+
+
 
 
 }

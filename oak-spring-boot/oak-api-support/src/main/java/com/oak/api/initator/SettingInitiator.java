@@ -4,7 +4,7 @@ import com.oak.api.enums.SettingValueType;
 import com.oak.api.services.system.SystemService;
 import com.oak.api.services.system.info.SettingGroupInfo;
 import com.oak.api.services.system.req.CreateSettingGroupReq;
-import com.oak.api.services.system.req.GetConfigReq;
+import com.oak.api.services.system.req.GetSettingReq;
 import com.oak.api.services.system.req.QuerySettingGroupReq;
 import com.oak.api.services.system.req.SaveSettingReq;
 import com.wuxp.api.ApiResp;
@@ -62,7 +62,7 @@ public class SettingInitiator extends AbstractBaseInitiator<SettingModel> {
                     evt.setOrderIndex(j);
                 }
 
-                String config = systemService.getConfig(new GetConfigReq(evt.getName(), false));
+                String config = systemService.getSetting(new GetSettingReq(evt.getName(), false));
                 if (config != null) {
                     ApiResp<Void> resp = systemService.saveSetting(evt);
                     log.info("创建设置【" + evt + "】->" + resp);

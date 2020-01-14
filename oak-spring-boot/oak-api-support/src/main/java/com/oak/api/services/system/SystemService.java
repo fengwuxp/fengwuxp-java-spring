@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -17,37 +18,39 @@ import java.util.List;
  */
 public interface SystemService {
 
-    String CONFIG_CACHE_NAME = "SYSTEM_CONFIG";
-
     String SETTING_CACHE_NAME = "SYSTEM_SETTING";
 
 
-    @Cacheable(value = CONFIG_CACHE_NAME, key = "#req.getName()", condition = "#req.getFromCache()")
-    String getConfig(GetConfigReq req);
+    String getSetting(GetSettingReq req);
 
 
-    @Cacheable(value = SETTING_CACHE_NAME, key = "'ALL'")
-    List<SettingSimpleInfo> getAllSetting();
+    String[] getSettingList(GetSettingListReq req);
 
 
     @Caching(evict = {
-            @CacheEvict(value = CONFIG_CACHE_NAME, key = "#req.getName()"),
+            @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()"),
             @CacheEvict(value = SETTING_CACHE_NAME, key = "'ALL'")})
     ApiResp<Void> saveSetting(SaveSettingReq req);
 
 
-    @Cacheable(value = CONFIG_CACHE_NAME,
+    @Cacheable(value = SETTING_CACHE_NAME,
             key = "#req.getName()",
             condition = "#req.getName()!=null",
             unless = "#result.total==0")
     Pagination<SettingInfo> querySetting(QuerySettingReq req);
 
+    @Cacheable(value = SETTING_CACHE_NAME,
+            key = "#name",
+            condition = "#name!=null",
+            unless = "#result==null")
+    SettingInfo findSettingByName(@NotNull String name);
 
-    @CacheEvict(value = CONFIG_CACHE_NAME, key = "#req.getName()")
+
+    @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()")
     void delSetting(DelSettingReq req);
 
 
-    @CacheEvict(value = CONFIG_CACHE_NAME, key = "#req.getName()")
+    @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()")
     boolean editSetting(EditConfigReq req);
 
 

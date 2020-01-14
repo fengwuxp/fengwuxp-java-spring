@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,9 +33,8 @@ public class SystemServiceImpl implements SystemService {
     private JpaDao jpaDao;
 
     @Override
-    public String getConfig(GetConfigReq req) {
+    public String getSetting(GetSettingReq req) {
         Setting setting = jpaDao.find(Setting.class, req.getName());
-
         if (setting != null) {
             return setting.getValue();
         }
@@ -43,16 +43,22 @@ public class SystemServiceImpl implements SystemService {
 
 
     @Override
-    public List<SettingSimpleInfo> getAllSetting() {
-        QuerySettingReq req = new QuerySettingReq();
-        req.setQuerySize(-1);
+    public String[] getSettingList(GetSettingListReq req) {
 
-        Pagination<SettingInfo> settingInfoPagination = this.querySetting(req);
-        return settingInfoPagination.getRecords()
-                .stream()
-                .map(settingInfo -> new SettingSimpleInfo(settingInfo.getName(), settingInfo.getValue()))
-                .collect(Collectors.toList());
+        return new String[0];
     }
+
+//    @Override
+//    public List<SettingSimpleInfo> getAllSetting() {
+//        QuerySettingReq req = new QuerySettingReq();
+//        req.setQuerySize(-1);
+//
+//        Pagination<SettingInfo> settingInfoPagination = this.querySetting(req);
+//        return settingInfoPagination.getRecords()
+//                .stream()
+//                .map(settingInfo -> new SettingSimpleInfo(settingInfo.getName(), settingInfo.getValue()))
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     public ApiResp<Void> saveSetting(SaveSettingReq req) {
@@ -120,6 +126,14 @@ public class SystemServiceImpl implements SystemService {
     @Override
     public Pagination<SettingInfo> querySetting(QuerySettingReq req) {
         return SimpleCommonDaoHelper.queryObject(this.jpaDao, Setting.class, SettingInfo.class, req);
+    }
+
+    @Override
+    public SettingInfo findSettingByName(@NotNull String name) {
+        return jpaDao.selectFrom(Setting.class)
+                .eq(E_Setting.name, name)
+                .findOne(SettingInfo.class);
+
     }
 
     @Override

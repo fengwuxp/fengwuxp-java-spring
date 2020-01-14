@@ -14,7 +14,7 @@ public class ServiceModelUtilTest {
 
     @Test
     public void testCodegenService() throws Exception {
-        String[] outPaths = {"codegen-result", "src", "api"};
+        String[] outPaths = {"codegen-result", "src", "main", "java"};
         String targetFilePath = Paths.get(System.getProperty("user.dir")).resolveSibling(String.join(File.separator, outPaths)).toString();
 
         File file = new File(targetFilePath);

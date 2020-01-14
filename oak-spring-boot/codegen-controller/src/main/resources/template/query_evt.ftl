@@ -1,7 +1,6 @@
 package ${packageName};
 
 import com.oak.api.model.ApiBaseQueryReq;
-import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

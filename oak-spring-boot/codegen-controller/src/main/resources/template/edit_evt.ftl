@@ -3,7 +3,6 @@ package ${packageName};
 import com.levin.commons.dao.annotation.update.UpdateColumn;
 import com.levin.commons.dao.annotation.*;
 import com.oak.api.model.ApiBaseReq;
-import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

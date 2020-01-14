@@ -74,8 +74,8 @@ public final class ServiceModelUtil {
         basePackageName = basePackageName.toLowerCase();
         List<FieldModel> fields = buildFieldModel(entityClass, entityMapping, true);
 
-        String desc = entityClass.isAnnotationPresent(Desc.class)
-                ? ((Desc) entityClass.getAnnotation(Desc.class)).value()
+        String desc = entityClass.isAnnotationPresent(Schema.class)
+                ? ((Schema) entityClass.getAnnotation(Schema.class)).description()
                 : entityClass.getSimpleName();
 
         String serviceTarget = target + File.separator + "services";
@@ -307,8 +307,8 @@ public final class ServiceModelUtil {
         controllerPackageName = controllerPackageName.replace("provide.", "");
 
 
-      //  String serviceName = packageName.substring(packageName.lastIndexOf(".") + 1);
-      //  serviceName = serviceName.substring(0, 1).toUpperCase() + serviceName.substring(1) + "Service";
+        //  String serviceName = packageName.substring(packageName.lastIndexOf(".") + 1);
+        //  serviceName = serviceName.substring(0, 1).toUpperCase() + serviceName.substring(1) + "Service";
         String serviceName = entityClass.getSimpleName() + "Service";
         FieldModel pkField = getPkField(entityClass, fields);
 
@@ -350,17 +350,8 @@ public final class ServiceModelUtil {
         ResolvableType resolvableTypeForClass = ResolvableType.forClass(clzss);
 
 
-        ReflectionUtils.doWithFields(clzss, new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-
-
-                declaredFields.add(field);
-
-                //  System.out.println("found " + clzss + " : " + field);
-
-            }
-        });
+        //  System.out.println("found " + clzss + " : " + field);
+        ReflectionUtils.doWithFields(clzss, declaredFields::add);
 
 
         // Field.setAccessible(declaredFields, true);
@@ -427,8 +418,17 @@ public final class ServiceModelUtil {
 
             }
 
-            fieldModel.setDesc(field.isAnnotationPresent(Schema.class) ? field.getAnnotation(Schema.class).description() : field.getName());
-            fieldModel.setDescDetail(field.isAnnotationPresent(Schema.class) ? field.getAnnotation(Schema.class).description() : "");
+            boolean hasSchema = field.isAnnotationPresent(Schema.class);
+            Schema schema = field.getAnnotation(Schema.class);
+            fieldModel.setDesc(hasSchema ? schema.description() : field.getName());
+            fieldModel.setDescDetail(hasSchema ? schema.description() : "");
+            if (!hasSchema) {
+                boolean isDesc = field.isAnnotationPresent(Desc.class);
+                Desc desc = field.getAnnotation(Desc.class);
+                fieldModel.setDesc(isDesc ? desc.value() : field.getName());
+                fieldModel.setDescDetail(isDesc ? desc.detail() : "");
+            }
+
             fieldModel.setPk(field.isAnnotationPresent(Id.class));
             fieldModel.setLike(field.isAnnotationPresent(Like.class));
             fieldModel.setNotUpdate(fieldModel.getPk() || notUpdateNames.contains(fieldModel.getName()) || fieldModel.getComplex());

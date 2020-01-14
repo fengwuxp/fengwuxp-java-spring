@@ -12,7 +12,6 @@ import ${packageName}.info.${entityName}Info;
  *  ${desc}服务
  *  ${.now}
  */
-
 public interface ${className} {
 
 

@@ -23,7 +23,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.wuxp.basic</groupId>

@@ -1,4 +1,4 @@
-package ${packageName};
+package com.oak.admin.services.menu.req;
 
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,21 +7,14 @@ import lombok.experimental.Accessors;
 import com.levin.commons.dao.annotation.*;
 import javax.validation.constraints.NotNull;
 
-<#list fields as field>
-    <#if !field.baseType && field.enums>
-import ${field.classType.name};
-        <#list field.imports as imp>
-import ${imp};
-        </#list>
-    </#if>
-</#list>
+import com.oak.admin.enums.MenuIAction;
 
 
 /**
- *  查找${desc}
- *  ${.now}
+ *  查找菜单
+ *  2020-1-14 16:32:16
  */
-@Schema(description = "查找${desc}")
+@Schema(description = "查找菜单")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,11 +22,11 @@ import ${imp};
 @ToString(callSuper = true)
 @Accessors(chain = true)
 
-public class ${className} extends ApiBaseReq {
+public class FindMenuReq extends ApiBaseReq {
 
-    @Schema(description = "${pkField.desc}")
+    @Schema(description = "ID")
     @NotNull
     @Eq(require = true)
-    private ${pkField.type} ${pkField.name};
+    private Long id;
 
 }

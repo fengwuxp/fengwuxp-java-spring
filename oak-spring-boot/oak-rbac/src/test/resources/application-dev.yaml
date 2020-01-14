@@ -29,6 +29,9 @@ spring:
       hibernate.id.new_generator_mappings: false
       hibernate.dialect.storage_engine: innodb
 
+test:
+  value: 1,2
+
 logging:
   level:
     test.com.oak: debug

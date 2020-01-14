@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Date;
         })
 @Data
 @NoArgsConstructor
+@ToString(exclude = "settingGroup")
 @EqualsAndHashCode(of = {"name"})
 public class Setting implements java.io.Serializable {
 

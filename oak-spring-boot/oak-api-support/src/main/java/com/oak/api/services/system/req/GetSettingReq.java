@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Schema(description ="获取配置项值")
-public class GetConfigReq extends ApiBaseReq {
+public class GetSettingReq extends ApiBaseReq {
 
     @Schema(description ="配置名称")
     private String name;
@@ -15,10 +15,10 @@ public class GetConfigReq extends ApiBaseReq {
     @Schema(description ="是否从缓存加载")
     private Boolean fromCache = true;
 
-    public GetConfigReq() {
+    public GetSettingReq() {
     }
 
-    public GetConfigReq(String name, Boolean fromCache) {
+    public GetSettingReq(String name, Boolean fromCache) {
         this.name = name;
         this.fromCache = fromCache;
     }

@@ -1,18 +1,18 @@
 package ${packageName};
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
+import com.levin.commons.service.domain.Desc;
 <#list fields as field>
-   <#if !field.baseType && field.enums>
-import ${field.classType.name};
-   </#if>
+    <#if !field.baseType && field.enums>
+        import ${field.classType.name};
+    </#if>
     <#if (field.infoClassName)??>
-import ${field.infoClassName};
+        import ${field.infoClassName};
     </#if>
     <#list field.imports as imp>
-import ${imp};
+        import ${imp};
     </#list>
 </#list>
 
@@ -21,12 +21,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 
-
 /**
- * ${desc}
- * ${.now}
- */
-@Desc(value = "${desc}")
+* ${desc}
+* ${.now}
+*/
+@Schema(description ="${desc}")
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -36,12 +35,13 @@ public class ${className} implements Serializable {
 
 <#list fields as field>
     <#if field.complex>
-    @Schema(description = "${field.desc}")
-    private ${field.excessReturnType} ${field.name}${field.excessSuffix};
+        <#if (field.lazy)??>  @Desc(value = "",code = "${field.name}")</#if>
+        @Schema(description = "${field.desc}")
+        private ${field.excessReturnType} ${field.name}${field.excessSuffix};
 
     <#else>
-    @Schema(description = "${field.desc}")
-    private ${field.type} ${field.name};
+        @Schema(description = "${field.desc}")
+        private ${field.type} ${field.name};
 
     </#if>
 </#list>
