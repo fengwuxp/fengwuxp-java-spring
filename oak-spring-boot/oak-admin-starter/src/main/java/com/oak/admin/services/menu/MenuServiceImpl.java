@@ -3,12 +3,17 @@ package com.oak.admin.services.menu;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.UpdateDao;
 import com.oak.admin.entities.E_Menu;
+import com.oak.admin.enums.MenuShowType;
+import com.oak.admin.enums.MenuType;
 import com.oak.api.helper.SimpleCommonDaoHelper;
 import org.springframework.beans.BeanUtils;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.oak.admin.entities.Menu;
@@ -77,6 +82,12 @@ public class MenuServiceImpl implements MenuService {
         entity.setCreateTime(time);
         entity.setLastUpdateTime(time);
         entity.setDeleted(false);
+        if (entity.getType() == null) {
+            entity.setType(MenuType.DEFAULT);
+        }
+        if (entity.getShowType() == null) {
+            entity.setShowType(MenuShowType.DEFAULT);
+        }
         jpaDao.create(entity);
         if (hasParent) {
             // 更新id path
@@ -88,6 +99,12 @@ public class MenuServiceImpl implements MenuService {
         return RestfulApiRespFactory.ok(entity.getId());
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = MENU_CACHE_NAME, key = "#req.id", condition = "#req.id!=null"),
+                    @CacheEvict(value = MENU_CACHE_NAME, key = "#req.parentId", condition = "#req.parentId!=null")
+            }
+    )
     @Override
     public ApiResp<Void> edit(EditMenuReq req) {
 
@@ -151,6 +168,9 @@ public class MenuServiceImpl implements MenuService {
         return RestfulApiRespFactory.ok();
     }
 
+    @CacheEvict(
+            value = MENU_CACHE_NAME, key = "#req.id", condition = "#req.id!=null"
+    )
     @Override
     public ApiResp<Void> delete(DeleteMenuReq req) {
 
@@ -185,6 +205,13 @@ public class MenuServiceImpl implements MenuService {
         return query(queryReq).getFirst();
     }
 
+    @Caching(
+            cacheable = {
+                    @Cacheable(value = MENU_CACHE_NAME, key = "#req.id", condition = "#req.id!=null", unless = "#result.empty"),
+                    @Cacheable(value = MENU_CACHE_NAME, key = "#req.parentId", condition = "#req.parentId!=null", unless = "#result.empty"),
+                    @Cacheable(value = MENU_CACHE_NAME, key = "#req.startsWithIdPath", condition = "#req.startsWithIdPath!=null", unless = "#result.empty")
+            }
+    )
     @Override
     public Pagination<MenuInfo> query(QueryMenuReq req) {
 

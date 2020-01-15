@@ -20,37 +20,38 @@ public interface SystemService {
 
     String SETTING_CACHE_NAME = "SYSTEM_SETTING";
 
+    String CONFIG_CACHE_NAME = "SYSTEM_CONFIG";
 
+
+    /**
+     * 获取配置
+     *
+     * @param req
+     * @return
+     */
     String getSetting(GetSettingReq req);
 
-
+    /**
+     * 获取配置列表
+     *
+     * @param req
+     * @return
+     */
     String[] getSettingList(GetSettingListReq req);
 
 
-    @Caching(evict = {
-            @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()"),
-            @CacheEvict(value = SETTING_CACHE_NAME, key = "'ALL'")})
     ApiResp<Void> saveSetting(SaveSettingReq req);
 
 
-    @Cacheable(value = SETTING_CACHE_NAME,
-            key = "#req.getName()",
-            condition = "#req.getName()!=null",
-            unless = "#result.total==0")
     Pagination<SettingInfo> querySetting(QuerySettingReq req);
 
-    @Cacheable(value = SETTING_CACHE_NAME,
-            key = "#name",
-            condition = "#name!=null",
-            unless = "#result==null")
+
     SettingInfo findSettingByName(@NotNull String name);
 
 
-    @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()")
     void delSetting(DelSettingReq req);
 
 
-    @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()")
     boolean editSetting(EditConfigReq req);
 
 

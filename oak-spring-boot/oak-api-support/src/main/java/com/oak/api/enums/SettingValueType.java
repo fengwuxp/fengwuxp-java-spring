@@ -28,6 +28,10 @@ public enum SettingValueType implements DescriptiveEnum {
     @Schema(description = "数组")
     ARRAY,
 
+    @Schema(description = "数字数组")
+    ARRAY_NUMBER,
+
+
     @Schema(description = "url")
     URL,
 
@@ -42,9 +46,6 @@ public enum SettingValueType implements DescriptiveEnum {
 
     @Schema(description = "日期时间")
     DATETIME,
-
-    @Schema(description = "html")
-    HTML,
 
     @Schema(description = "脚本")
     SCRIPT;

@@ -2,6 +2,8 @@ package com.oak.admin.services.menu.req;
 
 import com.levin.commons.dao.annotation.update.UpdateColumn;
 import com.levin.commons.dao.annotation.*;
+import com.oak.admin.enums.MenuShowType;
+import com.oak.admin.enums.MenuType;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -37,6 +39,14 @@ public class EditMenuReq extends ApiBaseReq {
     @UpdateColumn
     private MenuIAction action;
 
+    @Schema(description = "菜单类型")
+    @UpdateColumn
+    private MenuType type;
+
+    @Schema(description = "菜单的显示类型")
+    @UpdateColumn
+    private MenuShowType showType;
+
     @Size(max = 256)
     @Schema(description = "动作值")
     @UpdateColumn
@@ -46,10 +56,6 @@ public class EditMenuReq extends ApiBaseReq {
     @Schema(description = "动作参数")
     @UpdateColumn
     private String param;
-
-    @Schema(description = "类型")
-    @UpdateColumn
-    private String type;
 
     @Schema(description = "名称")
     @UpdateColumn

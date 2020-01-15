@@ -53,7 +53,7 @@ public class ResourceServiceImplTest {
         CreateResourceReq req = new CreateResourceReq();
         req.setCode("example");
         req.setName("用例");
-        req.setType(ResourceType.API_URL);
+        req.setType(ResourceType.URL);
         req.setModuleCode("default");
         req.setModuleName("默认");
 

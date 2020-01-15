@@ -9,11 +9,14 @@ public enum ResourceType implements DescriptiveEnum {
     @Schema(description = "数据")
     DATA,
 
-    @Schema(description = "视图url")
-    VIEW_URL,
+//    @Schema(description = "视图url")
+//    VIEW_URL,
+//
+//    @Schema(description = "api url")
+//    API_URL,
 
-    @Schema(description = "api url")
-    API_URL,
+    @Schema(description = "URL")
+    URL,
 
     @Schema(description = "图片")
     IMAGE,

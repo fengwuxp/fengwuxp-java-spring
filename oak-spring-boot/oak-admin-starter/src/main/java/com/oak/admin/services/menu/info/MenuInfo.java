@@ -1,5 +1,7 @@
 package com.oak.admin.services.menu.info;
 
+import com.oak.admin.enums.MenuShowType;
+import com.oak.admin.enums.MenuType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -8,6 +10,8 @@ import com.oak.admin.enums.MenuIAction;
 
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,10 +24,11 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"id" })
 @ToString(exclude = {"parentInfo",})
 public class MenuInfo implements Serializable {
 
+    private static final long serialVersionUID = 8139815533590432269L;
     @Schema(description = "ID")
     private Long id;
 
@@ -32,6 +37,12 @@ public class MenuInfo implements Serializable {
 
     @Schema(description = "动作")
     private MenuIAction action;
+
+    @Schema(description = "菜单类型")
+    private MenuType type;
+
+    @Schema(description = "菜单的显示类型")
+    private MenuShowType showType;
 
     @Schema(description = "动作值")
     private String value;
@@ -51,9 +62,6 @@ public class MenuInfo implements Serializable {
     @Desc(value = "", code = "parent")
     @Schema(description = "父对象")
     private MenuInfo parentInfo;
-
-    @Schema(description = "类型")
-    private String type;
 
     @Schema(description = "")
     private String idPath;

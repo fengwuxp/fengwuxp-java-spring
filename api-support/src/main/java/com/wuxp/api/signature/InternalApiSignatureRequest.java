@@ -1,13 +1,13 @@
 package com.wuxp.api.signature;
 
 
-import com.wuxp.api.ApiBaseReq;
+import com.wuxp.api.AbstractApiReq;
 
 import javax.servlet.http.HttpServletRequest;
 import java.beans.Transient;
 import java.util.Map;
 
-public class InternalApiSignatureRequest extends ApiBaseReq {
+public class InternalApiSignatureRequest extends AbstractApiReq {
 
 //    private static final String APP_ID_HEADER_KEY = "Api-App-Id";
 //    private static final String NONCE_STR_HEADER_KEY = "Api-nonce-str";

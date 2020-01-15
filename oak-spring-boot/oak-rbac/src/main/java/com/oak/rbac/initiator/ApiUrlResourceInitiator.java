@@ -48,7 +48,7 @@ public class ApiUrlResourceInitiator extends AbstractBaseInitiator<CreateResourc
             QueryResourceReq req = new QueryResourceReq();
             req.setQueryType(QueryType.QUERY_NUM);
             req.setId(resourceReq.getCode());
-            req.setType(ResourceType.API_URL);
+            req.setType(ResourceType.URL);
             Pagination<ResourceInfo> permissionInfoPagination = resourceService.queryResource(req);
             return permissionInfoPagination.getTotal() == 0;
         }).forEach(createResourceReq -> {

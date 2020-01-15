@@ -1,7 +1,7 @@
 package com.oak.api.services.log.req;
 
 import com.levin.commons.dao.annotation.Eq;
-import com.wuxp.api.ApiBaseReq;
+import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

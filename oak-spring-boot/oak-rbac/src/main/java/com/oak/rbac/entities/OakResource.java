@@ -21,7 +21,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @ToString(exclude = "permissions")
 @EqualsAndHashCode(callSuper = true, of = {"id"})
-public class OakResource extends AbstractNamedEntityObject<String> {
+public class  OakResource extends AbstractNamedEntityObject<String> {
 
     private static final long serialVersionUID = 6566419064985790620L;
 

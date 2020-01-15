@@ -18,11 +18,16 @@ import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,9 +39,10 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public String getSetting(GetSettingReq req) {
-        Setting setting = jpaDao.find(Setting.class, req.getName());
-        if (setting != null) {
-            return setting.getValue();
+
+        SettingInfo settingInfo = this.findSettingByName(req.getName());
+        if (settingInfo != null) {
+            return settingInfo.getValue();
         }
         return null;
     }
@@ -45,7 +51,12 @@ public class SystemServiceImpl implements SystemService {
     @Override
     public String[] getSettingList(GetSettingListReq req) {
 
-        return new String[0];
+        return Arrays.stream(req.getNames())
+                .map(this::findSettingByName)
+                .filter(Objects::nonNull)
+                .map(SettingInfo::getValue)
+                .toArray(String[]::new);
+
     }
 
 //    @Override
@@ -60,6 +71,10 @@ public class SystemServiceImpl implements SystemService {
 //                .collect(Collectors.toList());
 //    }
 
+    @Caching(evict = {
+            @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()"),
+            @CacheEvict(value = CONFIG_CACHE_NAME, key = "#req.getName()")
+    })
     @Override
     public ApiResp<Void> saveSetting(SaveSettingReq req) {
 
@@ -123,11 +138,19 @@ public class SystemServiceImpl implements SystemService {
 
     }
 
+    @Cacheable(value = SETTING_CACHE_NAME,
+            key = "#req.getName()",
+            condition = "#req.getName()!=null",
+            unless = "#result.total==0")
     @Override
     public Pagination<SettingInfo> querySetting(QuerySettingReq req) {
         return SimpleCommonDaoHelper.queryObject(this.jpaDao, Setting.class, SettingInfo.class, req);
     }
 
+    @Cacheable(value = SETTING_CACHE_NAME,
+            key = "#name",
+            condition = "#name!=null",
+            unless = "#result==null")
     @Override
     public SettingInfo findSettingByName(@NotNull String name) {
         return jpaDao.selectFrom(Setting.class)
@@ -136,11 +159,19 @@ public class SystemServiceImpl implements SystemService {
 
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()"),
+            @CacheEvict(value = CONFIG_CACHE_NAME, key = "#req.getName()")
+    })
     @Override
     public void delSetting(DelSettingReq req) {
         jpaDao.deleteById(Setting.class, req.getName());
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = SETTING_CACHE_NAME, key = "#req.getName()"),
+            @CacheEvict(value = CONFIG_CACHE_NAME, key = "#req.getName()")
+    })
     @Override
     public boolean editSetting(EditConfigReq req) {
         return jpaDao.updateTo(Setting.class).appendByQueryObj(req).update() > 0;

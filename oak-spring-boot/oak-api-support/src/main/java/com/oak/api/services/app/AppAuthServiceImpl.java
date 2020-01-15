@@ -14,6 +14,9 @@ import com.wuxp.api.model.Pagination;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -43,6 +46,11 @@ public class AppAuthServiceImpl implements AppAuthService {
         return authAccount.getId();
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = APP_STORE_CACHE_NAME, key = "#req.appId", condition = "#req.appId!=null")
+            }
+    )
     @Override
     public boolean editAppAuthAccount(EditAppAuthAccountReq req) {
 
@@ -73,6 +81,10 @@ public class AppAuthServiceImpl implements AppAuthService {
         return pageInfo.getFirst();
     }
 
+    @Cacheable(value = APP_STORE_CACHE_NAME,
+            key = "#appId",
+            condition = "#appId !=null",
+            unless = "!#result!=null")
     @Override
     public AppAuthAccountInfo getAppInfo(@NotNull String appId) {
         return this.findAppAuthAccount(new FindAuthReq(appId));

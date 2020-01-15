@@ -4,14 +4,19 @@ package com.oak.admin.services.infoprovide;
 import com.levin.commons.dao.Converter;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.SelectDao;
+import com.levin.commons.dao.UpdateDao;
 import com.oak.admin.entities.Area;
 import com.oak.admin.entities.E_Area;
 import com.oak.admin.services.infoprovide.info.AreaInfo;
+import com.oak.admin.services.infoprovide.req.EditAreaReq;
 import com.oak.admin.services.infoprovide.req.FindAreaReq;
 import com.oak.admin.services.infoprovide.req.QueryAreaReq;
+import com.oak.api.helper.SettingValueHelper;
 import com.oak.api.model.PageInfo;
+import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.model.QuerySortType;
+import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,9 @@ public class InfoProvideServiceImpl implements InfoProvideService {
     @Autowired
     private JpaDao jpaDao;
 
+    @Autowired
+    private SettingValueHelper settingValueHelper;
+
     @Override
     public Pagination<AreaInfo> queryArea(QueryAreaReq req) {
         SelectDao<Area> selectDao = jpaDao.selectFrom(Area.class, TABLE_ALIAS);
@@ -37,7 +45,7 @@ public class InfoProvideServiceImpl implements InfoProvideService {
         PageInfo<AreaInfo> pageInfo = PageInfo.newInstance(req);
 
         if (req.getLevel() == null) {
-            Integer maxLevel = 3;// Integer.valueOf(ConfigCache.getConfig("area_level", "3"));
+            Integer maxLevel = settingValueHelper.getSettingValue("area_level", 3);
             selectDao.appendWhere("e.level <= ?", maxLevel);
         }
 
@@ -118,5 +126,24 @@ public class InfoProvideServiceImpl implements InfoProvideService {
                 .eq(E_Area.id, req.getAreaCode())
                 .eq(E_Area.thirdCode, req.getThirdCode())
                 .findOne(AreaInfo.class, 4);
+    }
+
+    @Override
+    public ApiResp<Void> editArea(EditAreaReq req) {
+
+
+        Area entity = jpaDao.find(Area.class, req.getId());
+        if (entity == null) {
+            return RestfulApiRespFactory.error("Area数据不存在");
+        }
+
+        UpdateDao<Area> updateDao = jpaDao.updateTo(Area.class).appendByQueryObj(req);
+
+        int update = updateDao.update();
+        if (update < 1) {
+            return RestfulApiRespFactory.error("更新Area失败");
+        }
+
+        return RestfulApiRespFactory.ok();
     }
 }

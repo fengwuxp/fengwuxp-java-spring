@@ -81,7 +81,7 @@ public class PermissionServiceImpl implements PermissionService {
     public Collection<RequestUrlConfigAttribute> getAllUrlConfigAttributes() {
 
         QueryResourceReq queryResourceReq = new QueryResourceReq();
-        queryResourceReq.setType(ResourceType.API_URL);
+        queryResourceReq.setType(ResourceType.URL);
         Pagination<ResourceInfo> resourceInfoPagination = resourceService.queryResource(queryResourceReq);
 
         List<ResourceInfo> records = resourceInfoPagination.getRecords();

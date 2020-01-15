@@ -1,6 +1,8 @@
 package com.oak.admin.services.menu.req;
 
 import com.oak.admin.entities.E_Menu;
+import com.oak.admin.enums.MenuShowType;
+import com.oak.admin.enums.MenuType;
 import com.oak.api.model.ApiBaseQueryReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -29,6 +31,12 @@ public class QueryMenuReq extends ApiBaseQueryReq {
     @Schema(description = "动作")
     private MenuIAction action;
 
+    @Schema(description = "菜单类型")
+    private MenuType type;
+
+    @Schema(description = "菜单的显示类型")
+    private MenuShowType showType;
+
     @Schema(description = "层级")
     private Integer level;
 
@@ -42,11 +50,6 @@ public class QueryMenuReq extends ApiBaseQueryReq {
     @Fetch(value = "parent", condition = "#_val==true")
     private Boolean loadParent;
 
-    @Schema(description = "类型")
-    private String type;
-
-    @Schema(description = "路径")
-    private String idPath;
 
     @Schema(description = "路径")
     @Like(prefix = "", value = E_Menu.idPath)

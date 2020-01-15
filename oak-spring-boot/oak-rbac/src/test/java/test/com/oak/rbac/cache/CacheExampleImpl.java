@@ -21,6 +21,24 @@ public class CacheExampleImpl implements CacheExample {
 
     @Override
     public String getValueByCache(String key) {
-        return this.getValue(key);
+        return getValue(key);
     }
 }
+
+
+/**
+ *   class CacheExampleImpl$ClIBProxy extends CacheExampleImpl{
+ *
+ *       public String getValue(){
+ *          // 是否缓存中
+ *
+ *         String value  super.getValue();
+ *         // 加入缓存
+ *         return value
+ *       }
+ *
+ *   }
+ *
+ *
+ *
+ */

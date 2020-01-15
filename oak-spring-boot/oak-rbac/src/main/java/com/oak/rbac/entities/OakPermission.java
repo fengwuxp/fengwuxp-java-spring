@@ -28,6 +28,8 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String valueType;
+
     @Schema(description = "权限值(操作代码)")
     @Column(name = "value", length = 512, nullable = false)
     private String value;

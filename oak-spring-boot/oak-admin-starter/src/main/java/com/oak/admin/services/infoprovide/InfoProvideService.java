@@ -2,9 +2,12 @@ package com.oak.admin.services.infoprovide;
 
 
 import com.oak.admin.services.infoprovide.info.AreaInfo;
+import com.oak.admin.services.infoprovide.req.EditAreaReq;
 import com.oak.admin.services.infoprovide.req.FindAreaReq;
 import com.oak.admin.services.infoprovide.req.QueryAreaReq;
+import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 
@@ -33,6 +36,23 @@ public interface InfoProvideService {
     })
     Pagination<AreaInfo> queryArea(QueryAreaReq req);
 
+    @Caching(cacheable = {
+            @Cacheable(value = AREA_CACHE_NAME,
+                    key = "'ID_'+#req.areaCode",
+                    condition = "#req.areaCode != null",
+                    unless = "#result==null"),
+            @Cacheable(value = AREA_CACHE_NAME,
+                    key = "'T'+#req.thirdCode",
+                    condition = "#req.thirdCode != null",
+                    unless = "#result==null")
+    })
     AreaInfo findAreaById(FindAreaReq req);
 
+    @Caching(evict = {
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'ID_'+#req.id"),
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'LIST_ID_'+#req.id"),
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'LIST_T'+#req.thirdCode", condition = "#req.thirdCode != null"),
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'T'+#req.thirdCode", condition = "#req.thirdCode != null")
+    })
+    ApiResp<Void> editArea(EditAreaReq req);
 }

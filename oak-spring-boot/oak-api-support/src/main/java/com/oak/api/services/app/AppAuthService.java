@@ -48,10 +48,7 @@ public interface AppAuthService extends AppInfoStore {
      */
     AppAuthAccountInfo findAppAuthAccount(FindAuthReq req);
 
-    @Cacheable(value = APP_STORE_CACHE_NAME,
-            key = "#appId",
-            condition = "#appId !=null",
-            unless = "!#result!=null")
+
     @Override
     AppAuthAccountInfo getAppInfo(@NotNull String appId);
 }

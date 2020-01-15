@@ -4,15 +4,13 @@ package com.wuxp.api;
 import com.wuxp.api.signature.ApiSignatureRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
 
 @Data
 @Schema(name = "ApiBaseReq", description = "api基础请求对象")
-//@Validated
-public class ApiBaseReq implements ApiSignatureRequest {
+public class AbstractApiReq implements ApiSignatureRequest {
 
     @Schema(name = "name", description = "应用分配到的appId")
     @NotNull(message = "appId不能为空")
