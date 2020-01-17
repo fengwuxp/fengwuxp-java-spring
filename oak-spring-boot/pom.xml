@@ -36,6 +36,7 @@
         <module>oak-spring-codegen</module>
         <module>codegen-controller</module>
         <module>oak-admin-starter</module>
+        <module>oak-organization</module>
     </modules>
 
     <dependencies>

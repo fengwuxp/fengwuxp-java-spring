@@ -24,35 +24,11 @@ public interface InfoProvideService {
      * @param req
      * @return
      */
-    @Caching(cacheable = {
-            @Cacheable(value = AREA_CACHE_NAME,
-                    key = "'LIST_ID_'+#req.getId()",
-                    condition = "#req.getFromCache() and #req.id != null",
-                    unless = "#result.empty"),
-            @Cacheable(value = AREA_CACHE_NAME,
-                    key = "'LIST_T'+#req.thirdCode",
-                    condition = "#req.getFromCache() and #req.thirdCode != null",
-                    unless = "#result.empty")
-    })
     Pagination<AreaInfo> queryArea(QueryAreaReq req);
 
-    @Caching(cacheable = {
-            @Cacheable(value = AREA_CACHE_NAME,
-                    key = "'ID_'+#req.areaCode",
-                    condition = "#req.areaCode != null",
-                    unless = "#result==null"),
-            @Cacheable(value = AREA_CACHE_NAME,
-                    key = "'T'+#req.thirdCode",
-                    condition = "#req.thirdCode != null",
-                    unless = "#result==null")
-    })
+
     AreaInfo findAreaById(FindAreaReq req);
 
-    @Caching(evict = {
-            @CacheEvict(value = AREA_CACHE_NAME, key = "'ID_'+#req.id"),
-            @CacheEvict(value = AREA_CACHE_NAME, key = "'LIST_ID_'+#req.id"),
-            @CacheEvict(value = AREA_CACHE_NAME, key = "'LIST_T'+#req.thirdCode", condition = "#req.thirdCode != null"),
-            @CacheEvict(value = AREA_CACHE_NAME, key = "'T'+#req.thirdCode", condition = "#req.thirdCode != null")
-    })
+
     ApiResp<Void> editArea(EditAreaReq req);
 }

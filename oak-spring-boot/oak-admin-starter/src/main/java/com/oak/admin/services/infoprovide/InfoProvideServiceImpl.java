@@ -20,6 +20,9 @@ import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -39,6 +42,16 @@ public class InfoProvideServiceImpl implements InfoProvideService {
     private SettingValueHelper settingValueHelper;
 
     @Override
+    @Caching(cacheable = {
+            @Cacheable(value = AREA_CACHE_NAME,
+                    key = "'LIST_ID_'+#req.getId()",
+                    condition = "#req.getFromCache() and #req.id != null",
+                    unless = "#result.empty"),
+            @Cacheable(value = AREA_CACHE_NAME,
+                    key = "'LIST_T'+#req.thirdCode",
+                    condition = "#req.getFromCache() and #req.thirdCode != null",
+                    unless = "#result.empty")
+    })
     public Pagination<AreaInfo> queryArea(QueryAreaReq req) {
         SelectDao<Area> selectDao = jpaDao.selectFrom(Area.class, TABLE_ALIAS);
 
@@ -115,6 +128,16 @@ public class InfoProvideServiceImpl implements InfoProvideService {
         return pageInfo;
     }
 
+    @Caching(cacheable = {
+            @Cacheable(value = AREA_CACHE_NAME,
+                    key = "'ID_'+#req.areaCode",
+                    condition = "#req.areaCode != null",
+                    unless = "#result==null"),
+            @Cacheable(value = AREA_CACHE_NAME,
+                    key = "'T'+#req.thirdCode",
+                    condition = "#req.thirdCode != null",
+                    unless = "#result==null")
+    })
     @Override
     public AreaInfo findAreaById(FindAreaReq req) {
 
@@ -128,6 +151,12 @@ public class InfoProvideServiceImpl implements InfoProvideService {
                 .findOne(AreaInfo.class, 4);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'ID_'+#req.id"),
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'LIST_ID_'+#req.id"),
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'LIST_T'+#req.thirdCode", condition = "#req.thirdCode != null"),
+            @CacheEvict(value = AREA_CACHE_NAME, key = "'T'+#req.thirdCode", condition = "#req.thirdCode != null")
+    })
     @Override
     public ApiResp<Void> editArea(EditAreaReq req) {
 
