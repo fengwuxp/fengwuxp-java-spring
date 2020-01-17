@@ -1,6 +1,7 @@
 package com.oak.rbac.services.permission.req;
 
 import com.oak.api.model.ApiBaseQueryReq;
+import com.oak.rbac.enums.PermissionValueType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,4 +23,7 @@ public class QueryPermissionReq extends ApiBaseQueryReq {
 
     @Schema(description = "资源标识")
     private String resourceId;
+
+    @Schema(description = "权限类型")
+    private PermissionValueType valueType;
 }

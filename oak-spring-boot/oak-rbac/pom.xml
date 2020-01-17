@@ -32,7 +32,7 @@
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
-            <artifactId>wuxp-security-authority</artifactId>
+            <artifactId>fengwuxp-security-authority</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -41,14 +41,20 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-instrument</artifactId>
-<!--            <version>5.2.2.RELEASE</version>-->
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-<!--            <version>1.9.5</version>-->
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oak.springboot</groupId>
+            <artifactId>oaknt-codegen-controller</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -71,6 +77,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <skip>true</skip>
                     <agent>
                         ${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
                     </agent>
@@ -78,6 +85,14 @@
                         ${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
                     </agent>
                 </configuration>
+                <executions>
+                    <!--仅在测试阶段执行-->
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>test</phase>
+                    </execution>
+                </executions>
+
             </plugin>
         </plugins>
 

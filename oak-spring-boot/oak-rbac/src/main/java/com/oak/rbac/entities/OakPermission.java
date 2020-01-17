@@ -1,6 +1,7 @@
 package com.oak.rbac.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
+import com.oak.rbac.enums.PermissionValueType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +29,10 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String valueType;
+    @Schema(description = "权限类型")
+    @Column(name = "value_type", length = 16, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PermissionValueType valueType;
 
     @Schema(description = "权限值(操作代码)")
     @Column(name = "value", length = 512, nullable = false)

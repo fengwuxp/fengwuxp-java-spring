@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>wuxp-security</artifactId>
+        <artifactId>fengwuxp-security</artifactId>
         <groupId>com.wuxp.security</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -14,7 +14,7 @@
         <module>example-01</module>
     </modules>
 
-    <artifactId>wuxp-security-examples</artifactId>
+    <artifactId>fengwuxp-security-examples</artifactId>
 
     <dependencies>
         <!--spring doc open api-->
@@ -39,7 +39,28 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.oak.springboot</groupId>
+            <artifactId>oak-admin-spring-boot-starter</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <!--deploy 时忽略此model-->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

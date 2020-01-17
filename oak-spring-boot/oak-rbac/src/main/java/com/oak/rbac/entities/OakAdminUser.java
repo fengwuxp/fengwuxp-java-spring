@@ -1,6 +1,7 @@
 package com.oak.rbac.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
+import com.oak.rbac.enums.AdminUserType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +28,13 @@ public class OakAdminUser extends AbstractNamedEntityObject<Long> {
 
     @Schema(description = "管理员ID")
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+//    @Schema(description = "用户类型")
+//    @Column(name = "user_type", nullable = false, length = 16)
+//    @Enumerated(EnumType.STRING)
+//    private AdminUserType userType;
 
     @Schema(description = "用户名")
     @Column(name = "user_name", nullable = false, length = 32)
@@ -58,13 +65,12 @@ public class OakAdminUser extends AbstractNamedEntityObject<Long> {
     private Boolean root = false;
 
     @Schema(description = "创建人员")
-    @Column(name = "create_id", nullable = false, length = 20)
-    private String creatorId;
+    @Column(name = "create_id", nullable = false)
+    private Long creatorId;
 
     @Schema(description = "创建人员名称")
     @Column(name = "create_name", nullable = false, length = 20)
     private String creatorName;
-
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(

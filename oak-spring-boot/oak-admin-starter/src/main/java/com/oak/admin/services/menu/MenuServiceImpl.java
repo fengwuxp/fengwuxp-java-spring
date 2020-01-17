@@ -88,6 +88,7 @@ public class MenuServiceImpl implements MenuService {
         if (entity.getShowType() == null) {
             entity.setShowType(MenuShowType.DEFAULT);
         }
+        entity.setIdPath(PATH_SPLITTER);
         jpaDao.create(entity);
         if (hasParent) {
             // 更新id path

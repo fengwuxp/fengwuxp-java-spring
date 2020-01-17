@@ -1,5 +1,6 @@
 package com.oak.rbac.services.resource.info;
 
+import com.oak.rbac.enums.PermissionValueType;
 import com.oak.rbac.enums.ResourceType;
 import com.oak.rbac.services.permission.info.PermissionInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +24,10 @@ public class ResourceInfo implements Serializable {
     @Schema(description = "资源名称")
     @NotNull
     private String name;
+
+    @Schema(description = "权限类型")
+    @NotNull
+    private PermissionValueType valueType;
 
     @Schema(description = "资源类型")
     @NotNull

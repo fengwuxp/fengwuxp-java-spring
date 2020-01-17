@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import com.levin.commons.dao.annotation.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -31,6 +32,10 @@ public class CreateMenuReq extends ApiBaseReq {
     @Schema(description = "动作")
     @NotNull
     private MenuIAction action;
+
+    @Schema(description = "是否叶子目录")
+    @NotNull
+    private Boolean leaf;
 
     @Schema(description = "菜单类型")
     private MenuType type;
@@ -59,5 +64,6 @@ public class CreateMenuReq extends ApiBaseReq {
     @Schema(description = "备注")
     @Size(max = 1000)
     private String remark;
+
 
 }

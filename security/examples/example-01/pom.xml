@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>wuxp-security-examples</artifactId>
+        <artifactId>fengwuxp-security-examples</artifactId>
         <groupId>com.wuxp.security</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wuxp-security-example-01</artifactId>
+    <artifactId>fengwuxp-security-example-01</artifactId>
 
 
     <dependencies>
@@ -28,13 +28,13 @@
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
-            <artifactId>wuxp-security-captcha</artifactId>
+            <artifactId>fengwuxp-security-captcha</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
-            <artifactId>wuxp-security-authenticate</artifactId>
+            <artifactId>fengwuxp-security-authenticate</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -71,7 +71,7 @@
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
-            <artifactId>wuxp-security-authority</artifactId>
+            <artifactId>fengwuxp-security-authority</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
