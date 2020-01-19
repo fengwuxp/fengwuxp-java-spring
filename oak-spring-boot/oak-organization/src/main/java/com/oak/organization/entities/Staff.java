@@ -75,6 +75,9 @@ public class Staff extends AbstractNamedEntityObject<Long> {
     @Column(name = "creator_id")
     private Long creatorId;
 
+    @Schema(description = "关联的账号")
+    @Column(name = "admin_id", nullable = false)
+    private Long adminId;
 
 }
 

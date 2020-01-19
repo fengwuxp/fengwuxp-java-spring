@@ -42,20 +42,8 @@ public class CreateOakAdminUserReq extends ApiBaseReq {
     @NotNull
     private String password;
 
-    @Schema(description = "用于密码加密的盐")
-    @NotNull
-    @Size(max = 64)
-    private String cryptoSalt;
-
     @Schema(description = "创建人员")
-    @NotNull
-    @Size(max = 20)
-    private String creatorId;
-
-    @Schema(description = "创建人员名称")
-    @NotNull
-    @Size(max = 20)
-    private String creatorName;
+    private Long creatorId;
 
     @Schema(description = "名称")
     @NotNull
@@ -68,4 +56,6 @@ public class CreateOakAdminUserReq extends ApiBaseReq {
     @Size(max = 1000)
     private String remark;
 
+    @Schema(description = "是否超管理")
+    private Boolean root;
 }

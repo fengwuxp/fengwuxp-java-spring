@@ -43,17 +43,6 @@ public class EditOakAdminUserReq extends ApiBaseReq {
     @UpdateColumn
     private String email;
 
-
-    @Size(max = 20)
-    @Schema(description = "创建人员")
-    @UpdateColumn
-    private String creatorId;
-
-    @Size(max = 20)
-    @Schema(description = "创建人员名称")
-    @UpdateColumn
-    private String creatorName;
-
     @Schema(description = "名称")
     @UpdateColumn
     private String name;
@@ -70,6 +59,11 @@ public class EditOakAdminUserReq extends ApiBaseReq {
     @Schema(description = "备注")
     @UpdateColumn
     private String remark;
+
+    @Schema(description = "密码")
+    @Size(min = 6)
+    @Ignore
+    private String password;
 
     public EditOakAdminUserReq() {
     }

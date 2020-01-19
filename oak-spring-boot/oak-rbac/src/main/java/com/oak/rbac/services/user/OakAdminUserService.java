@@ -1,5 +1,6 @@
 package com.oak.rbac.services.user;
 
+import com.oak.rbac.entities.OakAdminUser;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +16,7 @@ import com.oak.rbac.services.user.info.OakAdminUserInfo;
 public interface OakAdminUserService {
 
 
-    ApiResp<Long> create(CreateOakAdminUserReq req);
+    ApiResp<OakAdminUser> create(CreateOakAdminUserReq req);
 
 
     ApiResp<Void> edit(EditOakAdminUserReq req);

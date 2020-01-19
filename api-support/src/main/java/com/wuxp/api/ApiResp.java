@@ -36,4 +36,10 @@ public interface ApiResp<T> {
      * @return
      */
     boolean isSuccess();
+
+    /**
+     * 获取消息描述
+     * @return
+     */
+    String getMessage();
 }

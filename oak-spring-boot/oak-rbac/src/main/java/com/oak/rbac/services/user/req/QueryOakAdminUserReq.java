@@ -41,12 +41,6 @@ public class QueryOakAdminUserReq extends ApiBaseQueryReq {
     @Schema(description = "邮箱")
     private String email;
 
-    @Schema(description = "密码")
-    private String password;
-
-    @Schema(description = "用于密码加密的盐")
-    private String cryptoSalt;
-
     @Schema(description = "是否超管理")
     private Boolean root;
 

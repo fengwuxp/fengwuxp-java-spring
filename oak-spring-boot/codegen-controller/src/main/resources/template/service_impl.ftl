@@ -43,7 +43,7 @@ public class ${className} implements ${serviceName} {
     <#list fields as field>
         <#if !field.notUpdate && field.uk>
         long ${field.name}C = jpaDao.selectFrom(${entityName}.class)
-                .appendWhereEquals("${field.name}", req.get${field.name?cap_first}())
+                .eq("${field.name}", req.get${field.name?cap_first}())
                 .count();
         if (${field.name}C > 0) {
             return RestfulApiRespFactory.error("${field.desc}已被使用");
@@ -83,7 +83,7 @@ public class ${className} implements ${serviceName} {
     <#if !field.notUpdate && field.uk>
         if (!StringUtils.isEmpty(req.get${field.name?cap_first}())) {
             long ${field.name}C = jpaDao.selectFrom(${entityName}.class)
-                    .appendWhereEquals("${field.name}", req.get${field.name?cap_first}())
+                    .eq("${field.name}", req.get${field.name?cap_first}())
                     .appendWhere("${pkField.name} != ?", req.get${pkField.name?cap_first}())
                     .count();
             if (${field.name}C > 0) {

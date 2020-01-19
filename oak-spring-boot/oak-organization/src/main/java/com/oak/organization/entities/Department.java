@@ -1,5 +1,6 @@
 package com.oak.organization.entities;
 
+import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
 import com.levin.commons.dao.domain.support.AbstractTreeObject;
 import com.levin.commons.service.domain.Desc;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +10,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Schema(description = "部门")
 @Entity
@@ -16,13 +18,13 @@ import javax.persistence.*;
         @Index(columnList = "name"),
         @Index(columnList = "parent_id"),
         @Index(columnList = "organization_id"),
-        @Index(columnList = "path"),
+        @Index(columnList = "id_path"),
 })
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"parent", "children"})
 @Accessors(chain = true)
-public class Department extends AbstractTreeObject<Long, Department> {
+public class Department extends AbstractNamedEntityObject<Long> {
 
     private static final long serialVersionUID = -5085157629557481143L;
 
@@ -55,10 +57,26 @@ public class Department extends AbstractTreeObject<Long, Department> {
     @Column(name = "level_path")
     private String levelPath;
 
-    @Schema(description = "描述")
-    @Column(name = "remark", length = 1024)
-    private String remark;
+    @Schema(description = "父ID")
+    @Column(name = "parent_id")
+    private Long parentId;
 
+    @Schema(description = "上级部门")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", insertable = false, updatable = false)
+    private Department parent;
 
+    @Schema(description = "下级部门")
+    @OneToMany(mappedBy = "parent", cascade = {CascadeType.REMOVE})
+    @OrderBy("orderCode DESC,name ASC")
+    private Set<Department> children;
+
+    @Schema(description = "ID路径")
+    @Column(name = "id_path")
+    private String idPath;
+
+    @Schema(description = "是否删除")
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
 }
 

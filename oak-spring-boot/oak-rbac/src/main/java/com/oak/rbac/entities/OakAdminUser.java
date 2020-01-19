@@ -1,8 +1,6 @@
 package com.oak.rbac.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
-import com.levin.commons.service.domain.Desc;
-import com.oak.rbac.enums.AdminUserType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +20,7 @@ import java.util.Set;
 @Schema(description = "管理员用户")
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true, of = {"id" })
+@EqualsAndHashCode(callSuper = true, of = {"id"})
 public class OakAdminUser extends AbstractNamedEntityObject<Long> {
 
 
@@ -32,12 +30,6 @@ public class OakAdminUser extends AbstractNamedEntityObject<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-//    @Schema(description = "用户类型")
-//    @Column(name = "user_type", nullable = false, length = 16)
-//    @Enumerated(EnumType.STRING)
-//    private AdminUserType userType;
-
 
     @Schema(description = "用户名")
     @Column(name = "user_name", nullable = false, length = 32)
@@ -68,18 +60,18 @@ public class OakAdminUser extends AbstractNamedEntityObject<Long> {
     private Boolean root = false;
 
     @Schema(description = "创建人员")
-    @Column(name = "create_id", nullable = false)
+    @Column(name = "create_id")
     private Long creatorId;
 
     @Schema(description = "创建人员名称")
-    @Column(name = "create_name", nullable = false, length = 20)
+    @Column(name = "create_name", length = 32)
     private String creatorName;
 
-    @Desc("登录token")
+    @Schema(description = "登录token")
     @Column(name = "token", length = 512)
     private String token;
 
-    @Desc("token失效时间")
+    @Schema(description = "token失效时间")
     @Column(name = "token_expired")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date tokenExpired;

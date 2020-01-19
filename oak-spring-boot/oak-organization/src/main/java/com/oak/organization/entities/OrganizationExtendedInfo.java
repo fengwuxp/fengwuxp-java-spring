@@ -14,7 +14,6 @@ import java.util.Date;
 @Entity
 @Table(name = "t_organization_extended_info")
 @Data
-@ToString(callSuper = true)
 @Accessors(chain = true)
 public class OrganizationExtendedInfo implements Serializable {
 

@@ -27,9 +27,9 @@ public class ProxyApiConfiguration implements ImportAware {
     }
 
 
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @Bean()
-//    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    @Bean
+    @ConditionalOnMissingBean
     public BeanFactoryApiOperationSourceAdvisor beanFactoryApiOperationSourceAdvisor() {
         BeanFactoryApiOperationSourceAdvisor advisor = new BeanFactoryApiOperationSourceAdvisor();
         advisor.setApiOperationSource(apiOperationSource());

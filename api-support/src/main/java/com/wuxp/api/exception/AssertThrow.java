@@ -1,5 +1,6 @@
 package com.wuxp.api.exception;
 
+import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CODE;
@@ -13,6 +14,13 @@ public final class AssertThrow {
 
     private AssertThrow() {
     }
+
+
+    public static void assertResp(ApiResp resp) {
+
+        assertTrue(resp.getMessage(), resp.isSuccess());
+    }
+
 
     public static void assertTrue(String message, boolean condition) {
         if (!condition) {

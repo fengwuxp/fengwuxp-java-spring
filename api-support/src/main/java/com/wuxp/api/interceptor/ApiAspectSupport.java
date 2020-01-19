@@ -1,5 +1,6 @@
 package com.wuxp.api.interceptor;
 
+import com.esotericsoftware.reflectasm.FieldAccess;
 import com.wuxp.api.ApiRequest;
 import com.wuxp.api.context.ApiRequestContextFactory;
 import com.wuxp.api.context.InjectField;
@@ -400,8 +401,14 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                     evaluationContext.setVariable(CURRENT_VALUE_VARIABLE, ReflectionUtils.getField(field, request));
                     boolean condition = evaluator.condition(injectField.condition(), methodKey, evaluationContext);
                     if (condition) {
-                        Object value = evaluator.value(injectField.value(), methodKey, evaluationContext);
-                        ReflectionUtils.setField(field, request, value);
+                        Object value = null;
+                        try {
+                            value = evaluator.value(injectField.value(), methodKey, evaluationContext);
+                            ReflectionUtils.setField(field, request, value);
+                        } catch (Exception e) {
+                            log.debug("参数注入失败 {}", injectField.value(), e);
+                        }
+
                     }
                 });
         evaluationContext.setVariable(REQUEST_OBJECT_VARIABLE, null);
@@ -433,8 +440,9 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
             if (condition) {
                 args[i] = evaluator.value(injectField.value(), methodKey, evaluationContext);
             }
+            evaluationContext.setVariable(CURRENT_VALUE_VARIABLE, null);
         }
-        evaluationContext.setVariable(CURRENT_VALUE_VARIABLE, null);
+
     }
 
     /**
