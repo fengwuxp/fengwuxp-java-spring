@@ -7,7 +7,6 @@ public final class OrganizationCacheKeyConstant {
 
 
 
-
     //最大部门层级
     public static final String MAX_DEPARTMENT_LEVEL = "max.department.level";
 

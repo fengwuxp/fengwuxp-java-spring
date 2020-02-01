@@ -1,6 +1,8 @@
 package test.com.oak.rbac;
 
 import com.wuxp.api.helper.SpringContextHolder;
+import com.wuxp.basic.uuid.JdkUUIDGenerateStrategy;
+import com.wuxp.basic.uuid.UUIDGenerateStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -78,4 +80,9 @@ public class TestConfig {
         return new SpringContextHolder();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public UUIDGenerateStrategy uuidGenerateStrategy() {
+        return new JdkUUIDGenerateStrategy();
+    }
 }

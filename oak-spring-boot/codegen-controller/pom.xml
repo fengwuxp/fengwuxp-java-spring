@@ -24,6 +24,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.wuxp.basic</groupId>
             <artifactId>fengwuxp-java-basic</artifactId>

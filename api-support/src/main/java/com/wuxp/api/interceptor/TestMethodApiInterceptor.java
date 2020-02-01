@@ -1,13 +1,11 @@
 package com.wuxp.api.interceptor;
 
-import com.esotericsoftware.reflectasm.FieldAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import com.wuxp.api.ApiRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -16,6 +14,9 @@ import java.util.Objects;
 
 import static com.wuxp.api.ApiRequest.*;
 
+/**
+ * 用于测试方法拦截
+ */
 @Slf4j
 public class TestMethodApiInterceptor extends ApiAspectSupport implements MethodInterceptor, Serializable {
 

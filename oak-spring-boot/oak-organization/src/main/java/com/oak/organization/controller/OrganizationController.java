@@ -1,6 +1,10 @@
 package com.oak.organization.controller;
 
+import com.oak.organization.constant.OrganizationApiLogTypeConstant;
+import com.oak.organization.management.organization.OrganizationManagementService;
+import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.log.ApiLog;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrganizationController {
 
 
+    private OrganizationManagementService organizationManagementService;
+
+
     @RequestMapping("/create")
-    public ApiResp<Long> create() {
+    @ApiLog(value = "'创建机构，名称['+#req.name+']'", type = OrganizationApiLogTypeConstant.机构)
+    public ApiResp<Long> create(RegisterOrganizationReq req) {
 
 
-        return RestfulApiRespFactory.ok();
+        return organizationManagementService.registerOrganization(req);
     }
 
 }

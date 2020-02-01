@@ -19,4 +19,9 @@ public interface OrganizationManagementService {
     ApiResp<Long> registerOrganization(RegisterOrganizationReq req);
 
 
+
+
+
+
+
 }

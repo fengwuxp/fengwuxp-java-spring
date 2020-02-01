@@ -3,7 +3,6 @@ package com.wuxp.api.interceptor;
 import com.wuxp.api.ApiRequest;
 import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ClassUtils;
 
 import javax.validation.constraints.*;
 import java.lang.annotation.Annotation;

@@ -53,7 +53,7 @@ public class OrganizationManagementServiceImpl implements OrganizationManagement
             return RestfulApiRespFactory.error(createOrganizationResp.getMessage());
         }
 
-        // 创建rabc 关联账号
+        // 创建rbac 关联账号
         CreateOakAdminUserReq createOakAdminUserReq = new CreateOakAdminUserReq();
         createOakAdminUserReq.setMobilePhone(req.getMobilePhone())
                 .setName(req.getContacts())

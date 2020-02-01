@@ -1,7 +1,13 @@
 package com.wuxp.basic.uuid;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.UUID;
 
+/**
+ * 基于jdk的uuid生成策略
+ */
+@Slf4j
 public class JdkUUIDGenerateStrategy implements UUIDGenerateStrategy {
     public JdkUUIDGenerateStrategy() {
     }

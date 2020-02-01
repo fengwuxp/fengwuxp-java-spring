@@ -1,18 +1,17 @@
 package com.wuxp.api.interceptor;
 
-import com.esotericsoftware.reflectasm.FieldAccess;
 import com.wuxp.api.ApiRequest;
 import com.wuxp.api.context.ApiRequestContextFactory;
 import com.wuxp.api.context.InjectField;
 import com.wuxp.api.log.ApiLog;
 import com.wuxp.api.log.ApiLogModel;
 import com.wuxp.api.log.ApiLogRecorder;
+import com.wuxp.api.log.SimpleApiAction;
 import com.wuxp.api.signature.*;
 import com.wuxp.basic.utils.IpAddressUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
@@ -303,6 +302,10 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         //使用异步队列记录日志
         this.threadPoolTaskScheduler.execute(() -> {
             ApiLogModel apiLogModel = genApiLogModel(apiLog, httpServletRequest, apiOperationMetadata, evaluationContext);
+            SimpleApiAction simpleApiAction = SimpleApiAction.valueOfByMethod(method);
+            if (simpleApiAction != null) {
+                apiLogModel.setAction(simpleApiAction.name());
+            }
             ApiAspectSupport.this.apiLogRecorder.log(apiLogModel, evaluationContext, throwable);
         });
     }
@@ -406,13 +409,15 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                             value = evaluator.value(injectField.value(), methodKey, evaluationContext);
                             ReflectionUtils.setField(field, request, value);
                         } catch (Exception e) {
-                            log.debug("参数注入失败 {}", injectField.value(), e);
+                            if (log.isDebugEnabled()) {
+                                log.debug("参数注入失败 {}", injectField.value(), e);
+                            }
                         }
-
                     }
+                    evaluationContext.setVariable(CURRENT_VALUE_VARIABLE, null);
                 });
         evaluationContext.setVariable(REQUEST_OBJECT_VARIABLE, null);
-        evaluationContext.setVariable(CURRENT_VALUE_VARIABLE, null);
+
     }
 
 
