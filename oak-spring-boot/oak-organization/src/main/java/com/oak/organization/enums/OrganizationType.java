@@ -11,9 +11,18 @@ public enum OrganizationType implements DescriptiveEnum {
     @Desc("平台")
     PLATFORM,
 
-    @Desc("代理商")
-    AGENT,
+    @Desc("服务商")
+    OEM,
 
-    @Desc("企业")
-    ENTERPRISE
+    @Desc("一级代理商")
+    FIRST_AGENT,
+
+    @Desc("二级代理商")
+    SECOND_AGENT,
+
+    @Desc("三级代理商")
+    THIRD_AGETN,
+
+    @Desc("商户")
+    MERCHANT
 }
