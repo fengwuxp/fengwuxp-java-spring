@@ -4,6 +4,7 @@ package test.com.oak.organization;
 import com.oak.codegen.ServiceModelUtil;
 import com.oak.organization.entities.Department;
 import com.oak.organization.entities.Organization;
+import com.oak.organization.entities.OrganizationExtendedInfo;
 import com.oak.organization.entities.Staff;
 import com.oak.organization.services.organization.info.OrganizationInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +29,10 @@ public class OakSpringCodeGeneratorTest {
             log.debug("删除原有的输出目录{}", delete);
         }
 
-        String basePackageName = "com.oak.organization.services.staff";
+        String basePackageName = "com.oak.organization.services.organizationextendedinfo";
 
         Map<String, Class> entityMapping = new HashMap<>();
         entityMapping.put("organization", OrganizationInfo.class);
-        ServiceModelUtil.entity2ServiceModel(Staff.class, entityMapping, basePackageName, targetFilePath);
+        ServiceModelUtil.entity2ServiceModel(OrganizationExtendedInfo.class, entityMapping, basePackageName, targetFilePath);
     }
 }

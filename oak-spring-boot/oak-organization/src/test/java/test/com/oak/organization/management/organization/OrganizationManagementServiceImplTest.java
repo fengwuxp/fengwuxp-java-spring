@@ -3,6 +3,7 @@ package test.com.oak.organization.management.organization;
 import com.github.javafaker.Faker;
 import com.oak.organization.enums.OrganizationType;
 import com.oak.organization.management.organization.OrganizationManagementService;
+import com.oak.organization.management.organization.req.AddOrganizationReq;
 import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
@@ -66,5 +67,22 @@ public class OrganizationManagementServiceImplTest {
 
     }
 
+    @Test
+    public void testAddOrganization() throws Exception {
 
+        AddOrganizationReq req = new AddOrganizationReq();
+        req.setAddress(faker.address().streetAddress())
+                .setContacts(faker.name().name())
+                .setMobilePhone(RandomStringUtils.randomAlphanumeric(11))
+                .setOrganizationType(OrganizationType.OEM)
+                .setAreaId("350102")
+                .setRemark("测试")
+                .setPassword("543210")
+                .setAreaName("鼓楼区")
+                .setName(faker.name().name());
+        ApiResp<Long> resp = organizationManagementService.addOrganization(req);
+
+        Assert.assertTrue(resp.getMessage(), resp.isSuccess());
+
+    }
 }
