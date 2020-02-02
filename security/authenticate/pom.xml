@@ -30,6 +30,13 @@
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
+            <artifactId>fengwuxp-security-jwt</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wuxp.security</groupId>
             <artifactId>fengwuxp-security-social</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>

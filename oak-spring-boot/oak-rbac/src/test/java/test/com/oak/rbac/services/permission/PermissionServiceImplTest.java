@@ -102,6 +102,7 @@ public class PermissionServiceImplTest {
     public void testQueryPermission() throws Exception {
 
         QueryPermissionReq req = new QueryPermissionReq();
+        req.setLikeName("test");
         Pagination<PermissionInfo> pagination = permissionService.queryPermission(req);
         log.debug("测试查询权限数据:{}", pagination);
     }

@@ -1,5 +1,6 @@
 package com.oak.rbac.services.permission.req;
 
+import com.levin.commons.dao.annotation.Like;
 import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.rbac.enums.PermissionValueType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +20,7 @@ public class QueryPermissionReq extends ApiBaseQueryReq {
     private String name;
 
     @Schema(description = "名称模糊查询")
+    @Like(value = "name")
     private String likeName;
 
     @Schema(description = "资源标识")

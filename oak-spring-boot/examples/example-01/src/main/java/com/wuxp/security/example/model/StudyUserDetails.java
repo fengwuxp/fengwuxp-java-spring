@@ -19,6 +19,12 @@ public class StudyUserDetails implements UserDetails {
 
     private String password;
 
+    // 访问token
+    private String accessToken;
+
+    // 刷新token
+    private String refreshToken;
+
     private List<GrantedAuthority> authorities;
 
     public StudyUserDetails(String username, String password) {

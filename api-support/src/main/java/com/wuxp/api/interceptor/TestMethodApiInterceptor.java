@@ -18,7 +18,7 @@ import static com.wuxp.api.ApiRequest.*;
  * 用于测试方法拦截
  */
 @Slf4j
-public class TestMethodApiInterceptor extends ApiAspectSupport implements MethodInterceptor, Serializable {
+public class TestMethodApiInterceptor extends ApiAspectSupport implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {

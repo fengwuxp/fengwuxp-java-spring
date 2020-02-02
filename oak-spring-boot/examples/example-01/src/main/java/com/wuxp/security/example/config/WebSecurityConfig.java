@@ -2,6 +2,7 @@ package com.wuxp.security.example.config;
 
 import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
+import com.wuxp.security.authenticate.JwtAuthenticationFilter;
 import com.wuxp.security.authenticate.PasswordAuthenticationProvider;
 import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
 import com.wuxp.security.authenticate.form.FormAuthenticationFailureHandler;
@@ -31,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 //    @Autowired
 //    private MockAuthoritySecurityInterceptor mockAuthoritySecurityInterceptor;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
     //实现权限拦截
@@ -123,7 +128,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and()
+                // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 
