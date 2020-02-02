@@ -36,7 +36,9 @@ public class SecurityContextAuthorizationRequestFilter extends OncePerRequestFil
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String authorizationToken = request.getHeader(tokenHeaderName);
-        log.info("加载spring security context {}", authorizationToken);
+        if (logger.isDebugEnabled()) {
+            log.debug("加载spring security context {}", authorizationToken);
+        }
         if (StringUtils.hasText(authorizationToken)) {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationToken);

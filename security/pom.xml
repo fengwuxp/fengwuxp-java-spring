@@ -24,7 +24,6 @@
 
     <modules>
         <module>authenticate</module>
-        <module>examples</module>
         <module>captcha</module>
         <module>social</module>
         <module>authority</module>

@@ -31,6 +31,7 @@
     </properties>
 
     <modules>
+        <module>examples</module>
         <module>oak-api-support</module>
         <module>oak-rbac</module>
         <module>oak-spring-codegen</module>

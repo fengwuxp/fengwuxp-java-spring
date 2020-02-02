@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>fengwuxp-security-examples</artifactId>
-        <groupId>com.wuxp.security</groupId>
+        <artifactId>oaknt-examples</artifactId>
+        <groupId>com.oak.springboot</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fengwuxp-security-example-01</artifactId>
+    <artifactId>oaknt-example-01</artifactId>
 
 
     <dependencies>
