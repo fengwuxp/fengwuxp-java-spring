@@ -2,9 +2,8 @@ package com.oak.api.services.infoprovide;
 
 
 import com.oak.api.services.infoprovide.info.AreaInfo;
-import com.oak.api.services.infoprovide.req.EditAreaReq;
-import com.oak.api.services.infoprovide.req.FindAreaReq;
-import com.oak.api.services.infoprovide.req.QueryAreaReq;
+import com.oak.api.services.infoprovide.info.ClientChannelInfo;
+import com.oak.api.services.infoprovide.req.*;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 
@@ -15,6 +14,9 @@ public interface InfoProvideService {
 
     String AREA_CACHE_NAME = "AREA_CACHE";
 
+
+    String CLIENT_CHANNEL_CACHE_NAME = "CLIENT_CHANNEL_CACHE";
+
     /**
      * 地区查询
      *
@@ -23,9 +25,23 @@ public interface InfoProvideService {
      */
     Pagination<AreaInfo> queryArea(QueryAreaReq req);
 
-
     AreaInfo findAreaById(FindAreaReq req);
 
-
+    /**
+     * 编辑地区
+     *
+     * @param req
+     * @return
+     */
     ApiResp<Void> editArea(EditAreaReq req);
+
+
+    Pagination<ClientChannelInfo> queryClientChannel(QueryClientChannelReq req);
+
+    ClientChannelInfo findClientChannelById(FindClientChannelReq req);
+
+    ApiResp<String> createClientChannel(CreateClientChannelReq req);
+
+    ApiResp<Void> editClientChannel(EditClientChannelReq req);
+
 }

@@ -38,8 +38,8 @@ public class AppAuthServiceImpl implements AppAuthService {
         BeanUtils.copyProperties(req, authAccount);
         authAccount.setAppId(req.getAppId());
         authAccount.setAppSecret(req.getAppSecret());
-        authAccount.setAddTime(new Date());
-        authAccount.setUpdateTime(authAccount.getAddTime());
+        authAccount.setCreateTime(new Date());
+        authAccount.setUpdateTime(authAccount.getCreateTime());
         authAccount.setDeleted(false);
         jpaDao.create(authAccount);
 
@@ -60,7 +60,8 @@ public class AppAuthServiceImpl implements AppAuthService {
             updateDao.appendColumn(E_AppAuthAccount.appSecret, req.getAppSecret());
         }
         int c = updateDao
-                .appendWhereEquals("id", req.getId())
+                .appendColumn(E_AppAuthAccount.updateTime, new Date())
+                .eq(E_AppAuthAccount.id, req.getId())
                 .update();
 
         return c >= 1;

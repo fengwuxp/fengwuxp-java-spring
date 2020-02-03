@@ -26,6 +26,7 @@ public class Cache implements java.io.Serializable {
     @Lob
     private String value;
 
+
     @Schema(description = "更新时间")
     @Column(name = "update_time", nullable = false, length = 19)
     @Temporal(TemporalType.TIMESTAMP)

@@ -1,5 +1,6 @@
 package com.oak.api.entities;
 
+import com.levin.commons.service.domain.Desc;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -48,10 +49,10 @@ public class AppAuthAccount implements java.io.Serializable {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
 
-    @Schema(name = "addTime", description = "创建日期")
-    @Column(name = "add_time", nullable = false, length = 19)
+    @Desc(value = "创建日期")
+    @Column(name = "create_time", nullable = false, length = 19)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date addTime;
+    private Date createTime;
 
     @Schema(name = "updateTime", description = "更新日期")
     @Column(name = "update_time", nullable = false, length = 19)

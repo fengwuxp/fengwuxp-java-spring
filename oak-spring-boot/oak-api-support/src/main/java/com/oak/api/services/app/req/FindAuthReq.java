@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 @Schema(description = "find接入账号")
 public class FindAuthReq extends ApiBaseReq {
 
-//    @Schema(name = "fromCache", description = "是否使用缓存")
-//    protected Boolean fromCache = true;
 
     @Schema(name = "appId", description = "appId")
     @NotNull

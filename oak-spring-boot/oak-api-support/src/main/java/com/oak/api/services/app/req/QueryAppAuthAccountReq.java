@@ -36,11 +36,6 @@ public class QueryAppAuthAccountReq extends ApiBaseQueryReq {
     @Schema(name = "deleted", description = "是否删除")
     private Boolean deleted;
 
-    @Schema(name = "addTime", description = "创建日期")
-    private Date addTime;
-
-    @Schema(name = "updateTime", description = "更新日期")
-    private Date updateTime;
 
     public QueryAppAuthAccountReq() {
     }

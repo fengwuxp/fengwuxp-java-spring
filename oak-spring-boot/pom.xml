@@ -38,6 +38,8 @@
         <module>codegen-controller</module>
         <module>oak-admin-starter</module>
         <module>oak-organization</module>
+        <module>oak-member</module>
+        <module>oak-cms</module>
     </modules>
 
     <dependencies>

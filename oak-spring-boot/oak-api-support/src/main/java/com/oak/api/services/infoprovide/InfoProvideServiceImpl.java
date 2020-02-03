@@ -5,12 +5,15 @@ import com.levin.commons.dao.Converter;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.SelectDao;
 import com.levin.commons.dao.UpdateDao;
+import com.oak.api.entities.AppAuthAccount;
+import com.oak.api.entities.E_AppAuthAccount;
 import com.oak.api.entities.system.Area;
+import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.entities.system.E_Area;
+import com.oak.api.helper.SimpleCommonDaoHelper;
 import com.oak.api.services.infoprovide.info.AreaInfo;
-import com.oak.api.services.infoprovide.req.EditAreaReq;
-import com.oak.api.services.infoprovide.req.FindAreaReq;
-import com.oak.api.services.infoprovide.req.QueryAreaReq;
+import com.oak.api.services.infoprovide.info.ClientChannelInfo;
+import com.oak.api.services.infoprovide.req.*;
 import com.oak.api.helper.SettingValueHelper;
 import com.oak.api.model.PageInfo;
 import com.wuxp.api.ApiResp;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.oak.api.model.ApiBaseQueryReq.TABLE_ALIAS;
@@ -171,6 +175,58 @@ public class InfoProvideServiceImpl implements InfoProvideService {
         int update = updateDao.update();
         if (update < 1) {
             return RestfulApiRespFactory.error("更新Area失败");
+        }
+
+        return RestfulApiRespFactory.ok();
+    }
+
+    @Caching(cacheable = {
+            @Cacheable(value = CLIENT_CHANNEL_CACHE_NAME,
+                    key = "#req.code()",
+                    condition = "#req.code != null",
+                    unless = "#result.empty"),
+    })
+    @Override
+    public Pagination<ClientChannelInfo> queryClientChannel(QueryClientChannelReq req) {
+        return SimpleCommonDaoHelper.queryObject(jpaDao, ClientChannel.class, ClientChannelInfo.class, req);
+    }
+
+    @Caching(cacheable = {
+            @Cacheable(value = CLIENT_CHANNEL_CACHE_NAME,
+                    key = "#req.code()",
+                    condition = "#req.code != null",
+                    unless = "#result!=null"),
+    })
+    @Override
+    public ClientChannelInfo findClientChannelById(FindClientChannelReq req) {
+        return this.queryClientChannel(new QueryClientChannelReq(req.getCode())).getFirst();
+    }
+
+    @Override
+    public ApiResp<String> createClientChannel(CreateClientChannelReq req) {
+
+        ClientChannel clientChannel = new ClientChannel();
+        BeanUtils.copyProperties(req, clientChannel);
+        clientChannel.setCreateTime(new Date());
+        clientChannel.setUpdateTime(clientChannel.getCreateTime());
+        jpaDao.create(clientChannel);
+
+        return RestfulApiRespFactory.created(clientChannel.getCode());
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = CLIENT_CHANNEL_CACHE_NAME, key = "#req.code"),
+    })
+    @Override
+    public ApiResp<Void> editClientChannel(EditClientChannelReq req) {
+        UpdateDao<ClientChannel> updateDao = jpaDao.updateTo(ClientChannel.class)
+                .appendByQueryObj(req);
+
+        int update = updateDao
+                .appendColumn(E_AppAuthAccount.updateTime, new Date())
+                .update();
+        if (update < 1) {
+            return RestfulApiRespFactory.error("更新客户端渠道失败");
         }
 
         return RestfulApiRespFactory.ok();
