@@ -101,13 +101,17 @@ public class CacheExampleImplTest {
     @Test
     public void testGetValueByCache() throws Exception {
 
-        String test1 = cacheExample.getValueByCache("test");
-        String test2 = cacheExample.getValueByCache("test");
-        String test3 = cacheExample.getValueByCache("test");
-        String test4 = cacheExample.getValue("test");
-        String test5 = cacheExample.getValue("test");
-        log.info("{}  {}  {}  {} {}", test1, test2, test3, test4, test5);
+//        String test1 = cacheExample.getValueByCache("test");
+//        String test2 = cacheExample.getValueByCache("test");
+//        String test3 = cacheExample.getValueByCache("test");
+//        String test4 = cacheExample.getValue("test");
+//        String test5 = cacheExample.getValue("test");
+//        log.info("{}  {}  {}  {} {}", test1, test2, test3, test4, test5);
 
+        String test4 = cacheExample.getValue("test", true);
+        String test5 = cacheExample.getValue("test", false);
+        String test6 = cacheExample.getValue("test", true);
+        log.info("{}  {}  {}  ", test4, test5, test6);
 
     }
 
