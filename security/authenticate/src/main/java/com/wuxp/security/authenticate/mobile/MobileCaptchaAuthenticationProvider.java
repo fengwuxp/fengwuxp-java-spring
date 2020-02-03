@@ -42,6 +42,7 @@ public class MobileCaptchaAuthenticationProvider implements AuthenticationProvid
      * @return
      * @throws AuthenticationException
      */
+    @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         MobileCaptchaAuthenticationToken authenticationToken = (MobileCaptchaAuthenticationToken) authentication;
         String mobilePhone = (String) authentication.getPrincipal();
@@ -69,6 +70,7 @@ public class MobileCaptchaAuthenticationProvider implements AuthenticationProvid
         return authenticationResult;
     }
 
+    @Override
     public boolean supports(Class<?> authentication) {
         return MobileCaptchaAuthenticationToken.class.isAssignableFrom(authentication);
     }

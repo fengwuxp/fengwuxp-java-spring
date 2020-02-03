@@ -37,6 +37,7 @@ public class MobileCaptchaAuthenticationFilter extends AbstractAuthenticationPro
      * @return
      * @throws AuthenticationException
      */
+    @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws AuthenticationException {
         if (postOnly && !httpServletRequest.getMethod().equals(HttpMethod.POST.name())) {
