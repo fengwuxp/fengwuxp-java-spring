@@ -11,9 +11,9 @@ import static test.com.oak.rbac.cache.CacheExample.EXAMPLE_CACHE_NAME;
 @Slf4j
 public class CacheExampleImpl implements CacheExample {
 
-    @Cacheable(value =EXAMPLE_CACHE_NAME, key = "#key", condition = "#key!=null")
+    @Cacheable(value =EXAMPLE_CACHE_NAME, key = "#key", condition = "#formCache")
     @Override
-    public String getValue(String key) {
+    public String getValue(String key,boolean formCache) {
         String value = RandomStringUtils.randomAlphabetic(32);
         log.info("key = {} , value = {}", key, value);
         return value;
@@ -21,7 +21,7 @@ public class CacheExampleImpl implements CacheExample {
 
     @Override
     public String getValueByCache(String key) {
-        return getValue(key);
+        return getValue(key,true);
     }
 }
 

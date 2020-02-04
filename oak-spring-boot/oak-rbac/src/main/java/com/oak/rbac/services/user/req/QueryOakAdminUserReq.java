@@ -60,14 +60,8 @@ public class QueryOakAdminUserReq extends ApiBaseQueryReq {
     @Like(value = E_OakAdminUser.name)
     private String likeName;
 
-    @Schema(description = "排序代码")
-    private Integer orderCode;
-
     @Schema(description = "是否允许")
     private Boolean enable;
-
-    @Schema(description = "是否可编辑")
-    private Boolean editable;
 
     @Schema(description = "最小创建时间")
     @Gte("createTime")
