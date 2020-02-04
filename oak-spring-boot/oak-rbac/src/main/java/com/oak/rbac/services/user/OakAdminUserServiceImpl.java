@@ -2,22 +2,26 @@ package com.oak.rbac.services.user;
 
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.UpdateDao;
-import com.oak.api.helper.SettingValueHelper;
 import com.oak.api.helper.SimpleCommonDaoHelper;
 import com.oak.rbac.entities.E_OakAdminUser;
-import com.wuxp.basic.uuid.UUIDGenerateStrategy;
-import org.springframework.beans.BeanUtils;
+import com.oak.rbac.entities.OakAdminUser;
+import com.oak.rbac.services.user.info.OakAdminUserInfo;
+import com.oak.rbac.services.user.req.CreateOakAdminUserReq;
+import com.oak.rbac.services.user.req.DeleteOakAdminUserReq;
+import com.oak.rbac.services.user.req.EditOakAdminUserReq;
+import com.oak.rbac.services.user.req.QueryOakAdminUserReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
+import com.wuxp.api.restful.RestfulApiRespFactory;
+import com.wuxp.basic.uuid.UUIDGenerateStrategy;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.wuxp.api.restful.RestfulApiRespFactory;
-import com.oak.rbac.entities.OakAdminUser;
-import com.oak.rbac.services.user.req.*;
-import com.oak.rbac.services.user.info.OakAdminUserInfo;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -31,6 +35,7 @@ import java.util.Date;
 @Slf4j
 public class OakAdminUserServiceImpl implements OakAdminUserService {
 
+    private final String ADMIN_USER_CACHE_NAME = "ADMIN_USER_CACHE_NAME";
 
     @Autowired
     private JpaDao jpaDao;
@@ -77,6 +82,7 @@ public class OakAdminUserServiceImpl implements OakAdminUserService {
         return RestfulApiRespFactory.ok(entity);
     }
 
+    @CachePut(value = ADMIN_USER_CACHE_NAME, key = "#req.id", condition = "#result.success")
     @Override
     public ApiResp<Void> edit(EditOakAdminUserReq req) {
 
@@ -146,4 +152,15 @@ public class OakAdminUserServiceImpl implements OakAdminUserService {
         return SimpleCommonDaoHelper.queryObject(jpaDao, OakAdminUser.class, OakAdminUserInfo.class, req);
 
     }
+
+
+    @Cacheable(value = ADMIN_USER_CACHE_NAME, key = "#token", unless = "#result==null")
+    @Override
+    public OakAdminUserInfo findByToken(String token) {
+        QueryOakAdminUserReq queryReq = new QueryOakAdminUserReq();
+        queryReq.setToken(token);
+        queryReq.setTokenExpired(new Date());
+        return query(queryReq).getFirst();
+    }
+
 }

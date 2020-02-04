@@ -1,11 +1,13 @@
 package com.oak.rbac.services.user;
 
 import com.oak.rbac.entities.OakAdminUser;
+import com.oak.rbac.services.user.info.OakAdminUserInfo;
+import com.oak.rbac.services.user.req.CreateOakAdminUserReq;
+import com.oak.rbac.services.user.req.DeleteOakAdminUserReq;
+import com.oak.rbac.services.user.req.EditOakAdminUserReq;
+import com.oak.rbac.services.user.req.QueryOakAdminUserReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
-import io.swagger.v3.oas.annotations.media.Schema;
-import com.oak.rbac.services.user.req.*;
-import com.oak.rbac.services.user.info.OakAdminUserInfo;
 
 
 
@@ -30,4 +32,10 @@ public interface OakAdminUserService {
 
     Pagination<OakAdminUserInfo> query(QueryOakAdminUserReq req);
 
+    /**
+     * 通过token获取账号信息
+     * @param token
+     * @return
+     */
+    OakAdminUserInfo findByToken(String token);
 }

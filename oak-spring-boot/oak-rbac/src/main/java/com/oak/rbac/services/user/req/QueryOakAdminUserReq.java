@@ -1,12 +1,15 @@
 package com.oak.rbac.services.user.req;
 
+import com.levin.commons.dao.annotation.Gte;
+import com.levin.commons.dao.annotation.Like;
+import com.levin.commons.dao.annotation.Lte;
 import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.rbac.entities.E_OakAdminUser;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
-import com.levin.commons.dao.annotation.misc.Fetch;
 
 import java.util.Date;
 
@@ -73,6 +76,13 @@ public class QueryOakAdminUserReq extends ApiBaseQueryReq {
     @Schema(description = "最大创建时间")
     @Lte("createTime")
     private Date maxCreateTime;
+
+    @Schema(description = "登录token")
+    private String token;
+
+    @Schema(description = "token失效时间")
+    @Gte("tokenExpired")
+    private Date tokenExpired;
 
     public QueryOakAdminUserReq() {
     }
