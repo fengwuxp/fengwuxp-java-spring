@@ -63,8 +63,6 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
 
         LoginEnvironmentContext loginEnvironmentContext = loginEnvironmentHolder.getContextAndIncreaseFailureCount(request);
 
-
-
         int failureCount = loginEnvironmentContext.getFailureCount();
         if (failureCount >= loginFailureThreshold) {
             // 锁定该账户

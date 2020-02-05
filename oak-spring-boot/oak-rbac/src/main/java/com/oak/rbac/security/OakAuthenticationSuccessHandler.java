@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.oak.rbac.services.user.OakAdminUserService;
 import com.oak.rbac.services.user.req.EditOakAdminUserReq;
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.exception.AssertThrow;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,16 +20,17 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @Slf4j
 @Setter
 public class OakAuthenticationSuccessHandler implements AuthenticationSuccessHandler, BeanFactoryAware, InitializingBean {
 
-    private PasswordLoginEnvironmentHolder loginEnvironmentHolder;
 
     private BeanFactory beanFactory;
 
-    @Autowired
+    private PasswordLoginEnvironmentHolder loginEnvironmentHolder;
+
     private OakAdminUserService oakAdminUserService;
 
     @Override
@@ -40,16 +42,15 @@ public class OakAuthenticationSuccessHandler implements AuthenticationSuccessHan
             log.debug("登录成功 {}", authentication);
         }
 
-        OakUser details = (OakUser) authentication.getDetails();
+        OakUser principal = (OakUser) authentication.getPrincipal();
 
         EditOakAdminUserReq editOakAdminUserReq = new EditOakAdminUserReq();
-        editOakAdminUserReq.setId(details.getId())
-                .setToken(details.getToken())
-                .setTokenExpired(details.getTokenExpired());
+        editOakAdminUserReq.setId(principal.getId())
+                .setToken(principal.getToken())
+                .setTokenExpired(principal.getTokenExpired())
+                .setLastLoginTime(new Date());
         ApiResp<Void> editResp = oakAdminUserService.edit(editOakAdminUserReq);
-        if (!editResp.isSuccess()) {
-            throw new UsernameNotFoundException("更新用户登录状态失败");
-        }
+        AssertThrow.assertResp(editResp);
 
         loginEnvironmentHolder.remove(request);
         //返回Json数据
@@ -59,8 +60,13 @@ public class OakAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
     @Override
     public void afterPropertiesSet() throws Exception {
+
         if (this.loginEnvironmentHolder == null) {
             this.loginEnvironmentHolder = this.beanFactory.getBean(PasswordLoginEnvironmentHolder.class);
+        }
+
+        if (this.oakAdminUserService == null) {
+            this.oakAdminUserService = this.beanFactory.getBean(OakAdminUserService.class);
         }
     }
 }

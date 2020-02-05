@@ -51,4 +51,10 @@ public class OakUser extends User implements PasswordUserDetails {
     public OakUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
+
+    @Override
+    public void eraseCredentials() {
+        super.eraseCredentials();
+        this.cryptoSalt = null;
+    }
 }

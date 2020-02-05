@@ -80,6 +80,10 @@ public class EditOakAdminUserReq extends ApiBaseReq {
     @UpdateColumn
     private Date lockExpired;
 
+    @Schema(description = "最后登录时间")
+    @UpdateColumn
+    private Date lastLoginTime;
+
     public EditOakAdminUserReq() {
     }
 

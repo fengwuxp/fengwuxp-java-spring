@@ -41,6 +41,7 @@ public class PasswordAuthenticationProvider extends DaoAuthenticationProvider {
                         "AbstractUserDetailsAuthenticationProvider.badCredentials",
                         "Bad credentials"));
             }
+            return;
         }
 
         // 调用父类方法完成密码验证
