@@ -40,6 +40,7 @@
         <module>oak-organization</module>
         <module>oak-member</module>
         <module>oak-cms</module>
+        <module>oak-payment</module>
     </modules>
 
     <dependencies>
