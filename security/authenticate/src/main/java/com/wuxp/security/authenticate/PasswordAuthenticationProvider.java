@@ -2,10 +2,13 @@ package com.wuxp.security.authenticate;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
 /**
  * 使用密码登录方式鉴权提供者
@@ -28,6 +31,16 @@ public class PasswordAuthenticationProvider extends DaoAuthenticationProvider {
         //验证失败
         if (!captchaAuthenticationDetails.isVerificationPassed()) {
             throw new CaptchaException(captchaAuthenticationDetails.getErrorMessage());
+        }
+        if (userDetails instanceof PasswordUserDetails) {
+            PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder(((PasswordUserDetails) userDetails).getCryptoSalt());
+            Object presentedPassword = usernamePasswordAuthenticationToken.getCredentials();
+            if (!passwordEncoder.matches(presentedPassword.toString(), userDetails.getPassword())) {
+                logger.debug("Authentication failed: password does not match stored value");
+                throw new BadCredentialsException(messages.getMessage(
+                        "AbstractUserDetailsAuthenticationProvider.badCredentials",
+                        "Bad credentials"));
+            }
         }
 
         // 调用父类方法完成密码验证

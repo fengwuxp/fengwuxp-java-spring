@@ -17,7 +17,7 @@ public class FormLoginProperties {
     /**
      * 登录处理url
      */
-    private String loginProcessingUrl = "/do_login";
+    private String loginProcessingUrl = "/login";
 
     /**
      * 在登录失败多少次后需要验证码验证

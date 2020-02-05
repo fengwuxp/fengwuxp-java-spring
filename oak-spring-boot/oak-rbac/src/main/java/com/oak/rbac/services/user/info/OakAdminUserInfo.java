@@ -3,12 +3,7 @@ package com.oak.rbac.services.user.info;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-import com.levin.commons.service.domain.Desc;
 
-
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -82,5 +77,6 @@ public class OakAdminUserInfo implements Serializable {
     @Schema(description = "token失效时间")
     private Date tokenExpired;
 
-
+    @Schema(description = "账号锁定到期时间")
+    private Date lockExpired;
 }

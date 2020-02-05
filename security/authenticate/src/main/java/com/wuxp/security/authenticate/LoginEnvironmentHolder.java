@@ -25,4 +25,10 @@ public interface LoginEnvironmentHolder {
      */
     LoginEnvironmentContext getContextAndIncreaseFailureCount(HttpServletRequest request);
 
+    /***
+     * 移除登录上下文
+     * @param request
+     */
+    void remove(HttpServletRequest request);
+
 }

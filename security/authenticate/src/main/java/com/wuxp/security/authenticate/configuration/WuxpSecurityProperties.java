@@ -42,7 +42,7 @@ public class WuxpSecurityProperties {
     /**
      * 扫码登录
      */
-    private ScanCodeLoginProperties scanCode=new ScanCodeLoginProperties();
+    private ScanCodeLoginProperties scanCode = new ScanCodeLoginProperties();
 
     /**
      * 在一段时间内登录连续失败次数的阈值
@@ -51,12 +51,12 @@ public class WuxpSecurityProperties {
 
     /**
      * 连续登录失败的时间范围
-     * 例如：2个小时内连续登录登录失败N次后，账号将会被限制登录
+     * 例如：5个小时内连续登录登录失败N次后，账号将会被限制登录
      */
-    private Duration continuousLoginTimeRange = Duration.ofSeconds(7200);
+    private Duration continuousLoginTimeRange = Duration.ofHours(5);
 
     /**
      * 连续登录失败{@code loginThreshold}次数后，账号在一段时间内被禁止登陆
      */
-    private Duration limitLoginTimes = Duration.ofSeconds(7200);
+    private Duration limitLoginTimes = Duration.ofHours(2);
 }

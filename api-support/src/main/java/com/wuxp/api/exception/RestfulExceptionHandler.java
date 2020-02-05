@@ -5,6 +5,7 @@ import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.api.signature.ApiSignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -101,17 +102,17 @@ public class RestfulExceptionHandler {
         return RestfulApiRespFactory.error(exception.getMessage(), exception.getErrorCode());
     }
 
-//    /**
-//     * 处理权限判断异常
-//     *
-//     * @param exception
-//     * @return
-//     */
-//    @ExceptionHandler({AccessDeniedException.class})
-//    @ResponseBody
-//    public ApiResp<Void> handleAccessDeniedException(AccessDeniedException exception) {
-//        return RestfulApiRespFactory.error(exception.getMessage());
-//    }
+    /**
+     * 处理权限判断异常
+     *
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler({AccessDeniedException.class})
+    @ResponseBody
+    public ApiResp<Void> handleAccessDeniedException(AccessDeniedException exception) {
+        return RestfulApiRespFactory.error(exception.getMessage());
+    }
 
     /**
      * 处理所有异常

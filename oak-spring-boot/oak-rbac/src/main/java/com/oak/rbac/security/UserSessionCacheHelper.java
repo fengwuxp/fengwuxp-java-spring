@@ -1,6 +1,5 @@
-package com.wuxp.security.example.security;
+package com.oak.rbac.security;
 
-import com.wuxp.security.example.model.StudyUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -18,12 +17,12 @@ public class UserSessionCacheHelper {
 
 
     @Cacheable(value = {OAK_ADMIN_USER_CACHE_NAME}, key = "#token", condition = "#token!=null")
-    public StudyUserDetails get(String token) {
+    public OakUser get(String token) {
         return null;
     }
 
     @CachePut(value = {OAK_ADMIN_USER_CACHE_NAME}, key = "#token", condition = "#token!=null")
-    public StudyUserDetails join(String token, StudyUserDetails userDetails) {
+    public OakUser join(String token, OakUser userDetails) {
         return userDetails;
     }
 
