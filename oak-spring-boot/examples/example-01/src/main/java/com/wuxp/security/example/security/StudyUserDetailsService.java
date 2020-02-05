@@ -7,26 +7,28 @@ import com.oak.rbac.services.user.req.EditOakAdminUserReq;
 import com.oak.rbac.services.user.req.QueryOakAdminUserReq;
 import com.wuxp.security.example.constant.OakAdminUserConstant;
 import com.wuxp.security.example.model.StudyUserDetails;
+import com.wuxp.security.jwt.JwtTokenPair;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
 
 @Slf4j
-@Service
 public class StudyUserDetailsService implements UserDetailsService {
 
-    @Resource
+    @Autowired
     private OakAdminUserService oakAdminUserService;
 
-    private JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+    @Autowired
+    private UserSessionCacheHelper userSessionCacheHelper;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -48,18 +50,16 @@ public class StudyUserDetailsService implements UserDetailsService {
         if (adminUserInfo == null) {
             throw new UsernameNotFoundException(username);
         }
-        String token = jwtTokenProvider.generateAccessToken(username);
-        adminUserInfo.setToken(token);
-        //token失效时间
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.HOUR_OF_DAY, OakAdminUserConstant.LOGIN_TOKEN_VALID_HOUR);
-        adminUserInfo.setTokenExpired(calendar.getTime());
+        JwtTokenPair.JwtTokenPayLoad jwtTokenPayLoad = jwtTokenProvider.generateAccessToken(username);
+        adminUserInfo.setToken(jwtTokenPayLoad.getToken());
+        adminUserInfo.setTokenExpired(jwtTokenPayLoad.getTokenExpireTimes());
         EditOakAdminUserReq editOakAdminUserReq = new EditOakAdminUserReq();
         editOakAdminUserReq.setId(adminUserInfo.getId())
                 .setToken(adminUserInfo.getToken())
                 .setTokenExpired(adminUserInfo.getTokenExpired());
         oakAdminUserService.edit(editOakAdminUserReq);
-        return new StudyUserDetails(username, adminUserInfo.getPassword());
+        StudyUserDetails studyUserDetails = new StudyUserDetails(username, null);
+        userSessionCacheHelper.join(jwtTokenPayLoad.getToken(), studyUserDetails);
+        return studyUserDetails;
     }
 }

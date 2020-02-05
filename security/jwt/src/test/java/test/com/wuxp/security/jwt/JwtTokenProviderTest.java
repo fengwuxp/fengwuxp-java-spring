@@ -23,7 +23,7 @@ public class JwtTokenProviderTest {
     public void before() {
         JwtProperties properties = new JwtProperties();
 //        properties.setExpireTimeout(Duration.ofSeconds(1));
-        jwtTokenProvider.setProperties(properties);
+        jwtTokenProvider.setJwtProperties(properties);
     }
 
     @Test
@@ -33,12 +33,15 @@ public class JwtTokenProviderTest {
 
         Thread.sleep(2000);
 
-        Jws<Claims> parse = jwtTokenProvider.parse(jwtTokenPair.getAccessToken());
+        JwtTokenPair.JwtTokenPayLoad accessToken = jwtTokenPair.getAccessToken();
+        String token = accessToken.getToken();
+        Jws<Claims> parse = jwtTokenProvider.parse(token);
 
-        log.debug(parse.getBody().getAudience());
+        Claims body = parse.getBody();
+        log.debug(body.getAudience());
 
-        Assert.assertTrue("检查失败", jwtTokenProvider.check(jwtTokenPair.getAccessToken()));
-        Assert.assertTrue("检查失败", jwtTokenProvider.check(jwtTokenPair.getRefreshToken()));
+        Assert.assertTrue("检查失败", jwtTokenProvider.check(token));
+        Assert.assertTrue("检查失败", jwtTokenProvider.check(token));
 
     }
 

@@ -42,7 +42,7 @@ public class WuxpSecurityConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = JwtProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+//    @ConditionalOnMissingBean(JwtProperties.class)
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }

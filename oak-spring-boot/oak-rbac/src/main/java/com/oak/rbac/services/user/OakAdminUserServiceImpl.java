@@ -154,13 +154,6 @@ public class OakAdminUserServiceImpl implements OakAdminUserService {
     }
 
 
-    @Cacheable(value = ADMIN_USER_CACHE_NAME, key = "#token", unless = "#result==null")
-    @Override
-    public OakAdminUserInfo findByToken(String token) {
-        QueryOakAdminUserReq queryReq = new QueryOakAdminUserReq();
-        queryReq.setToken(token);
-        queryReq.setTokenExpired(new Date());
-        return query(queryReq).getFirst();
-    }
+
 
 }

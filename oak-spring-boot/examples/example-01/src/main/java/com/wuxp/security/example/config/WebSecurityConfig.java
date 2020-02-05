@@ -31,6 +31,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -124,7 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .accessDeniedHandler(new RequestUrlAccessDeniedHandler())
                 //匿名用户访问无权限资源时的异常处理
-                .authenticationEntryPoint(new RestfulAuthenticationEntryPoint("请先登陆"))
+                .authenticationEntryPoint(this.authenticationEntryPoint())
                 .and()
                 .authorizeRequests()
                 .anyRequest()
@@ -169,6 +170,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService studyUserDetailsService() {
         return new StudyUserDetailsService();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new RestfulAuthenticationEntryPoint("请先登陆");
     }
 
     @Bean

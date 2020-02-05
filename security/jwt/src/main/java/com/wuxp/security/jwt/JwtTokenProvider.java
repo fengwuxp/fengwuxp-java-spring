@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -50,25 +51,23 @@ public class JwtTokenProvider implements BeanFactoryAware, InitializingBean {
     /**
      * generate access token
      */
-    public String generateAccessToken(String userUniqueIdentifier) {
-        return spliceToken(jwtProperties.getHeaderPrefix(),
-                generateToken(
-                        jwtProperties.getSubject(),
-                        jwtProperties.getIssuer(),
-                        userUniqueIdentifier,
-                        jwtProperties.getExpireTimeout()));
+    public JwtTokenPair.JwtTokenPayLoad generateAccessToken(String userUniqueIdentifier) {
+        return generateToken(
+                jwtProperties.getSubject(),
+                jwtProperties.getIssuer(),
+                userUniqueIdentifier,
+                jwtProperties.getExpireTimeout());
     }
 
     /**
      * generate refresh token
      */
-    public String generateRefreshToken(String userUniqueIdentifier) {
-        return spliceToken(jwtProperties.getHeaderPrefix(),
-                generateToken(
-                        jwtProperties.getSubject(),
-                        jwtProperties.getIssuer(),
-                        userUniqueIdentifier,
-                        jwtProperties.getRefreshExpireTimeout()));
+    public JwtTokenPair.JwtTokenPayLoad generateRefreshToken(String userUniqueIdentifier) {
+        return generateToken(
+                jwtProperties.getSubject(),
+                jwtProperties.getIssuer(),
+                userUniqueIdentifier,
+                jwtProperties.getRefreshExpireTimeout());
     }
 
 
@@ -103,15 +102,19 @@ public class JwtTokenProvider implements BeanFactoryAware, InitializingBean {
     /**
      * generate token
      */
-    protected String generateToken(String subject, String issuer, String audience, Duration timeout) {
-        return Jwts.builder()
+    protected JwtTokenPair.JwtTokenPayLoad generateToken(String subject, String issuer, String audience, Duration timeout) {
+
+        Date expiration = Date.from(Instant.now().plusSeconds(timeout.getSeconds()));
+        String token = Jwts.builder()
                 .signWith(getKey())
                 .setSubject(subject)
                 .setIssuer(issuer)
                 .setIssuedAt(new Date())
                 .setAudience(audience)
-                .setExpiration(Date.from(Instant.now().plusSeconds(timeout.getSeconds())))
+                .setExpiration(expiration)
                 .compact();
+        token = spliceToken(jwtProperties.getHeaderPrefix(), token);
+        return new JwtTokenPair.JwtTokenPayLoad().setToken(token).setTokenExpireTimes(expiration);
     }
 
 

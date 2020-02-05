@@ -3,6 +3,8 @@ package com.wuxp.security.example.config;
 
 import com.wuxp.api.context.ApiRequestContextFactory;
 import com.wuxp.api.log.ApiLogRecorder;
+import com.wuxp.basic.uuid.JdkUUIDGenerateStrategy;
+import com.wuxp.basic.uuid.UUIDGenerateStrategy;
 import com.wuxp.security.example.advisor.OrderedAbstractBeanFactoryAwareAdvisingPostProcessor;
 import com.wuxp.security.example.context.MockApiRequestContextFactory;
 import com.wuxp.security.example.log.MockApiLogRecorder;
@@ -72,11 +74,12 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
         return new MockApiRequestContextFactory();
     }
 
-    @Bean
-    public ApiLogRecorder apiLogRecorder() {
-
-        return new MockApiLogRecorder();
-    }
+//    @Bean
+//    @ConditionalOnMissingBean(ApiLogRecorder.class)
+//    public ApiLogRecorder apiLogRecorder() {
+//
+//        return new MockApiLogRecorder();
+//    }
 
     @Bean
     public CacheManager cacheManager() {
@@ -88,6 +91,11 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 //    public ApiSignatureStrategy apiSignatureStrategy() {
 //        return new MD5ApiSignatureStrategy(new MockAppInfoStore());
 //    }
+
+    @Bean
+    public UUIDGenerateStrategy uuidGenerateStrategy() {
+        return new JdkUUIDGenerateStrategy();
+    }
 
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {

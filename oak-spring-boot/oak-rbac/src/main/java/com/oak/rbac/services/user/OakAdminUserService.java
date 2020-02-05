@@ -32,10 +32,4 @@ public interface OakAdminUserService {
 
     Pagination<OakAdminUserInfo> query(QueryOakAdminUserReq req);
 
-    /**
-     * 通过token获取账号信息
-     * @param token
-     * @return
-     */
-    OakAdminUserInfo findByToken(String token);
 }
