@@ -31,8 +31,6 @@ public class SimpleAuthenticationFailureHandler implements AuthenticationFailure
         map.put("message", exception.getMessage());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-//        String s = mapper.writeValueAsString(map);
-//        log.info("{}",s);
         response.getWriter().write(mapper.writeValueAsString(map));
     }
 }

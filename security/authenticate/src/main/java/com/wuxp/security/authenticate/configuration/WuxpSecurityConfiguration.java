@@ -3,10 +3,8 @@ package com.wuxp.security.authenticate.configuration;
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.JwtAuthenticationFilter;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
-import com.wuxp.security.authenticate.handlers.WuxpAuthenticationSuccessHandler;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaAuthenticationFailureHandler;
 import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationFailureHandler;
-import com.wuxp.security.jwt.JwtProperties;
 import com.wuxp.security.openid.SocialOpenIdAuthenticationFailureHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -47,12 +45,7 @@ public class WuxpSecurityConfiguration {
         return new JwtAuthenticationFilter();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(AuthenticationSuccessHandler.class)
-    public WuxpAuthenticationSuccessHandler wuxpAuthenticationSuccessHandler() {
 
-        return new WuxpAuthenticationSuccessHandler();
-    }
 
     @Bean
     @ConditionalOnMissingBean(MobileCaptchaAuthenticationFailureHandler.class)

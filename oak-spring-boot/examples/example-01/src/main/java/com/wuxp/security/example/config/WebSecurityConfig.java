@@ -1,5 +1,7 @@
 package com.wuxp.security.example.config;
 
+import com.oak.rbac.security.OakSessionInformationExpiredStrategy;
+import com.oak.rbac.security.OakUserDetailsService;
 import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.JwtAuthenticationFilter;
@@ -13,12 +15,11 @@ import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationSecurityCon
 import com.wuxp.security.authority.url.RequestUrlAccessDecisionVoter;
 import com.wuxp.security.authority.url.RequestUrlAccessDeniedHandler;
 import com.wuxp.security.example.authority.MockFilterInvocationSecurityMetadataSource;
-import com.wuxp.security.example.security.StudyUserDetailsService;
-import com.wuxp.security.example.security.handlers.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
@@ -32,8 +33,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +59,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private ScanCodeAuthenticationSecurityConfig scanCodeAuthenticationSecurityConfig;
 
-//    @Autowired
-//    private MockAuthoritySecurityInterceptor mockAuthoritySecurityInterceptor;
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    //实现权限拦截
+    @Autowired
+    private OakSessionInformationExpiredStrategy oakSessionInformationExpiredStrategy;
+
+
+    // 实现权限拦截
     @Autowired
     private MockFilterInvocationSecurityMetadataSource securityMetadataSource;
 
@@ -75,7 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordAuthenticationProvider passwordAuthenticationProvider() {
         PasswordAuthenticationProvider passwordAuthenticationProvider = new PasswordAuthenticationProvider();
         passwordAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        passwordAuthenticationProvider.setUserDetailsService(studyUserDetailsService());
+        passwordAuthenticationProvider.setUserDetailsService(oakUserDetailsService());
         return passwordAuthenticationProvider;
     }
 
@@ -85,7 +94,37 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 配置登录页面
         FormLoginProperties formLoginProperties = wuxpSecurityProperties.getForm();
         http.csrf().disable()
+//                .cors()
+//                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(this.accessDeniedHandler())
+                //匿名用户访问无权限资源时的异常处理
+                .authenticationEntryPoint(this.authenticationEntryPoint())
+                .and()
+                .formLogin()
+                .permitAll()
+                .loginPage(formLoginProperties.getLoginPage())
+                .loginProcessingUrl(formLoginProperties.getLoginProcessingUrl())
+                .authenticationDetailsSource(authenticationDetailsAuthenticationDetailsSource)
+                .successHandler(this.authenticationSuccessHandler)
+                .failureHandler(this.formAuthenticationFailureHandler())
+                .and()
                 .authorizeRequests()
+                .antMatchers(
+                        // 登录路径
+                        formLoginProperties.getLoginPage(),
+                        formLoginProperties.getLoginProcessingUrl()
+                ).permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS)
+                .permitAll()
+                .and()
+                // 登出处理
+                .logout()
+                .permitAll()
+                .logoutSuccessHandler(logoutSuccessHandler())
+                .deleteCookies("JSESSIONID")
                 // url 权限检查
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
@@ -109,30 +148,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                    }
 //                })
                 .and()
-                .formLogin()
-                .loginPage(formLoginProperties.getLoginPage())
-                .loginProcessingUrl(formLoginProperties.getLoginProcessingUrl())
-                .authenticationDetailsSource(authenticationDetailsAuthenticationDetailsSource)
-                .permitAll()
-                .successHandler(new LoginSuccessHandler())
-                .failureHandler(new FormAuthenticationFailureHandler(wuxpSecurityProperties, passwordLoginEnvironmentHolder))
-                .and()
                 //添加扫码登录
-                .apply(scanCodeAuthenticationSecurityConfig).and()
-                .logout()
-                .permitAll()
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(new RequestUrlAccessDeniedHandler())
-                //匿名用户访问无权限资源时的异常处理
-                .authenticationEntryPoint(this.authenticationEntryPoint())
+                .apply(scanCodeAuthenticationSecurityConfig)
                 .and()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
                 .and()
                 // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement()
+                .maximumSessions(wuxpSecurityProperties.getMaximumSessions())
+                .expiredSessionStrategy(oakSessionInformationExpiredStrategy);
+
 
     }
 
@@ -146,7 +174,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/log/**",
                 "/version/**",
                 "/example/**",
-                "/login",
+//                "/login",
+//                "/do_login",
 
                 "/js/**",
                 "/css/**",
@@ -167,9 +196,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return NoOpPasswordEncoder.getInstance();
     }
 
+//    @Bean
+//    public UserDetailsService studyUserDetailsService() {
+//        return new StudyUserDetailsService();
+//    }
+
     @Bean
-    public UserDetailsService studyUserDetailsService() {
-        return new StudyUserDetailsService();
+    public UserDetailsService oakUserDetailsService() {
+        return new OakUserDetailsService();
     }
 
     @Bean
@@ -186,6 +220,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         hierarchy.setHierarchy("ROLE_");
         decisionVoters.add(new RoleHierarchyVoter(hierarchy));
         return new AffirmativeBased(decisionVoters);
+    }
+
+
+    @Bean
+    public FormAuthenticationFailureHandler formAuthenticationFailureHandler() {
+        return new FormAuthenticationFailureHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AccessDeniedHandler.class)
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new RequestUrlAccessDeniedHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(LogoutSuccessHandler.class)
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new SimpleUrlLogoutSuccessHandler();
     }
 
 //    @Bean

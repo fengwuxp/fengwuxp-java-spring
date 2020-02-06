@@ -10,8 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -76,8 +74,15 @@ public class EditOakAdminUserReq extends ApiBaseReq {
 
     @Schema(description = "token失效时间")
     @UpdateColumn
-    @Temporal(value = TemporalType.TIMESTAMP)
     private Date tokenExpired;
+
+    @Schema(description = "账号锁定到期时间")
+    @UpdateColumn
+    private Date lockExpired;
+
+    @Schema(description = "最后登录时间")
+    @UpdateColumn
+    private Date lastLoginTime;
 
     public EditOakAdminUserReq() {
     }

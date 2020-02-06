@@ -76,6 +76,16 @@ public class OakAdminUser extends AbstractNamedEntityObject<Long> {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date tokenExpired;
 
+    @Schema(description = "账号锁定到期时间")
+    @Column(name = "lock_expried")
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date lockExpired;
+
+    @Schema(description = "最后登录时间")
+    @Column(name = "last_login_time")
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date lastLoginTime;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             // 用来指定中间表的名称

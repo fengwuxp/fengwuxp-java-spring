@@ -10,8 +10,8 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/study_db?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=UTC
   jpa:
-    scan-packages: com.wuxp,com.oaknt
-    generate-ddl: false
+    scan-packages: com.wuxp,com.oaknt,com.oak
+    generate-ddl: true
     show-sql: true
     format-sql: true
     properties:
@@ -22,5 +22,5 @@ spring:
 logging:
   level:
     org.springframework: debug
-
+#    org.hibernate: debug
 

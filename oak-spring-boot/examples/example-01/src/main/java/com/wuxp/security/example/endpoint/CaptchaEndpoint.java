@@ -9,6 +9,7 @@ import com.wuxp.security.captcha.configuration.QrCodeCaptchaProperties;
 import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.mobile.MobileCaptcha;
 import com.wuxp.security.captcha.mobile.MobileCaptchaGenerateResult;
+import com.wuxp.security.captcha.mobile.MobileCaptchaType;
 import com.wuxp.security.captcha.picture.PictureCaptcha;
 import com.wuxp.security.captcha.picture.PictureCaptchaGenerateResult;
 import com.wuxp.security.captcha.picture.PictureCaptchaGenerator;
@@ -106,13 +107,15 @@ public class CaptchaEndpoint {
     /**
      * 获取手机验证码
      *
-     * @param useType {@Link MobileCaptchaType}
+     * @param useType
      * @param mobile
+     * @see MobileCaptchaType
      */
     @RequestMapping("/mobile/{useType}")
     @ResponseBody
     public ApiResp<Map<String, String>> mobileCaptcha(@PathVariable String useType, String mobile) {
         assert mobile != null;
+
         MobileCaptchaGenerateResult mobileCaptchaGenerateResult = mobileCaptcha.generate(useType, mobile);
         log.info("获取手机验证码{} {}", useType, mobile);
         if (!mobileCaptchaGenerateResult.isSuccess()) {
