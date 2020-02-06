@@ -13,6 +13,9 @@ import java.util.Date;
 
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * @author chenPC
+ */
 @Desc(value = "文章互动记录")
 @Entity
 @Table(name = "t_ncms_article_action", uniqueConstraints = {@UniqueConstraint(columnNames = {"article_id", "source_code", "action_type"})})

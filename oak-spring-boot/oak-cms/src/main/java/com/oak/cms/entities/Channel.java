@@ -13,6 +13,9 @@ import java.util.List;
 
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * @author chenPC
+ */
 @Schema(description = "栏目")
 @Entity
 @Table(name = "t_ncms_channel")
