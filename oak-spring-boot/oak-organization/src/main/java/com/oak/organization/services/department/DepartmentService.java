@@ -13,7 +13,7 @@ import com.wuxp.api.model.Pagination;
  * 部门服务
  * 2020-1-19 14:02:11
  *
- * @author chenPC
+ * @author
  */
 public interface DepartmentService {
 
