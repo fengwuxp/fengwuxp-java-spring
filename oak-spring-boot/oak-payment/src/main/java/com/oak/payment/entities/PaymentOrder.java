@@ -42,8 +42,8 @@ public class PaymentOrder implements Serializable {
     private PaymentType type;
 
     @Schema(description = "支付关联的订单类型")
-    @Column(name = "order_type", nullable = false, length = 32)
-    private String orderType;
+    @Column(name = "order_types", nullable = false, length = 32)
+    private String orderTypes;
 
     @Schema(description = "归属的卖家用户")
     @Column(name = "seller_id", nullable = false)

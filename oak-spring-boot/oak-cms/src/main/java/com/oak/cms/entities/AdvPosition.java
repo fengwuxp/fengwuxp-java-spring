@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.persistence.*;
-
 import java.util.Date;
 
 import static javax.persistence.GenerationType.AUTO;
 
 
+/**
+ * @author chenPC
+ */
 @Entity
 @Schema(description = "广告位信息")
 @Table(name = "t_adv_position", indexes = {
@@ -97,7 +99,7 @@ public class AdvPosition implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date crateTime;
 
-    @Schema(description =  "更新日期")
+    @Schema(description = "更新日期")
     @Column(name = "update_time", length = 19, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;

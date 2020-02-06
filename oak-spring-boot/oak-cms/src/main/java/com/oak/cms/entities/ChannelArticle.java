@@ -1,6 +1,5 @@
 package com.oak.cms.entities;
 
-import com.levin.commons.service.domain.Desc;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +10,9 @@ import java.util.Date;
 
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * @author chenPC
+ */
 @Schema(description = "专题文章")
 @Entity
 @Table(name = "t_ncms_channel_article")

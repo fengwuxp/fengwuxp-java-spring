@@ -6,13 +6,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
 
-
 import javax.persistence.*;
 import java.util.Date;
 
 import static javax.persistence.GenerationType.AUTO;
 
 
+/**
+ * @author chenPC
+ */
 @Entity
 @Schema(description = "广告信息")
 @Table(name = "t_adv", indexes = {
@@ -107,7 +109,7 @@ public class Adv implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date crateTime;
 
-    @Schema(description =  "更新日期")
+    @Schema(description = "更新日期")
     @Column(name = "update_time", length = 19, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;

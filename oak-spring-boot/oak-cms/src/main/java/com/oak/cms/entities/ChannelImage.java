@@ -1,6 +1,5 @@
 package com.oak.cms.entities;
 
-import com.levin.commons.service.domain.Desc;
 import com.oak.cms.enums.LinkType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -12,6 +11,9 @@ import java.util.Date;
 
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * @author chenPC
+ */
 @Schema(description = "栏目轮播图")
 @Entity
 @Table(name = "t_ncms_channel_image")

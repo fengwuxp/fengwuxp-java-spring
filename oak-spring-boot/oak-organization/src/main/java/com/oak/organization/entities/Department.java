@@ -1,8 +1,6 @@
 package com.oak.organization.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
-import com.levin.commons.dao.domain.support.AbstractTreeObject;
-import com.levin.commons.service.domain.Desc;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,6 +10,9 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * @author
+ */
 @Schema(description = "部门")
 @Entity
 @Table(name = "t_organization_department", indexes = {
