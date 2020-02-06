@@ -19,6 +19,18 @@ public class RoleInfo implements Serializable {
     @Schema(description = "角色名称")
     private String name;
 
+    @Schema(description = "排序代码")
+    protected Integer orderCode;
+
+    @Schema(description = "是否启用")
+    protected Boolean enable;
+
+    @Schema(description = "是否可编辑")
+    protected Boolean editable;
+
+    @Schema(description = "备注")
+    protected String remark;
+
     @Schema(description = "权限列表")
     @Desc(value = "", code = "permissions")
     private Set<PermissionInfo> permissions;

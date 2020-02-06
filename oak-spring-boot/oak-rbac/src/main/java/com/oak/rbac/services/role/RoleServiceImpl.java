@@ -6,6 +6,10 @@ import com.oak.rbac.entities.E_OakPermission;
 import com.oak.rbac.entities.E_OakRole;
 import com.oak.rbac.entities.OakPermission;
 import com.oak.rbac.entities.OakRole;
+import com.oak.rbac.enums.PermissionValueType;
+import com.oak.rbac.services.permission.PermissionService;
+import com.oak.rbac.services.permission.info.PermissionInfo;
+import com.oak.rbac.services.permission.req.QueryPermissionReq;
 import com.oak.rbac.services.role.info.RoleInfo;
 import com.oak.rbac.services.role.req.CreateRoleReq;
 import com.oak.rbac.services.role.req.DeleteRoleReq;
@@ -25,12 +29,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.oak.rbac.authority.OakRequestUrlResourceProvider.URL_ACCESS_ROLES_CACHE_NAME;
+
 @Slf4j
 @Service
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private JpaDao jpaDao;
+
+    @Autowired
+    private PermissionService permissionService;
 
 
     @Override
@@ -78,6 +87,10 @@ public class RoleServiceImpl implements RoleService {
                             key = ROLE_CACHE_NAME,
                             value = "#req.name",
                             condition = "#result.success"
+                    ),
+                    @CacheEvict(
+                            value = URL_ACCESS_ROLES_CACHE_NAME,
+                            allEntries = true
                     )
             }
     )
@@ -139,6 +152,10 @@ public class RoleServiceImpl implements RoleService {
                             value = ROLE_CACHE_NAME,
                             key = "#req.name",
                             condition = "#result.success"
+                    ),
+                    @CacheEvict(
+                            value = URL_ACCESS_ROLES_CACHE_NAME,
+                            allEntries = true
                     )
             }
     )
@@ -182,4 +199,7 @@ public class RoleServiceImpl implements RoleService {
     public Pagination<RoleInfo> queryRole(QueryRoleReq req) {
         return SimpleCommonDaoHelper.queryObject(jpaDao, OakRole.class, RoleInfo.class, req);
     }
+
+
+
 }

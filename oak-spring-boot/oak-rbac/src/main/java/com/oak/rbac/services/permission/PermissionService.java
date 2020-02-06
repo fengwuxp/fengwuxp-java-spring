@@ -5,12 +5,11 @@ import com.oak.rbac.services.permission.req.CreatePermissionReq;
 import com.oak.rbac.services.permission.req.DeletePermissionReq;
 import com.oak.rbac.services.permission.req.QueryPermissionReq;
 import com.wuxp.api.model.Pagination;
-import com.wuxp.security.authority.url.RequestUrlConfigAttributeProvider;
 
 /**
  * 权限管理服务
  */
-public interface PermissionService extends RequestUrlConfigAttributeProvider {
+public interface PermissionService  {
 
     /**
      * 创建权限
@@ -36,4 +35,6 @@ public interface PermissionService extends RequestUrlConfigAttributeProvider {
      * @return
      */
     Pagination<PermissionInfo> queryPermission(QueryPermissionReq req);
+
+
 }

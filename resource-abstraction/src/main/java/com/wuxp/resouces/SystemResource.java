@@ -9,14 +9,14 @@ import com.wuxp.resouces.enums.ResourceType;
  * all can be considered as resources, this is a logical abstraction
  * </p>
  */
-public interface Resource<ID> {
+public interface SystemResource<ID> {
 
     /**
      * an instance used to distinguish resources
      *
      * @return resource unique identifier
      */
-    ID getUniqueIdentifier();
+    ID getId();
 
     /**
      * @return resource type
@@ -26,5 +26,5 @@ public interface Resource<ID> {
     /**
      * @return class type of resource
      */
-    Class<ID> getClassType();
+    Class<?> getClassType();
 }

@@ -1,7 +1,6 @@
 package com.oak.rbac.security;
 
 import com.alibaba.fastjson.JSON;
-import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.jwt.JwtProperties;
 import lombok.extern.slf4j.Slf4j;

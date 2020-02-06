@@ -1,14 +1,16 @@
 package com.oak.rbac.services.menu.info;
 
 
+import com.levin.commons.service.domain.Desc;
 import com.oak.rbac.enums.MenuIAction;
 import com.oak.rbac.enums.MenuShowType;
 import com.oak.rbac.enums.MenuType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.service.domain.Desc;
-
 
 import java.io.Serializable;
 import java.util.Date;

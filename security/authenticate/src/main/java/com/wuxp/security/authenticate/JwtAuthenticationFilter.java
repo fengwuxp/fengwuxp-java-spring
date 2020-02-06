@@ -56,7 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         String authorizationHeader = request.getHeader(jwtProperties.getHeaderName());
         String headerPrefix = jwtProperties.getHeaderPrefix();
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(headerPrefix)) {
-//            String jwtToken = authorizationHeader.replace(headerPrefix, "");
             if (StringUtils.hasText(authorizationHeader)) {
 //                Jws<Claims> claimsJws = jwtTokenProvider.parse(jwtToken);
                 UserDetails userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader);

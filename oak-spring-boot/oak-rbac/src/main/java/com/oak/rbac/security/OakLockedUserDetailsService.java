@@ -20,7 +20,6 @@ import java.util.Date;
  * 锁定连续登录失败的账号
  */
 @Slf4j
-@Service
 public class OakLockedUserDetailsService implements LockedUserDetailsService {
 
     @Autowired

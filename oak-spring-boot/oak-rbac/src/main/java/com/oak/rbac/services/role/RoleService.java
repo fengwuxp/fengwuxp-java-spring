@@ -8,6 +8,8 @@ import com.oak.rbac.services.role.req.QueryRoleReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 
+import java.util.Set;
+
 
 /**
  * 角色服务
@@ -16,6 +18,7 @@ public interface RoleService {
 
 
     String ROLE_CACHE_NAME = "RBAC_ROLE_CACHE";
+
 
 
     /**

@@ -1,38 +1,27 @@
 package com.oak.rbac.security;
 
-import antlr.collections.List;
-import com.oak.rbac.services.permission.PermissionService;
-import com.oak.rbac.services.permission.info.PermissionInfo;
-import com.oak.rbac.services.permission.req.QueryPermissionReq;
-import com.oak.rbac.services.role.RoleService;
 import com.oak.rbac.services.user.OakAdminUserService;
 import com.oak.rbac.services.user.info.OakAdminUserInfo;
-import com.oak.rbac.services.user.req.EditOakAdminUserReq;
 import com.oak.rbac.services.user.req.QueryOakAdminUserReq;
-import com.wuxp.api.ApiResp;
-import com.wuxp.security.jwt.JwtTokenPair;
-import com.wuxp.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+
+import static com.oak.rbac.authority.OakRequestUrlResourceProvider.ROOT_ROLE;
+
 
 @Slf4j
 public class OakUserDetailsService implements UserDetailsService {
 
     @Autowired
     private OakAdminUserService oakAdminUserService;
-
-
 
 
     @Override
@@ -56,8 +45,12 @@ public class OakUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("用户被锁定");
         }
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>(AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_APP"));
-
+        // AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_APP")
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        if (adminUserInfo.getRoot()) {
+            // 超级管理员
+            authorities.addAll(AuthorityUtils.createAuthorityList(ROOT_ROLE));
+        }
         OakUser oakUser = new OakUser(adminUserInfo.getName(),
                 adminUserInfo.getPassword(),
                 adminUserInfo.getEnable(),

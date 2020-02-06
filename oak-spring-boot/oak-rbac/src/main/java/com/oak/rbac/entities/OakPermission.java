@@ -2,11 +2,13 @@ package com.oak.rbac.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
 import com.oak.rbac.enums.PermissionValueType;
+import com.wuxp.resouces.AntUrlResource;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpMethod;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -20,7 +22,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @ToString(exclude = {"roles", "resource"})
 @EqualsAndHashCode(callSuper = true, of = {"id"})
-public class OakPermission extends AbstractNamedEntityObject<Long> {
+public class OakPermission extends AbstractNamedEntityObject<Long> implements AntUrlResource<Long> {
 
     private static final long serialVersionUID = -2236535431871280682L;
 
@@ -38,6 +40,10 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @Column(name = "value", length = 512, nullable = false)
     private String value;
 
+    @Schema(description = "支持的http method")
+    @Column(name = "http_method", length = 16, nullable = false)
+    private String httpMethod;
+
     @Schema(description = "资源标识")
     @Column(name = "resource_id", length = 128, nullable = false)
     private String resourceId;
@@ -47,9 +53,18 @@ public class OakPermission extends AbstractNamedEntityObject<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     private OakResource resource;
 
+    @Schema(description = "关联角色")
     //配置多对多
-    @ManyToMany(mappedBy = "permissions")
+    @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
     private Set<OakRole> roles;
 
+    @Override
+    public String getPattern() {
+        return this.value;
+    }
 
+    @Override
+    public Class<?> getClassType() {
+        return OakPermission.class;
+    }
 }

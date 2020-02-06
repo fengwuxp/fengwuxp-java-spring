@@ -2,7 +2,6 @@ package com.oak.rbac.security;
 
 import com.alibaba.fastjson.JSON;
 import com.oak.rbac.services.role.RoleService;
-import com.oak.rbac.services.role.req.QueryRoleReq;
 import com.oak.rbac.services.user.OakAdminUserService;
 import com.oak.rbac.services.user.req.EditOakAdminUserReq;
 import com.wuxp.api.ApiResp;
@@ -15,18 +14,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 
+
+/**
+ * 登录成功处理
+ */
 @Slf4j
 @Setter
 public class OakAuthenticationSuccessHandler implements AuthenticationSuccessHandler, BeanFactoryAware, InitializingBean {
@@ -62,23 +62,21 @@ public class OakAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
         //TODO 加载权限
 
-//        QueryRoleReq req = new QueryRoleReq();
-//        req.setFetchPermission();
-//        roleService.queryRole(req);
-
         JwtTokenPair.JwtTokenPayLoad jwtTokenPayLoad = jwtTokenProvider.generateAccessToken(principal.getUsername());
         principal.setToken(jwtTokenPayLoad.getToken());
         principal.setTokenExpired(jwtTokenPayLoad.getTokenExpireTimes());
 
         // 加入缓存
         userSessionCacheHelper.join(principal.getToken(), principal);
-
         loginEnvironmentHolder.remove(request);
         if (log.isDebugEnabled()) {
             log.debug("登录成功 {}", authentication);
         }
+
+        // TODO 记录登录日志
+
         //返回Json数据
-        String string = JSON.toJSONString(jwtTokenPayLoad);
+        String string = JSON.toJSONString(principal);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.getWriter().write(string);
 
