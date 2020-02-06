@@ -1,5 +1,6 @@
 package com.wuxp.security.example.config;
 
+import com.oak.rbac.security.OakSessionInformationExpiredStrategy;
 import com.oak.rbac.security.OakUserDetailsService;
 import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
@@ -64,6 +66,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
+    @Autowired
+    private OakSessionInformationExpiredStrategy oakSessionInformationExpiredStrategy;
+
 
     // 实现权限拦截
     @Autowired
@@ -89,6 +94,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 配置登录页面
         FormLoginProperties formLoginProperties = wuxpSecurityProperties.getForm();
         http.csrf().disable()
+//                .cors()
+//                .and()
                 .exceptionHandling()
                 .accessDeniedHandler(this.accessDeniedHandler())
                 //匿名用户访问无权限资源时的异常处理
@@ -108,6 +115,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         formLoginProperties.getLoginPage(),
                         formLoginProperties.getLoginProcessingUrl()
                 ).permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS)
+                .permitAll()
                 .and()
                 // 登出处理
                 .logout()
@@ -145,7 +156,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement()
+                .maximumSessions(wuxpSecurityProperties.getMaximumSessions())
+                .expiredSessionStrategy(oakSessionInformationExpiredStrategy);
+
 
     }
 

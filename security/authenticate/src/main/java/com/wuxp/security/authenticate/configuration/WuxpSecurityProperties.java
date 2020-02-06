@@ -59,4 +59,9 @@ public class WuxpSecurityProperties {
      * 连续登录失败{@code loginThreshold}次数后，账号在一段时间内被禁止登陆
      */
     private Duration limitLoginTimes = Duration.ofHours(2);
+
+    /**
+     * 同一账号同时登录最大用户数
+     */
+    private int maximumSessions = 1;
 }
