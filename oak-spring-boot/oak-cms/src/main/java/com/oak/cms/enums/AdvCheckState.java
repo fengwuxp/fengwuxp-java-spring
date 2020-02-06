@@ -5,7 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 广告审核状态
- * Created by DELL on 2016/5/18.
+ *
+ * @author chenPC
+ * @date 2016/5/18
  */
 @Schema(description = "广告审核状态")
 public enum AdvCheckState implements DescriptiveEnum {

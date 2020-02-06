@@ -4,6 +4,10 @@ package com.oak.cms.enums;
 import com.wuxp.basic.enums.DescriptiveEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * @author chenPC
+ */
+
 @Schema(description = "文章互动类型")
 public enum ArticleActionType implements DescriptiveEnum {
 
