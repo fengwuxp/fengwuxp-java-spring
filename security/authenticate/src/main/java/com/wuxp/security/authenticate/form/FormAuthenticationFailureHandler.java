@@ -13,8 +13,10 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,17 +63,23 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
 
+        log.error("认证失败", exception);
+
         LoginEnvironmentContext loginEnvironmentContext = loginEnvironmentHolder.getContextAndIncreaseFailureCount(request);
 
         int failureCount = loginEnvironmentContext.getFailureCount();
         if (failureCount >= loginFailureThreshold) {
             // 锁定该账户
-            this.lockedUserDetailsService.lockUserByUsername(loginEnvironmentContext.getUsername(),this.limitLoginTimes);
+            this.lockedUserDetailsService.lockUserByUsername(loginEnvironmentContext.getUsername(), this.limitLoginTimes);
         }
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
         Map<String, Object> map = new HashMap<>();
-        map.put("message", exception.getMessage());
+        String message = exception.getMessage();
+        if (exception instanceof BadCredentialsException) {
+            message = "用户名或密码错误";
+        }
+        map.put("message", StringUtils.hasText(message) ? message : "发生非预期的异常");
         //是否需要图片验证码验证
         map.put("needPictureCaptcha", loginEnvironmentContext.isNeedPictureCaptcha());
         //返回Json数据

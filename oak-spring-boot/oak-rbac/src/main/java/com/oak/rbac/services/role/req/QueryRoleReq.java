@@ -25,6 +25,9 @@ public class QueryRoleReq extends ApiBaseQueryReq {
     @Fetch(value = "permissions", condition = "#_val==true")
     private Boolean fetchPermission;
 
+    @Schema(description = "是否启用")
+    protected Boolean enable;
+
     public QueryRoleReq() {
     }
 

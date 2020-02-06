@@ -12,9 +12,6 @@ import com.wuxp.security.authenticate.form.FormLoginProperties;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.authenticate.restful.RestfulAuthenticationEntryPoint;
 import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationSecurityConfig;
-import com.wuxp.security.authority.url.RequestUrlAccessDecisionVoter;
-import com.wuxp.security.authority.url.RequestUrlAccessDeniedHandler;
-import com.wuxp.security.example.authority.MockFilterInvocationSecurityMetadataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -54,11 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WuxpSecurityProperties wuxpSecurityProperties;
 
     @Autowired
-    private PasswordLoginEnvironmentHolder passwordLoginEnvironmentHolder;
-
-    @Autowired
     private ScanCodeAuthenticationSecurityConfig scanCodeAuthenticationSecurityConfig;
-
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -67,12 +60,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
-    private OakSessionInformationExpiredStrategy oakSessionInformationExpiredStrategy;
+    private LogoutSuccessHandler logoutSuccessHandler;
 
+    @Autowired
+    private OakSessionInformationExpiredStrategy oakSessionInformationExpiredStrategy;
 
     // 实现权限拦截
     @Autowired
-    private MockFilterInvocationSecurityMetadataSource securityMetadataSource;
+    private FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -97,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .cors()
 //                .and()
                 .exceptionHandling()
-                .accessDeniedHandler(this.accessDeniedHandler())
+//                .accessDeniedHandler(this.accessDeniedHandler())
                 //匿名用户访问无权限资源时的异常处理
                 .authenticationEntryPoint(this.authenticationEntryPoint())
                 .and()
@@ -122,6 +117,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 登出处理
                 .logout()
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll()
                 .logoutSuccessHandler(logoutSuccessHandler())
                 .deleteCookies("JSESSIONID")
@@ -132,7 +128,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         //决策管理器
                         o.setAccessDecisionManager(affirmativeBased());
                         //安全元数据源
-                        o.setSecurityMetadataSource(securityMetadataSource);
+                        o.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
                         return o;
                     }
                 })
@@ -174,8 +170,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/log/**",
                 "/version/**",
                 "/example/**",
-//                "/login",
-//                "/do_login",
+                "/error",
 
                 "/js/**",
                 "/css/**",
@@ -215,7 +210,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @ConditionalOnMissingBean(AffirmativeBased.class)
     public AffirmativeBased affirmativeBased() {
         List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
-        decisionVoters.add(new RequestUrlAccessDecisionVoter());
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy("ROLE_");
         decisionVoters.add(new RoleHierarchyVoter(hierarchy));
@@ -228,11 +222,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new FormAuthenticationFailureHandler();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(AccessDeniedHandler.class)
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new RequestUrlAccessDeniedHandler();
-    }
 
     @Bean
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
@@ -240,11 +229,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new SimpleUrlLogoutSuccessHandler();
     }
 
-//    @Bean
-//    public RequestUrlSecurityMetadataSource securityMetadataSource() {
-//
-//        return new RequestUrlSecurityMetadataSource();
-//    }
 
     @Bean
     public SpringContextHolder springContextHolder() {

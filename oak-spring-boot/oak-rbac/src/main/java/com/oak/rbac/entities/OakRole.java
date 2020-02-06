@@ -44,6 +44,6 @@ public class OakRole extends AbstractNamedEntityObject<Long> {
 
     //配置多对多
     @ManyToMany(mappedBy = "roles")
-    private Set<OakAdminUser> roles;
+    private Set<OakAdminUser> users;
 
 }

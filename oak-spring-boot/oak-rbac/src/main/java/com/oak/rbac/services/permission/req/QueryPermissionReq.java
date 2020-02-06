@@ -1,6 +1,7 @@
 package com.oak.rbac.services.permission.req;
 
 import com.levin.commons.dao.annotation.Like;
+import com.levin.commons.dao.annotation.misc.Fetch;
 import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.rbac.enums.PermissionValueType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,4 +29,12 @@ public class QueryPermissionReq extends ApiBaseQueryReq {
 
     @Schema(description = "权限类型")
     private PermissionValueType valueType;
+
+    @Schema(description = "权限值")
+    private String value;
+
+    @Schema(description = "是否加载角色列表")
+    @Fetch(value = "roles", condition = "#_val==true")
+    private Boolean fetchRole;
+
 }
