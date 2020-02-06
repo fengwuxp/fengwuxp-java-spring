@@ -3,6 +3,7 @@ package com.oak.rbac.services.user.req;
 import com.levin.commons.dao.annotation.Gte;
 import com.levin.commons.dao.annotation.Like;
 import com.levin.commons.dao.annotation.Lte;
+import com.levin.commons.dao.annotation.misc.Fetch;
 import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.rbac.entities.E_OakAdminUser;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -74,9 +75,9 @@ public class QueryOakAdminUserReq extends ApiBaseQueryReq {
     @Schema(description = "登录token")
     private String token;
 
-    @Schema(description = "token失效时间")
-    @Gte("tokenExpired")
-    private Date tokenExpired;
+    @Schema(description = "加载角色")
+    @Fetch(value = "roles", condition = "#_val==true")
+    private Boolean fetchRole;
 
     public QueryOakAdminUserReq() {
     }

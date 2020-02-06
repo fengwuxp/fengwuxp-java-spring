@@ -1,5 +1,7 @@
 package com.oak.rbac.security;
 
+import com.oak.rbac.services.role.RoleService;
+import com.oak.rbac.services.role.info.RoleInfo;
 import com.oak.rbac.services.user.OakAdminUserService;
 import com.oak.rbac.services.user.info.OakAdminUserInfo;
 import com.oak.rbac.services.user.req.QueryOakAdminUserReq;
@@ -11,9 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
+import static com.oak.rbac.authority.OakRequestUrlResourceProvider.ROLE_PREFIX;
 import static com.oak.rbac.authority.OakRequestUrlResourceProvider.ROOT_ROLE;
 
 
@@ -22,7 +27,6 @@ public class OakUserDetailsService implements UserDetailsService {
 
     @Autowired
     private OakAdminUserService oakAdminUserService;
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,6 +40,7 @@ public class OakUserDetailsService implements UserDetailsService {
         //账号信息
         QueryOakAdminUserReq queryOakAdminUserReq = new QueryOakAdminUserReq();
         queryOakAdminUserReq.setUserName(username);
+        queryOakAdminUserReq.setFetchRole(true);
         OakAdminUserInfo adminUserInfo = oakAdminUserService.query(queryOakAdminUserReq).getFirst();
         if (adminUserInfo == null) {
             throw new UsernameNotFoundException(username);
@@ -45,12 +50,25 @@ public class OakUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("用户被锁定");
         }
 
+        return converterOakUser(adminUserInfo);
+    }
+
+    private static OakUser converterOakUser(OakAdminUserInfo adminUserInfo) {
         // AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_APP")
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         if (adminUserInfo.getRoot()) {
             // 超级管理员
             authorities.addAll(AuthorityUtils.createAuthorityList(ROOT_ROLE));
         }
+
+        Set<RoleInfo> roles = adminUserInfo.getRoles();
+        if (roles != null && !roles.isEmpty()) {
+            String[] roleNames = roles.stream()
+                    .map(roleInfo -> MessageFormat.format("{0}{1}", ROLE_PREFIX, roleInfo.getName()))
+                    .toArray(String[]::new);
+            authorities.addAll(AuthorityUtils.createAuthorityList(roleNames));
+        }
+
         OakUser oakUser = new OakUser(adminUserInfo.getName(),
                 adminUserInfo.getPassword(),
                 adminUserInfo.getEnable(),
@@ -62,9 +80,8 @@ public class OakUserDetailsService implements UserDetailsService {
                 .setEmail(adminUserInfo.getEmail())
                 .setId(adminUserInfo.getId())
                 .setMobilePhone(adminUserInfo.getMobilePhone())
-                .setRoot(adminUserInfo.getRoot());
-
-
+                .setRoot(adminUserInfo.getRoot())
+                .setName(adminUserInfo.getName());
         return oakUser;
     }
 }
