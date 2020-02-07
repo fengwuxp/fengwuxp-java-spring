@@ -103,7 +103,6 @@ public class AdvPositionServiceImpl implements AdvPositionService {
                     .appendColumn("deleted", true)
                     .appendByQueryObj(req)
                     .update() > 0;
-            //return RestfulApiRespFactory.error("无法删除广告位信息");
         }
 
         if (!r) {

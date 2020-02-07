@@ -2,13 +2,15 @@ package com.oak.organization.management.organization;
 
 
 import com.oak.organization.management.organization.req.AddOrganizationReq;
+import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.oak.organization.management.organization.req.UpdateOrganizationExtendedInfoReq;
 import com.oak.organization.management.organization.req.UpdateOrganizationReq;
-import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.wuxp.api.ApiResp;
 
 /**
  * 组织管理服务
+ *
+ * @author
  */
 public interface OrganizationManagementService {
 
@@ -23,6 +25,7 @@ public interface OrganizationManagementService {
 
     /**
      * 新增机构
+     *
      * @param req
      * @return
      */
@@ -30,6 +33,7 @@ public interface OrganizationManagementService {
 
     /**
      * 编辑机构
+     *
      * @param req
      * @return
      */
@@ -37,6 +41,7 @@ public interface OrganizationManagementService {
 
     /**
      * 编辑机构拓展信息
+     *
      * @param req
      * @return
      */

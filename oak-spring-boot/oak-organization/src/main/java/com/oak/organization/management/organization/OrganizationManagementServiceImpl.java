@@ -1,12 +1,11 @@
 package com.oak.organization.management.organization;
 
 import com.oak.organization.entities.Organization;
-import com.oak.organization.entities.OrganizationExtendedInfo;
 import com.oak.organization.enums.StaffAccountType;
 import com.oak.organization.management.organization.req.AddOrganizationReq;
+import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.oak.organization.management.organization.req.UpdateOrganizationExtendedInfoReq;
 import com.oak.organization.management.organization.req.UpdateOrganizationReq;
-import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.oak.organization.services.organization.OrganizationService;
 import com.oak.organization.services.organization.req.CreateOrganizationReq;
 import com.oak.organization.services.organization.req.EditOrganizationReq;
@@ -28,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author
+ */
 @Slf4j
 @Service
 public class OrganizationManagementServiceImpl implements OrganizationManagementService {

@@ -51,7 +51,6 @@ public class AdvPositionController {
      */
     @PostMapping("/create")
     @Operation(summary = "创建AdvPosition", description = "广告位信息")
-    //@ApiLog(value = "#JSON.toJSONString(req)")
     public ApiResp<Long> create(CreateAdvPositionReq req) {
         return advPositionService.create(req);
     }
