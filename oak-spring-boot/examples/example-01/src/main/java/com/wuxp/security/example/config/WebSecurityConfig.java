@@ -117,9 +117,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 登出处理
                 .logout()
-                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll()
-                .logoutSuccessHandler(logoutSuccessHandler())
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .deleteCookies("JSESSIONID")
                 // url 权限检查
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
@@ -223,11 +222,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean
-    @ConditionalOnMissingBean(LogoutSuccessHandler.class)
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return new SimpleUrlLogoutSuccessHandler();
-    }
 
 
     @Bean

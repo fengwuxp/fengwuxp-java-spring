@@ -29,7 +29,9 @@ public class OakRequestUrlResourceProvider implements AntRequestUrlResourceProvi
 
     public static final String URL_ACCESS_ROLES_CACHE_NAME = "URL_ACCESS_ROLES_CACHE";
 
-    public static final String ROOT_ROLE = "ROOT_ROLE";
+    public static final String ROLE_PREFIX = "ROLE_";
+
+    public static final String ROOT_ROLE = ROLE_PREFIX + "ROOT";
 
     @Autowired
     private RoleService roleService;

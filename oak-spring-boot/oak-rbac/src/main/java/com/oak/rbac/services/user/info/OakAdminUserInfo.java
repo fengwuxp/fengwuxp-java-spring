@@ -1,5 +1,8 @@
 package com.oak.rbac.services.user.info;
 
+import com.levin.commons.service.domain.Desc;
+import com.oak.rbac.entities.OakRole;
+import com.oak.rbac.services.role.info.RoleInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 
 /**
@@ -85,4 +89,8 @@ public class OakAdminUserInfo implements Serializable {
 
     @Schema(description = "最后登录时间")
     private Date lastLoginTime;
+
+    @Schema(description = "关联的角色列表")
+    @Desc(value = "", code = "roles")
+    private Set<RoleInfo> roles;
 }

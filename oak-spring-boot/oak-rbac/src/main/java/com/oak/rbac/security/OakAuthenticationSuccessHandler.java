@@ -60,8 +60,6 @@ public class OakAuthenticationSuccessHandler implements AuthenticationSuccessHan
         AssertThrow.assertResp(editResp);
 
 
-        //TODO 加载权限
-
         JwtTokenPair.JwtTokenPayLoad jwtTokenPayLoad = jwtTokenProvider.generateAccessToken(principal.getUsername());
         principal.setToken(jwtTokenPayLoad.getToken());
         principal.setTokenExpired(jwtTokenPayLoad.getTokenExpireTimes());

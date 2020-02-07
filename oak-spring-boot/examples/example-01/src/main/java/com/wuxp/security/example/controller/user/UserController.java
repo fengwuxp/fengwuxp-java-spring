@@ -1,13 +1,19 @@
 package com.wuxp.security.example.controller.user;
 
+import com.oak.rbac.security.OakUser;
+import com.oak.rbac.security.OakUserDetailsService;
+import com.oak.rbac.security.UserSessionCacheHelper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +24,8 @@ import java.security.Principal;
 @Slf4j
 @Tag(name = "用户", description = "用户相关")
 public class UserController {
+
+
 
 
 

@@ -22,6 +22,9 @@ public class OakUser extends User implements PasswordUserDetails {
     @Schema(description = "管理员ID")
     private Long id;
 
+    @Schema(description = "名称")
+    private String name;
+
     @Schema(description = "昵称")
     private String nickName;
 
