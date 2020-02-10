@@ -1,10 +1,10 @@
-package com.oak.cms.services.adv;
+package com.oak.cms.services.advposition;
 
-import com.oak.cms.services.adv.info.AdvPositionInfo;
-import com.oak.cms.services.adv.req.CreateAdvPositionReq;
-import com.oak.cms.services.adv.req.DeleteAdvPositionReq;
-import com.oak.cms.services.adv.req.EditAdvPositionReq;
-import com.oak.cms.services.adv.req.QueryAdvPositionReq;
+import com.oak.cms.services.advposition.info.AdvPositionInfo;
+import com.oak.cms.services.advposition.req.CreateAdvPositionReq;
+import com.oak.cms.services.advposition.req.DeleteAdvPositionReq;
+import com.oak.cms.services.advposition.req.EditAdvPositionReq;
+import com.oak.cms.services.advposition.req.QueryAdvPositionReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 

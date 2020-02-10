@@ -1,4 +1,4 @@
-package com.oak.cms.management.adv.req;
+package com.oak.cms.services.advposition.req;
 
 import com.levin.commons.dao.annotation.Eq;
 import com.oak.api.model.ApiBaseReq;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author chenPC
  */
-@Schema(description = "查找广告位")
+@Schema(description = "查找广告位信息")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

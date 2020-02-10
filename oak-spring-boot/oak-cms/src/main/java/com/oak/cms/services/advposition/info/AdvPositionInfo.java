@@ -1,8 +1,7 @@
-package com.oak.cms.management.adv.req;
+package com.oak.cms.services.advposition.info;
 
-import com.levin.commons.dao.annotation.Gte;
-import com.levin.commons.dao.annotation.Lte;
-import com.oak.api.model.ApiBaseQueryReq;
+import com.levin.commons.service.domain.Desc;
+import com.oak.api.services.infoprovide.info.AreaInfo;
 import com.oak.cms.enums.AdvDisplayType;
 import com.oak.cms.enums.AdvType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,22 +11,23 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Date;
 
+
 /**
- * 查询广告位信息
+ * 广告位信息
  * 2020-2-6 16:50:22
  *
  * @author chenPC
  */
-@Schema(description = "查询广告位信息")
+@Schema(description = "广告位信息")
 @Data
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Accessors(chain = true)
-
-public class QueryAdvPositionsReq extends ApiBaseQueryReq {
+@NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(exclude = {"areaInfo",})
+public class AdvPositionInfo implements Serializable {
 
     @Schema(description = "广告位置id")
     private Long id;
@@ -71,24 +71,18 @@ public class QueryAdvPositionsReq extends ApiBaseQueryReq {
     @Schema(description = "归属地区id")
     private String areaId;
 
+    @Desc(value = "", code = "area")
+    @Schema(description = "地区")
+    private AreaInfo areaInfo;
+
     @Schema(description = "广告规格")
     private String spec;
 
-    @Schema(description = "最小创建日期")
-    @Gte("crateTime")
-    private Date minCrateTime;
+    @Schema(description = "创建日期")
+    private Date crateTime;
 
-    @Schema(description = "最大创建日期")
-    @Lte("crateTime")
-    private Date maxCrateTime;
-
-    @Schema(description = "最小更新日期")
-    @Gte("updateTime")
-    private Date minUpdateTime;
-
-    @Schema(description = "最大更新日期")
-    @Lte("updateTime")
-    private Date maxUpdateTime;
+    @Schema(description = "更新日期")
+    private Date updateTime;
 
 
 }

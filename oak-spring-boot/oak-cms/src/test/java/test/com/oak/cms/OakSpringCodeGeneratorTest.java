@@ -2,7 +2,7 @@ package test.com.oak.cms;
 
 
 import com.oak.api.services.infoprovide.info.AreaInfo;
-import com.oak.cms.entities.AdvPosition;
+import com.oak.cms.entities.Adv;
 import com.oak.codegen.ServiceModelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -29,6 +29,6 @@ public class OakSpringCodeGeneratorTest {
         String basePackageName = "com.oak.cms.services.adv";
         Map<String, Class> entityMapping = new HashMap<>();
         entityMapping.put("area", AreaInfo.class);
-        ServiceModelUtil.entity2ServiceModel(AdvPosition.class, entityMapping, basePackageName, targetFilePath);
+        ServiceModelUtil.entity2ServiceModel(Adv.class, entityMapping, basePackageName, targetFilePath);
     }
 }
