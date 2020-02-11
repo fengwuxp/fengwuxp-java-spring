@@ -1,21 +1,25 @@
 package com.oak.cms.services.adv.req;
 
+import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
-import com.levin.commons.dao.annotation.*;
 import com.oak.api.model.ApiBaseReq;
+import com.oaknt.ncms.enums.AdvCheckState;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import com.oaknt.ncms.enums.AdvCheckState;
 
 
 /**
- *  编辑广告信息
- *  2020-2-10 18:55:01
+ * 编辑广告信息
+ * 2020-2-10 18:55:01
+ *
+ * @author chenPC
  */
 @Schema(description = "编辑广告信息")
 @Data

@@ -1,17 +1,19 @@
 package com.oak.cms.services.adv.req;
 
+import com.levin.commons.dao.annotation.In;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.In;
-import javax.validation.constraints.Size;
-import com.levin.commons.dao.annotation.*;
-import com.oaknt.ncms.enums.AdvCheckState;
 
 /**
- *  删除广告信息
- *  2020-2-10 18:55:01
+ * 删除广告信息
+ * 2020-2-10 18:55:01
+ *
+ * @author chenPC
  */
 @Schema(description = "删除广告信息")
 @Data

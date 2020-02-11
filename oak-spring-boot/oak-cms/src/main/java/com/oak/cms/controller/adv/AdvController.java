@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+/**
+ * @author chenPC
+ */
 @RestController
 @RequestMapping("/Adv")
 @Tag(name = "广告信息", description = "广告信息管理")
@@ -48,7 +51,6 @@ public class AdvController {
      */
     @PostMapping("/create")
     @Operation(summary = "创建Adv", description = "广告信息")
-    //@ApiLog(value = "#JSON.toJSONString(req)")
     public ApiResp<Long> create(CreateAdvReq req) {
         return advService.create(req);
     }
