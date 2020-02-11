@@ -1,21 +1,20 @@
 package com.oak.cms.services.adv.req;
 
-import com.levin.commons.dao.annotation.Eq;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-
+import com.levin.commons.dao.annotation.*;
 import javax.validation.constraints.NotNull;
+
+import com.oaknt.ncms.enums.AdvCheckState;
 
 
 /**
- * 查找广告位信息
- * 2020-2-6 16:50:22
- *
- * @author chenPC
+ *  查找广告信息
+ *  2020-2-10 18:55:01
  */
-@Schema(description = "查找广告位信息")
+@Schema(description = "查找广告信息")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,9 +22,9 @@ import javax.validation.constraints.NotNull;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 
-public class FindAdvPositionReq extends ApiBaseReq {
+public class FindAdvReq extends ApiBaseReq {
 
-    @Schema(description = "广告位置id")
+    @Schema(description = "id")
     @NotNull
     @Eq(require = true)
     private Long id;

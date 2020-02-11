@@ -1,4 +1,4 @@
-package com.oak.cms.management.adv.req;
+package com.oak.cms.management.advposition.req;
 
 import com.oak.api.model.ApiBaseReq;
 import com.oak.cms.enums.AdvDisplayType;

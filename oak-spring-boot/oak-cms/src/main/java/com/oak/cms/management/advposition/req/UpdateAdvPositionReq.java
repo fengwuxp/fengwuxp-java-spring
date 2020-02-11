@@ -1,4 +1,4 @@
-package com.oak.cms.management.adv.req;
+package com.oak.cms.management.advposition.req;
 
 /**
  * 操作--启用状态
