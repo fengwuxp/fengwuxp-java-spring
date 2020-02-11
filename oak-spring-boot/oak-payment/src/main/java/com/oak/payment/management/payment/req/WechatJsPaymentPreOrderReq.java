@@ -1,7 +1,6 @@
-package com.oak.payment.management.req;
+package com.oak.payment.management.payment.req;
 
 import com.oak.api.model.ApiBaseReq;
-import com.oak.payment.enums.PaymentType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

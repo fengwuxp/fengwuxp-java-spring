@@ -1,8 +1,6 @@
 package com.oak.payment.entities;
 
 
-import com.levin.commons.dao.domain.support.AbstractBaseEntityObject;
-import com.levin.commons.service.domain.Desc;
 import com.oak.payment.enums.PaymentStatus;
 import com.oak.payment.enums.PaymentType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -156,6 +154,14 @@ public class Payment implements Serializable {
     @Column(name = "update_time", updatable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     protected Date updateTime;
+
+    @Schema(description = "退款单号")
+    @Column(name = "refund_sn", nullable = false, length = 32)
+    private String refundSn;
+
+    @Schema(description = "第三方退款单号")
+    @Column(name = "out_refund_sn", nullable = false, length = 32)
+    private String outRefundSn;
 
     @Transient
     public Integer getRefundableAmount() {

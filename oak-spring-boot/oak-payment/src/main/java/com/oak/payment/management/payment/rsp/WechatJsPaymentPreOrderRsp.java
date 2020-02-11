@@ -1,4 +1,4 @@
-package com.oak.payment.management.rsp;
+package com.oak.payment.management.payment.rsp;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
