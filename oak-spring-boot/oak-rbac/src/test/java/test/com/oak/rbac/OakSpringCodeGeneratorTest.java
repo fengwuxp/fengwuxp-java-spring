@@ -1,11 +1,12 @@
 package test.com.oak.rbac;
 
 
-
 import com.oak.codegen.ServiceModelUtil;
 import com.oak.rbac.entities.OakAdminUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -30,5 +31,13 @@ public class OakSpringCodeGeneratorTest {
 
         Map<String, Class> entityMapping = new HashMap<>();
         ServiceModelUtil.entity2ServiceModel(OakAdminUser.class, entityMapping, basePackageName, targetFilePath);
+    }
+
+    @Test
+    public void testAntMatch() {
+        PathMatcher antPathMatcher = new AntPathMatcher();
+
+        boolean match = antPathMatcher.match("/src/pages/**/*.less", "/src/pages/demo/js/style.less");
+        log.debug("{}", match);
     }
 }
