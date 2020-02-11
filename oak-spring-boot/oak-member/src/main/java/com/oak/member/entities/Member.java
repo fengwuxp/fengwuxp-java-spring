@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.text.MessageFormat;
@@ -21,6 +22,7 @@ import static javax.persistence.GenerationType.AUTO;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(exclude = {"memberAccount", "memberSecure"})
+@Accessors(chain = true)
 public class Member extends AbstractNamedEntityObject<Long> {
 
     private static final long serialVersionUID = 1L;
@@ -98,7 +100,7 @@ public class Member extends AbstractNamedEntityObject<Long> {
     private String regSource;
 
     @Schema(description =  "注册来源")
-    @JoinColumn(name = "reg_source", nullable = false)
+    @JoinColumn(name = "reg_source", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private ClientChannel regClientChannel;
 

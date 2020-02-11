@@ -26,7 +26,7 @@ public class ClientChannel implements java.io.Serializable {
     private String code;
 
     @Desc(value = "名称")
-    @Column(name = "`name`", nullable = false, length = 128)
+    @Column(name = "name", nullable = false, length = 128)
     private String name;
 
     @Desc(value = "客户端类型")
@@ -39,7 +39,7 @@ public class ClientChannel implements java.io.Serializable {
     private Integer orderIndex;
 
     @Desc(value = "启用")
-    @Column(name = "`enabled`", nullable = false)
+    @Column(name = "enabled", nullable = false)
     private Boolean enabled;
 
     @Desc(value = "创建日期")

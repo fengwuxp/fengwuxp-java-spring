@@ -10,7 +10,7 @@ import java.util.Date;
 @Schema(description = "个人实名信息")
 @Entity
 @Table(name = "t_member_personal", indexes = {
-        @Index(columnList = "member_id")
+        @Index(columnList = "id")
 })
 @Data
 public class MemberPersonal implements java.io.Serializable {

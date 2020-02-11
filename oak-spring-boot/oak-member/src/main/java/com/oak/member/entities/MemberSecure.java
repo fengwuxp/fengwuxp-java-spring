@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -23,18 +22,18 @@ public class MemberSecure implements java.io.Serializable {
     @Id
     private Long id;
 
-    @Desc(value = "加密key")
-    @Column(name = "pwd_key", nullable = false)
-    private String pwdKey;
-
-    @Desc(value = "动态口令安全密钥")
-    @Column(name = "totp_secret", length = 16, nullable = false)
-    @Size(min = 16, max = 16)
-    private String totpSecret;
-
-    @Desc(value = "开启二次验证")
-    @Column(name = "totp_enabled", nullable = false)
-    private Boolean totpEnabled = false;
+    //@Desc(value = "加密key")
+    //@Column(name = "pwd_key", nullable = false)
+    //private String pwdKey;
+    //
+    //@Desc(value = "动态口令安全密钥")
+    //@Column(name = "totp_secret", length = 16, nullable = false)
+    //@Size(min = 16, max = 16)
+    //private String totpSecret;
+    //
+    //@Desc(value = "开启二次验证")
+    //@Column(name = "totp_enabled", nullable = false)
+    //private Boolean totpEnabled = false;
 
     @Desc(value = "登录密码")
     @Column(name = "login_password", nullable = false, length = 128)

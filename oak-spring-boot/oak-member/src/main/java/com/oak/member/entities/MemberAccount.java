@@ -88,9 +88,9 @@ public class MemberAccount extends AbstractBaseEntityObject<Long> {
     @JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "id"))
     private Member member;
 
-    @Schema(description = "校验码")
-    @Column(name = "check_code", nullable = false)
-    private String checkCode;
+    //@Schema(description = "校验码")
+    //@Column(name = "check_code", nullable = false)
+    //private String checkCode;
 
     /**
      * default constructor
