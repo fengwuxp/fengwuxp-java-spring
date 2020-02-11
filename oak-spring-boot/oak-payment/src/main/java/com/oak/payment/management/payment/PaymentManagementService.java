@@ -1,10 +1,8 @@
 package com.oak.payment.management.payment;
 
-import com.oak.payment.management.req.CreateOrderReq;
-import com.oak.payment.management.req.WechatJsPaymentPreOrderReq;
-import com.oak.payment.management.rsp.WechatJsPaymentPreOrderRsp;
+import com.oak.payment.management.payment.req.*;
+import com.oak.payment.management.payment.rsp.WechatJsPaymentPreOrderRsp;
 import com.wuxp.api.ApiResp;
-import com.wuxp.payment.resp.QueryOrderResponse;
 
 /**
 * @author: zhuox
@@ -22,17 +20,16 @@ public interface PaymentManagementService {
     ApiResp<String> createPaymentOrder(CreateOrderReq req);
 
     /**
-     * 微信小程序/公众号预下单
+     * 支付完成
      * @param req
      * @return
      */
-    ApiResp<WechatJsPaymentPreOrderRsp> wechatJsPaymentPreOrder(WechatJsPaymentPreOrderReq req);
+    ApiResp<Void> paymentDone(PaymentDoneReq req);
+
     /**
-     * 支付完成
-     * @param orderResponse
+     * 退款完成
+     * @param req
      * @return
      */
-    ApiResp<Void> paymentDone(QueryOrderResponse orderResponse);
-
-
+    ApiResp<Void> orderRefundDone(OrderRefundDoneReq req);
 }

@@ -1,4 +1,4 @@
-package com.oak.payment.management.req;
+package com.oak.payment.management.payment.req;
 
 import com.oak.api.model.ApiBaseReq;
 import com.oak.payment.enums.PaymentType;

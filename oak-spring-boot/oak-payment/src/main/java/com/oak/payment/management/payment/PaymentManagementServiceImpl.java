@@ -1,15 +1,12 @@
 package com.oak.payment.management.payment;
 
-import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.oak.payment.enums.PaymentStatus;
-import com.oak.payment.management.req.CreateOrderReq;
-import com.oak.payment.management.req.WechatJsPaymentPreOrderReq;
-import com.oak.payment.management.rsp.WechatJsPaymentPreOrderRsp;
+import com.oak.payment.management.payment.req.*;
+import com.oak.payment.management.payment.rsp.WechatJsPaymentPreOrderRsp;
 import com.oak.payment.services.payment.PaymentService;
 import com.oak.payment.services.payment.info.PaymentInfo;
 import com.oak.payment.services.payment.req.CreatePaymentReq;
 import com.oak.payment.services.payment.req.EditPaymentReq;
-import com.oak.payment.services.payment.req.QueryPaymentReq;
 import com.oak.payment.services.paymentorder.PaymentOrderService;
 import com.oak.payment.services.paymentorder.info.PaymentOrderInfo;
 import com.oak.payment.services.paymentorder.req.CreatePaymentOrderReq;
@@ -18,21 +15,26 @@ import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.payment.enums.TradeStatus;
 import com.wuxp.payment.req.PreOrderRequest;
+import com.wuxp.payment.req.RefundRequest;
 import com.wuxp.payment.resp.PreOrderResponse;
-import com.wuxp.payment.resp.QueryOrderResponse;
 import com.wuxp.payment.wechat.WechatJsPaymentService;
 import com.wuxp.payment.wechat.model.WechatJsTradePayResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author: zhuox
  * @create: 2020-02-06
  * @description: 支付单服务实现
  **/
+@Slf4j
+@Service
 public class PaymentManagementServiceImpl implements PaymentManagementService {
 
     @Autowired
@@ -69,21 +71,10 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         return paymentService.create(createPaymentReq);
     }
 
-    @Override
-    public ApiResp<WechatJsPaymentPreOrderRsp> wechatJsPaymentPreOrder(WechatJsPaymentPreOrderReq req) {
-        PreOrderRequest preOrderRequest = new PreOrderRequest();
-        BeanUtils.copyProperties(req, preOrderRequest);
-        PreOrderResponse<WechatJsTradePayResult> response = wechatJsPaymentService.preOrder(preOrderRequest);
-        WechatJsTradePayResult tradePayResult = response.getResult();
-        WechatJsPaymentPreOrderRsp rsp = new WechatJsPaymentPreOrderRsp();
-        BeanUtils.copyProperties(tradePayResult, rsp);
-        return RestfulApiRespFactory.ok(rsp);
-    }
-
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ApiResp<Void> paymentDone(QueryOrderResponse orderResponse) {
-        PaymentInfo paymentInfo = paymentService.findById(orderResponse.getTradeNo());
+    public ApiResp<Void> paymentDone(PaymentDoneReq req) {
+        PaymentInfo paymentInfo = paymentService.findById(req.getTradeNo());
         if (paymentInfo == null) {
             return RestfulApiRespFactory.error("支付单不存在");
         }
@@ -92,21 +83,28 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         }
         //修改支付单信息
         EditPaymentReq editPaymentReq = new EditPaymentReq(paymentInfo.getSn());
-        editPaymentReq.setPaymentMethodName(orderResponse.getPaymentMethod().name());
-        editPaymentReq.setPayerAccount(orderResponse.getPayerAccount());
-        editPaymentReq.setReturnSn(orderResponse.getOutTradeNo());
+        editPaymentReq.setPaymentMethodName(req.getPaymentMethod().name());
+        editPaymentReq.setPayerAccount(req.getPayerAccount());
+        editPaymentReq.setReturnSn(req.getOutTradeNo());
         editPaymentReq.setFinishedTime(new Date());
-        editPaymentReq.setStatus(this.transformPaymentStatus(orderResponse.getTradeStatus().name()));
-        WxPayOrderNotifyResult payOrderNotifyResult = (WxPayOrderNotifyResult)orderResponse.getRawResponse();
-        editPaymentReq.setReturnCode(payOrderNotifyResult.getReturnCode());
-        editPaymentReq.setReturnInfo(payOrderNotifyResult.getReturnMsg());
+        editPaymentReq.setStatus(this.transformPaymentStatus(req.getTradeStatus().name()));
+        editPaymentReq.setReturnCode(req.getReturnCode());
+        editPaymentReq.setReturnInfo(req.getReturnInfo());
         paymentService.edit(editPaymentReq);
         //修改支付订单
         PaymentOrderInfo paymentOrderInfo = paymentOrderService.findById(paymentInfo.getPayOrderSn());
         EditPaymentOrderReq editPaymentOrderReq = new EditPaymentOrderReq(paymentOrderInfo.getSn());
-        editPaymentOrderReq.setPaidAmount(orderResponse.getBuyerPayAmount());
+        editPaymentOrderReq.setPaidAmount(req.getBuyerPayAmount());
         editPaymentOrderReq.setStatus(editPaymentReq.getStatus());
         paymentOrderService.edit(editPaymentOrderReq);
+        return RestfulApiRespFactory.ok();
+    }
+    
+
+    @Override
+    public ApiResp<Void> orderRefundDone(OrderRefundDoneReq req) {
+        PaymentInfo paymentInfo = paymentService.findById(req.getTradeNo());
+
         return RestfulApiRespFactory.ok();
     }
 
