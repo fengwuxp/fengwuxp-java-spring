@@ -19,7 +19,7 @@ import java.util.Date;
  *
  * @author chenPC
  */
-@Schema(description = "查询广告信息")
+@Schema(description = "查询广告")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

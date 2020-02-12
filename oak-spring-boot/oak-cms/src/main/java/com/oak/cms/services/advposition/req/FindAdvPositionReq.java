@@ -1,19 +1,19 @@
 package com.oak.cms.services.advposition.req;
 
-import com.levin.commons.dao.annotation.Eq;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-
+import com.levin.commons.dao.annotation.*;
 import javax.validation.constraints.NotNull;
+
+import com.oak.cms.enums.AdvType;
+import com.oak.cms.enums.AdvDisplayType;
 
 
 /**
- * 查找广告位信息
- * 2020-2-6 16:50:22
- *
- * @author chenPC
+ *  查找广告位信息
+ *  2020-2-12 18:54:50
  */
 @Schema(description = "查找广告位信息")
 @Data

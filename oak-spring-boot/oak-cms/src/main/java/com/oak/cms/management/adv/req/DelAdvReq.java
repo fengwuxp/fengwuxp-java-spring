@@ -33,5 +33,8 @@ public class DelAdvReq extends ApiBaseReq {
     @Eq(require = true)
     private Long id;
 
+    @Schema(description = "广告位id")
+    @NotNull
+    private Long apId;
 
 }

@@ -18,7 +18,7 @@ import java.util.Date;
  *
  * @author chenPC
  */
-@Schema(description = "创建CreateAdvReq的请求")
+@Schema(description = "创建广告")
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
