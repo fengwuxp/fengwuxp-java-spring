@@ -1,7 +1,7 @@
 package com.oak.payment.management.pay.req;
 
-import com.wuxp.payment.PaymentCallbackTemplateProvider;
 import com.wuxp.payment.PaymentConfigurationProvider;
+import com.wuxp.payment.wechat.config.WechatPaymentConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -20,9 +20,8 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 public class WechatJsApiPreOrderReq {
 
-    @Schema(description = "支付配置提供者")
-    @NotNull
-    private PaymentConfigurationProvider paymentConfigurationProvider;
+    @Schema(description = "支付配置")
+    private WechatPaymentConfig wechatPaymentConfig;
 
     /**
      * 应用内的交易流水号
