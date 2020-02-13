@@ -29,7 +29,6 @@ import com.oak.member.services.secure.req.CreateMemberSecureReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.beans.BeanUtils;

@@ -94,15 +94,15 @@ public class MemberManagementServiceTest {
 
         RegisterMemberFromWxMaReq req = new RegisterMemberFromWxMaReq();
         req.setAddress(faker.address().streetAddress())
-                .setCode("013ue0n80j1NaD1TMTj802LJm80ue0nD")
-                .setEncryptedData("UbW6iBKDSMWzsMs25hpS/TH/NjO/wvGdKwgk3fBeGvzmd//BdYHnHPO5X/XW5C5F7arK0RxoV95pNcsynpIuLmyQrmLuyS8F7RLZ+YtrSjZ8enaSY/tLn/nfAhVpS+Z/O//XOvYIH4hPveTFlhkYIlKF7SWZkqLri7ledeRwb15WsIdhVGDFVKozcHYuX0QxbK3shaomxxsAs5+FSjv5Jit3MB3H346ok0mrDfMFry9pzy7rq9OPDrBXw+4NkpMrPidrALksmu+HPfQcFoRoBCfDS2bg9aTH8EpAYz4aAoRTHisB2xRjQTeR7B/13v/pZ6ld5cs53CeY0Z/mL6dR1I3WlnTXNZfswKDkhw8H8srdlDV4s4hYmzFvikp05RxRgYgphG3UwnYCxR1AzK8epfWr4coSp5QOnHFoDlIFjiEtOKcvPlHgRPxRrgJPz48XgKqmgzYRDvOYpV49OD9xcw==")
-                .setIvStr("eMqZjwO2iQbsPcu6770ErA==")
+                .setCode("0130jIF82biEnM009cH82sjtF820jIFO")
+                .setEncryptedData("UttQML9Oc6asOeHPNMyjgvdZLEN2Gvk7HDtMrZUkeJrjb1E5n+KQEnoeptYitvQrQZeckck3ScpYN38zFYLAz6weYuMTxFfyIP7sujNMCTboXEi4OzJQKNS/mTOomjv7KYfnsEWCB9s4uYKSOFq+j0NpJTdPXnuRSNkVQOBLFp3aMnlzvF0cQ165Tnc/bHuiB6oOF5JQsBj0fiKU3hA9Xj227x4M93QkbJq0QhSK17P2eNRbEbRzMaMCpm+ejJTQ+nBfnbKCnF92iXEEN4R6hZUI2DgHXw5zwzYEzrXxIFNmRkHKqo+5vw5302oPYX8qfAO3Z6PgfMKH/rqfQROpJu+K9Fs/GUK27KmcXxESmamPLJOT9Vc/iwhyVQevQt1ZuvOS9GxXmUixkKOPb1uh/xomfvspGNDOacA55/Hbm3v6or3C46ygrG/84xORSvkQMczoHn+IT8UOn3V95q2X3g==")
+                .setIvStr("qHLxwglbPqVbuzWuS2SE0g==")
                 .setNickName("测试")
                 .setAvatarUrl("测试")
                 .setAreaId("350102")
                 .setGender(Gender.SECRET)
-                .setUserEncryptedData("UbW6iBKDSMWzsMs25hpS/TH/NjO/wvGdKwgk3fBeGvzmd//BdYHnHPO5X/XW5C5F7arK0RxoV95pNcsynpIuLmyQrmLuyS8F7RLZ+YtrSjZ8enaSY/tLn/nfAhVpS+Z/O//XOvYIH4hPveTFlhkYIlKF7SWZkqLri7ledeRwb15WsIdhVGDFVKozcHYuX0QxbK3shaomxxsAs5+FSjv5Jit3MB3H346ok0mrDfMFry9pzy7rq9OPDrBXw+4NkpMrPidrALksmu+HPfQcFoRoBCfDS2bg9aTH8EpAYz4aAoRTHisB2xRjQTeR7B/13v/pZ6ld5cs53CeY0Z/mL6dR1I3WlnTXNZfswKDkhw8H8srdlDV4s4hYmzFvikp05RxRgYgphG3UwnYCxR1AzK8epfWr4coSp5QOnHFoDlIFjiEtOKcvPlHgRPxRrgJPz48XgKqmgzYRDvOYpV49OD9xcw==")
-                .setUserIvStr("eMqZjwO2iQbsPcu6770ErA==")
+                .setUserEncryptedData("")
+                .setUserIvStr("qHLxwglbPqVbuzWuS2SE0g==")
                 .setAreaName("鼓楼区")
                 .setAvatarUrl("ster");
         ApiResp<Long> resp = memberManagementService.registerFromWxMa(req);
