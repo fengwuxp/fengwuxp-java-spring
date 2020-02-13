@@ -1,8 +1,9 @@
 package com.oak.payment.management.payment;
 
 import com.oak.payment.enums.PaymentStatus;
-import com.oak.payment.management.payment.req.*;
-import com.oak.payment.management.payment.rsp.WechatJsPaymentPreOrderRsp;
+import com.oak.payment.management.payment.req.CreateOrderReq;
+import com.oak.payment.management.payment.req.OrderRefundDoneReq;
+import com.oak.payment.management.payment.req.PaymentDoneReq;
 import com.oak.payment.services.payment.PaymentService;
 import com.oak.payment.services.payment.info.PaymentInfo;
 import com.oak.payment.services.payment.req.CreatePaymentReq;
@@ -14,19 +15,12 @@ import com.oak.payment.services.paymentorder.req.EditPaymentOrderReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.payment.enums.TradeStatus;
-import com.wuxp.payment.req.PreOrderRequest;
-import com.wuxp.payment.req.RefundRequest;
-import com.wuxp.payment.resp.PreOrderResponse;
-import com.wuxp.payment.wechat.WechatJsPaymentService;
-import com.wuxp.payment.wechat.model.WechatJsTradePayResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * @author: zhuox
@@ -41,8 +35,6 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
     private PaymentService paymentService;
     @Autowired
     private PaymentOrderService paymentOrderService;
-    @Autowired
-    private WechatJsPaymentService wechatJsPaymentService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -99,7 +91,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         paymentOrderService.edit(editPaymentOrderReq);
         return RestfulApiRespFactory.ok();
     }
-    
+
 
     @Override
     public ApiResp<Void> orderRefundDone(OrderRefundDoneReq req) {

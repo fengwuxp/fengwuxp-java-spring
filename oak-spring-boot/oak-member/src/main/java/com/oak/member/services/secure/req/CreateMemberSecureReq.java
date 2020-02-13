@@ -35,7 +35,6 @@ public class CreateMemberSecureReq extends ApiBaseReq {
     //private String totpSecret;
 
     @Schema(description = "登录密码")
-    @NotNull
     @Size(max = 128)
     private String loginPassword;
 

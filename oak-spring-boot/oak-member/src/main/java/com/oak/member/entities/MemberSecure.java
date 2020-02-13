@@ -36,7 +36,7 @@ public class MemberSecure implements java.io.Serializable {
     //private Boolean totpEnabled = false;
 
     @Desc(value = "登录密码")
-    @Column(name = "login_password", nullable = false, length = 128)
+    @Column(name = "login_password", length = 128)
     private String loginPassword;
 
     @Desc(value = "支付密码")

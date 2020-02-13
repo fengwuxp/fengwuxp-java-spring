@@ -28,7 +28,6 @@ import java.util.Date;
 public class RegisterMemberReq extends ApiBaseReq {
 
     @Schema(description =  "手机号")
-    @NotNull
     private String mobilePhone;
 
     @Schema(description =  "Email")

@@ -9,6 +9,7 @@ import com.oak.member.management.member.MemberManagementService;
 import com.oak.member.management.member.info.AccountInfo;
 import com.oak.member.management.member.req.MemberAccountInfoReq;
 import com.oak.member.management.member.req.RegisterMemberFromWxMaReq;
+import com.oak.member.management.member.req.RegisterMemberFromWxReq;
 import com.oak.member.management.member.req.RegisterMemberReq;
 import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
@@ -93,19 +94,32 @@ public class MemberManagementServiceTest {
 
         RegisterMemberFromWxMaReq req = new RegisterMemberFromWxMaReq();
         req.setAddress(faker.address().streetAddress())
-                .setCode("")
-                .setEncryptedData("")
-                .setIvStr("")
-                .setIvStr("")
+                .setCode("013ue0n80j1NaD1TMTj802LJm80ue0nD")
+                .setEncryptedData("UbW6iBKDSMWzsMs25hpS/TH/NjO/wvGdKwgk3fBeGvzmd//BdYHnHPO5X/XW5C5F7arK0RxoV95pNcsynpIuLmyQrmLuyS8F7RLZ+YtrSjZ8enaSY/tLn/nfAhVpS+Z/O//XOvYIH4hPveTFlhkYIlKF7SWZkqLri7ledeRwb15WsIdhVGDFVKozcHYuX0QxbK3shaomxxsAs5+FSjv5Jit3MB3H346ok0mrDfMFry9pzy7rq9OPDrBXw+4NkpMrPidrALksmu+HPfQcFoRoBCfDS2bg9aTH8EpAYz4aAoRTHisB2xRjQTeR7B/13v/pZ6ld5cs53CeY0Z/mL6dR1I3WlnTXNZfswKDkhw8H8srdlDV4s4hYmzFvikp05RxRgYgphG3UwnYCxR1AzK8epfWr4coSp5QOnHFoDlIFjiEtOKcvPlHgRPxRrgJPz48XgKqmgzYRDvOYpV49OD9xcw==")
+                .setIvStr("eMqZjwO2iQbsPcu6770ErA==")
                 .setNickName("测试")
                 .setAvatarUrl("测试")
                 .setAreaId("350102")
                 .setGender(Gender.SECRET)
-                .setUserEncryptedData("")
-                .setUserIvStr("")
+                .setUserEncryptedData("UbW6iBKDSMWzsMs25hpS/TH/NjO/wvGdKwgk3fBeGvzmd//BdYHnHPO5X/XW5C5F7arK0RxoV95pNcsynpIuLmyQrmLuyS8F7RLZ+YtrSjZ8enaSY/tLn/nfAhVpS+Z/O//XOvYIH4hPveTFlhkYIlKF7SWZkqLri7ledeRwb15WsIdhVGDFVKozcHYuX0QxbK3shaomxxsAs5+FSjv5Jit3MB3H346ok0mrDfMFry9pzy7rq9OPDrBXw+4NkpMrPidrALksmu+HPfQcFoRoBCfDS2bg9aTH8EpAYz4aAoRTHisB2xRjQTeR7B/13v/pZ6ld5cs53CeY0Z/mL6dR1I3WlnTXNZfswKDkhw8H8srdlDV4s4hYmzFvikp05RxRgYgphG3UwnYCxR1AzK8epfWr4coSp5QOnHFoDlIFjiEtOKcvPlHgRPxRrgJPz48XgKqmgzYRDvOYpV49OD9xcw==")
+                .setUserIvStr("eMqZjwO2iQbsPcu6770ErA==")
                 .setAreaName("鼓楼区")
                 .setAvatarUrl("ster");
         ApiResp<Long> resp = memberManagementService.registerFromWxMa(req);
+
+        Assert.assertTrue(resp.getMessage(), resp.isSuccess());
+
+    }
+
+    @Test
+    public void testRegisterFromWx() throws Exception {
+
+        RegisterMemberFromWxReq req = new RegisterMemberFromWxReq();
+        req.setAddress(faker.address().streetAddress())
+                .setCode("oPGID1ZEH5Rg5Xen3L-QAm11ts3w")
+                .setAreaId("350102")
+                .setAreaName("鼓楼区");
+        ApiResp<Long> resp = memberManagementService.registerFromWx(req);
 
         Assert.assertTrue(resp.getMessage(), resp.isSuccess());
 
