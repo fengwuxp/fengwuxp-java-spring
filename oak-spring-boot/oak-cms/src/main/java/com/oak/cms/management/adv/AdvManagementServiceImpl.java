@@ -111,7 +111,7 @@ public class AdvManagementServiceImpl implements AdvManagementService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ApiResp<Void> editEnabled(UpdateAdvReq req) {
+    public ApiResp<Void> editAdv(UpdateAdvReq req) {
         if (!StringUtils.hasText(req.getUrl())) {
             req.setUrl(null);
         }
