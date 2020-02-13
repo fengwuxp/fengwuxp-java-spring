@@ -2,14 +2,10 @@ package test.com.wuxp.security.example.codegen;
 
 
 import com.oak.codegen.ServiceModelUtil;
-
 import com.wuxp.security.example.entities.ExampleEntity;
 import org.junit.Test;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 

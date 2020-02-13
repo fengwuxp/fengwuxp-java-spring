@@ -31,120 +31,120 @@ public class WxMaHelper {
 
     //微信小程序参数
     //private static String appId = "wx794451f9a4fe0da2";
-    private static String appId = "wxf7aa3f25069cf527";
-    private static String secret = "82dfc32a790aa3e66547935d8ae7a3a6";
-    private static String aesKey = "EncodingAESKey";
-    private static String msgDataFormat = "JSON";
+    private static String appId = "";
+    private static String secret = "";
+    private static String aesKey = "";
+    private static String msgDataFormat = "";
     //微信公众号参数
     /**
      * 公众号appID
      */
-    private static String mpAppId = "wx9bbf82a4639c9c8b";
+    private static String mpAppId = "";
     /**
      * 公众号appsecret
      */
-    private static String mpSecret = "ee8b7211676c6992b43d1d5468e25c88";
+    private static String mpSecret = "";
     /**
      * 公众号EncodingAESKey
      */
-    private static String mpAesKey;
+    private static String mpAesKey = "";
     /**
      * 微信商户平台ID
      */
-    private static String mpPartnerId;
+    private static String mpPartnerId = "";
     /**
      * 商户平台设置的API密钥
      */
-    private static String mpPartnerKey;
+    private static String mpPartnerKey = "";
     /**
      * 商户平台的证书文件地址
      */
-    private static String mpKeyPath;
+    private static String mpKeyPath = "";
     /**
      * 模版消息的模版ID
      */
-    private static String mpTemplateId;
+    private static String mpTemplateId = "";
     /**
      * 网页授权获取用户信息回调地址
      */
-    private static String mpOauth2RedirectURI;
+    private static String mpOauth2RedirectURI = "";
     /**
      * 网页应用授权登陆回调地址
      */
-    private static String mpQRConnectRedirectURL;
+    private static String mpQRConnectRedirectURL = "";
     /**
      * 完整客服账号，格式为：账号前缀@公众号微信号
      */
-    private static String mpKFAccount;
+    private static String mpKFAccount = "";
 
     @Value("${wechat.ma.appId}")
-    public static void setAppId(String appId) {
-        WxMaHelper.appId = appId;
+    public void setAppId(String appIdStr) {
+        appId = appIdStr;
     }
 
     @Value("${wechat.ma.secret}")
-    public static void setSecret(String secret) {
-        WxMaHelper.secret = secret;
+    public void setSecret(String secretStr) {
+        secret = secretStr;
     }
 
     @Value("${wechat.ma.aesKey}")
-    public static void setAesKey(String aesKey) {
-        WxMaHelper.aesKey = aesKey;
+    public void setAesKey(String aeskey) {
+        aesKey = aeskey;
     }
 
     @Value("${wechat.ma.msgDataFormat}")
-    public static void setMsgDataFormat(String msgDataFormat) {
-        WxMaHelper.msgDataFormat = msgDataFormat;
+    public void setMsgDataFormat(String msgdataFormat) {
+        msgDataFormat = msgdataFormat;
     }
 
     @Value("${wechat.mp.appId}")
-    public static void setMpAppId(String mpAppId) {
-        WxMaHelper.mpAppId = mpAppId;
+    public void setMpAppId(String appId) {
+        mpAppId = appId;
     }
 
     @Value("${wechat.mp.secret}")
-    public static void setMpSecret(String mpSecret) {
-        WxMaHelper.mpSecret = mpSecret;
+    public void setMpSecret(String secret) {
+        mpSecret = secret;
     }
 
     @Value("${wechat.mp.aesKey}")
-    public static void setMpAesKey(String mpAesKey) {
-        WxMaHelper.mpAesKey = mpAesKey;
+    public void setMpAesKey(String aesKey) {
+        mpAesKey = aesKey;
     }
 
     @Value("${wechat.mp.partnerId}")
-    public static void setMpPartnerId(String mpPartnerId) {
-        WxMaHelper.mpPartnerId = mpPartnerId;
+    public void setMpPartnerId(String mppartnerId) {
+        mpPartnerId = mppartnerId;
     }
 
     @Value("${wechat.mp.partnerKey}")
-    public static void setMpPartnerKey(String mpPartnerKey) {
-        WxMaHelper.mpPartnerKey = mpPartnerKey;
+    public void setMpPartnerKey(String mppartnerKey) {
+        mpPartnerKey = mppartnerKey;
     }
 
     @Value("${wechat.mp.keyPath}")
-    public static void setMpKeyPath(String mpKeyPath) {
-        WxMaHelper.mpKeyPath = mpKeyPath;
+    public void setMpKeyPath(String mpkeyPath) {
+        mpKeyPath = mpkeyPath;
     }
 
     @Value("${wechat.mp.templateId}")
-    public static void setMpTemplateId(String mpTemplateId) {
-        WxMaHelper.mpTemplateId = mpTemplateId;
+    public void setMpTemplateId(String mptemplateId) {
+        mpTemplateId = mptemplateId;
     }
 
     @Value("${wechat.mp.oauth2RedirectURI}")
-    public static void setMpOauth2RedirectURI(String mpOauth2RedirectURI) {
-        WxMaHelper.mpOauth2RedirectURI = mpOauth2RedirectURI;
+    public void setMpOauth2RedirectURI(String mpoauth2RedirectURI) {
+        mpOauth2RedirectURI = mpoauth2RedirectURI;
     }
 
     @Value("${wechat.mp.qrConnectRedirectURL}")
-    public static void setMpQRConnectRedirectURL(String mpQRConnectRedirectURL) {
-        WxMaHelper.mpQRConnectRedirectURL = mpQRConnectRedirectURL;
+    public void setMpQRConnectRedirectURL(String mpqRConnectRedirectURL) {
+        mpQRConnectRedirectURL = mpqRConnectRedirectURL;
     }
 
     @Value("${wechat.mp.kfAccount}")
-    public static void setMpKFAccount(String mpKFAccount) {
-        WxMaHelper.mpKFAccount = mpKFAccount;
+    public void setMpKFAccount(String mpkFAccount) {
+        mpKFAccount = mpkFAccount;
     }
 
     /**
