@@ -1,17 +1,10 @@
 package test.com.wuxp.security.example;
 
-import com.wuxp.security.authenticate.PasswordUserDetails;
 import com.wuxp.security.jwt.JwtTokenPair;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;

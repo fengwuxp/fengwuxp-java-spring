@@ -11,40 +11,42 @@
 
     <artifactId>oaknt-payment</artifactId>
     <dependencies>
+
         <dependency>
             <groupId>com.wuxp.basic</groupId>
             <artifactId>fengwuxp-java-basic</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.oak.springboot</groupId>
             <artifactId>oaknt-api-support</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.oak.springboot</groupId>
             <artifactId>oaknt-codegen-controller</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.oak.springboot</groupId>
-            <artifactId>oaknt-rbac</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.wuxp.payment</groupId>
             <artifactId>fengwuxp-payment-spring-boot-starter</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
+
     </dependencies>
+
 
 
 </project>

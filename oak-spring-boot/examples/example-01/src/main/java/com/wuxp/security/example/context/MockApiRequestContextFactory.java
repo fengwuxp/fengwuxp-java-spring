@@ -23,6 +23,5 @@ public class MockApiRequestContextFactory implements ApiRequestContextFactory {
         context.put("ip", IpAddressUtils.try2GetUserRealIPAddr(request));
         context.put("name", "张三");
         return context;
-
     }
 }
