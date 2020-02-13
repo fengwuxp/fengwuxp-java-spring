@@ -10,6 +10,7 @@ import com.wuxp.security.example.services.simple.req.CreateExampleReq;
 import com.wuxp.security.example.services.simple.req.DeleteExampleReq;
 import com.wuxp.security.example.services.simple.req.EditExampleReq;
 import com.wuxp.security.example.services.simple.req.QueryExampleReq;
+import com.wuxp.security.example.services.user.AdminUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

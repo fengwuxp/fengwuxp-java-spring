@@ -75,6 +75,9 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 return RestfulApiRespFactory.error("该手机号已注册！");
             }
         }
+        if (!req.getNotPassword() && !StringUtils.hasText(req.getLoginPassword())) {
+            return RestfulApiRespFactory.error("登陆密码不能为空");
+        }
 
         ClientChannel regSource = jpaDao.selectFrom(ClientChannel.class)
                 .eq(E_ClientChannel.clientType, req.getClientType())
@@ -133,22 +136,33 @@ public class MemberManagementServiceImpl implements MemberManagementService {
         if (!tokenResp.isSuccess()) {
             return RestfulApiRespFactory.error(tokenResp.getMessage());
         }
-        ApiResp<WxMpUser> userResp = WxMaHelper.getWxMpUserInfo(tokenResp.getData());
-        if (!tokenResp.isSuccess()) {
+        ApiResp<WxMpUser> userResp = WxMaHelper.getWxMpUserInfo(req.getCode());
+        if (!userResp.isSuccess()) {
             return RestfulApiRespFactory.error(userResp.getMessage());
         }
         RegisterMemberReq registerMemberReq = new RegisterMemberReq();
         BeanUtils.copyProperties(req, registerMemberReq);
         registerMemberReq.setClientType(ClientType.MOBILE)
                 .setOpenType(OpenType.WEIXIN)
-                .setOpenId(tokenResp.getData().getOpenId())
+                .setOpenId(userResp.getData().getOpenId())
                 .setUserName(userResp.getData().getNickname())
                 .setAvatarUrl(userResp.getData().getHeadImgUrl())
                 .setNickName(userResp.getData().getNickname())
                 .setUnionId(userResp.getData().getUnionId())
                 .setGender(formatUserGender(userResp.getData().getSex()))
-                .setNotPassword(Boolean.FALSE)
+                .setNotPassword(Boolean.TRUE)
+                .setMobileAuth(Boolean.FALSE)
                 .setVerify(MemberVerifyStatus.APPROVED);
+                //.setOpenType(OpenType.WEIXIN)
+                //.setOpenId("oQoUs5OFGiCBRPqHMR0Eghxd-u8E")
+                //.setUserName("L、")
+                //.setAvatarUrl("https://wx.qlogo.cn/mmopen/vi_32/aj70XCXjADAeDEoteLsFgbq3klTicKib0GXTEcurTrKJX3iayicIApEBmoFicgibIYxgqZcvrhPaqp1u86gQVMQ0Gqtw/132")
+                //.setNickName("L、")
+                //.setUnionId("")
+                //.setGender(Gender.SECRET)
+                //.setNotPassword(Boolean.TRUE)
+                //.setMobileAuth(Boolean.FALSE)
+                //.setVerify(MemberVerifyStatus.APPROVED);
 
         return register(registerMemberReq);
     }
@@ -168,10 +182,12 @@ public class MemberManagementServiceImpl implements MemberManagementService {
         RegisterMemberReq registerReq = new RegisterMemberReq();
         BeanUtils.copyProperties(req, registerReq);
         registerReq.setOpenType(OpenType.WEIXIN_MA)
+                .setUserName(userInfo.getData().getNickName())
                 .setOpenId(sessionResult.getData().getOpenid())
                 .setUnionId(userInfo.getData().getUnionId())
                 .setMobilePhone(phoneNumberInfo.getData().getPhoneNumber())
-                .setNotPassword(Boolean.FALSE)
+                .setNotPassword(Boolean.TRUE)
+                .setMobileAuth(Boolean.FALSE)
                 .setVerify(MemberVerifyStatus.APPROVED)
                 .setClientType(ClientType.MOBILE);
         ApiResp<Long> rsp = register(registerReq);
