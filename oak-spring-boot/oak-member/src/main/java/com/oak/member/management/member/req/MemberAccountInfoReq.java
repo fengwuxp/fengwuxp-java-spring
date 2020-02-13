@@ -1,6 +1,8 @@
 package com.oak.member.management.member.req;
 
 import com.oak.api.model.ApiBaseReq;
+import com.oak.member.constant.MemberApiContextInjectExprConstant;
+import com.wuxp.api.context.InjectField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -21,7 +23,7 @@ import javax.validation.constraints.NotNull;
 public class MemberAccountInfoReq extends ApiBaseReq {
 
     @Schema(name = "用户id")
-    @NotNull
+    @InjectField(value = MemberApiContextInjectExprConstant.INJECT_MEMBER_ID_EXPR)
     private Long id;
 
 }

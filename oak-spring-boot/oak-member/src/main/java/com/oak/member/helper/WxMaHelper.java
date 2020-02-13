@@ -247,7 +247,7 @@ public class WxMaHelper {
     }
 
     /**
-     * 微信公众号 根据openId获取用户信息
+     * 微信公众号 根据token获取用户信息
      *
      * @param token 用户网页授权 access_token
      * @return
@@ -265,6 +265,12 @@ public class WxMaHelper {
         }
     }
 
+    /**
+     * 微信公众号 openId
+     *
+     * @param openId 用户网页授权 access_token
+     * @return
+     */
     public static ApiResp<WxMpUser> getWxMpUserInfo(String openId) {
         WxMpService mpService = WxMaHelper.getWxMpService();
         try {

@@ -97,13 +97,4 @@ public class AccountInfo {
     @Schema(description = "用户会员vip级别")
     private VipGrade vipGrade;
 
-    @Schema(description = "是否有月卡")
-    private Boolean hasMonthCard;
-
-    @Schema(description = "月卡数量")
-    private Integer cardNum;
-
-    @Schema(description = "月卡剩余天数")
-    private Long cardDay;
-
 }
