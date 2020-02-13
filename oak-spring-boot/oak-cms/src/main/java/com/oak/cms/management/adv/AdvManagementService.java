@@ -1,10 +1,8 @@
 package com.oak.cms.management.adv;
 
-import com.oak.cms.management.adv.req.AddAdvInfoReq;
-import com.oak.cms.management.adv.req.DelAdvReq;
-import com.oak.cms.management.adv.req.QueryAdvInfoReq;
-import com.oak.cms.management.adv.req.UpdateAdvReq;
+import com.oak.cms.management.adv.req.*;
 import com.oak.cms.services.adv.info.AdvInfo;
+import com.oak.cms.services.advposition.info.AdvPositionInfo;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 
@@ -19,7 +17,7 @@ public interface AdvManagementService {
      * @param req
      * @return
      */
-    Pagination<AdvInfo> query(QueryAdvInfoReq req);
+    Pagination<AdvInfo> queryAdv(QueryAdvInfoReq req);
 
     /**
      * 添加广告
@@ -27,7 +25,7 @@ public interface AdvManagementService {
      * @param req
      * @return
      */
-    ApiResp<Long> create(AddAdvInfoReq req);
+    ApiResp<Long> createAdv(AddAdvInfoReq req);
 
 
     /**
@@ -42,8 +40,43 @@ public interface AdvManagementService {
     /**
      * 删除广告
      *
-     * @param id
+     * @param req
      * @return
      */
     ApiResp<Void> deleteAdvById(DelAdvReq req);
+
+
+    /**
+     * 创建广告位
+     *
+     * @param req
+     * @return
+     */
+    ApiResp<Long> createAdvPosition(AddAdvPositionReq req);
+
+
+    /**
+     * 删除广告位
+     *
+     * @param req
+     * @return
+     */
+    ApiResp<Void> deleteAdvPosition(DelAdvPositionReq req);
+
+    /**
+     * 更新广告位
+     *
+     * @param req
+     * @return
+     */
+    ApiResp<Void> editAdvPosition(UpdateAdvPositionReq req);
+
+    /**
+     * 查询广告位
+     *
+     * @param req
+     * @return
+     */
+    Pagination<AdvPositionInfo> queryPositions(QueryAdvPositionInfoReq req);
+
 }

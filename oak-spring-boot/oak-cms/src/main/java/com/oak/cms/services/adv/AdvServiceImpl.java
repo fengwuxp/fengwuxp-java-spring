@@ -3,23 +3,28 @@ package com.oak.cms.services.adv;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.UpdateDao;
 import com.oak.api.helper.SimpleCommonDaoHelper;
-import org.springframework.beans.BeanUtils;
+import com.oak.cms.entities.Adv;
+import com.oak.cms.services.adv.info.AdvInfo;
+import com.oak.cms.services.adv.req.CreateAdvReq;
+import com.oak.cms.services.adv.req.DeleteAdvReq;
+import com.oak.cms.services.adv.req.EditAdvReq;
+import com.oak.cms.services.adv.req.QueryAdvReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
+import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.wuxp.api.restful.RestfulApiRespFactory;
-import com.oak.cms.entities.Adv;
-import com.oak.cms.services.adv.req.*;
-import com.oak.cms.services.adv.info.AdvInfo;
+
 import java.util.Date;
-import com.oak.api.services.infoprovide.info.AreaInfo;
 
 
 /**
- *  广告信息服务
- *  2020-2-10 18:55:01
+ * 广告信息服务
+ * 2020-2-10 18:55:01
+ *
+ * @author chenPC
  */
 @Service
 @Slf4j
@@ -36,7 +41,7 @@ public class AdvServiceImpl implements AdvService {
         Adv entity = new Adv();
         BeanUtils.copyProperties(req, entity);
 
-            entity.setUpdateTime(new Date());
+        entity.setUpdateTime(new Date());
 
         jpaDao.create(entity);
 
@@ -49,7 +54,7 @@ public class AdvServiceImpl implements AdvService {
 
         Adv entity = jpaDao.find(Adv.class, req.getId());
         if (entity == null) {
-            return  RestfulApiRespFactory.error("广告信息数据不存在");
+            return RestfulApiRespFactory.error("广告信息数据不存在");
         }
 
         UpdateDao<Adv> updateDao = jpaDao.updateTo(Adv.class).appendByQueryObj(req);
@@ -57,7 +62,7 @@ public class AdvServiceImpl implements AdvService {
         updateDao.appendColumn("updateTime", new Date());
         int update = updateDao.update();
         if (update < 1) {
-            return  RestfulApiRespFactory.error("更新广告信息失败");
+            return RestfulApiRespFactory.error("更新广告信息失败");
         }
 
         return RestfulApiRespFactory.ok();
@@ -69,7 +74,7 @@ public class AdvServiceImpl implements AdvService {
 
         if (req.getId() == null
                 && (req.getIds() == null || req.getIds().length == 0)) {
-            return  RestfulApiRespFactory.error("删除参数不能为空");
+            return RestfulApiRespFactory.error("删除参数不能为空");
         }
 
         boolean r;
@@ -80,11 +85,10 @@ public class AdvServiceImpl implements AdvService {
                     .appendColumn("deleted", true)
                     .appendByQueryObj(req)
                     .update() > 0;
-            //return RestfulApiRespFactory.error("无法删除广告信息");
         }
 
         if (!r) {
-            return  RestfulApiRespFactory.error("删除失败");
+            return RestfulApiRespFactory.error("删除失败");
         }
 
         return RestfulApiRespFactory.ok();
@@ -101,7 +105,7 @@ public class AdvServiceImpl implements AdvService {
     @Override
     public Pagination<AdvInfo> query(QueryAdvReq req) {
 
-        return SimpleCommonDaoHelper.queryObject(jpaDao,Adv.class,AdvInfo.class,req);
+        return SimpleCommonDaoHelper.queryObject(jpaDao, Adv.class, AdvInfo.class, req);
 
     }
 }

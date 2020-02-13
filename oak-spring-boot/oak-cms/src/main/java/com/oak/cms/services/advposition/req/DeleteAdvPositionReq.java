@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * 删除广告位信息
- * 2020-2-6 16:50:22
+ * 2020-2-12 18:54:50
  *
  * @author chenPC
  */

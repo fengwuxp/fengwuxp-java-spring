@@ -9,7 +9,7 @@ import com.wuxp.payment.wechat.model.WechatJsTradePayResult;
 * @create: 2020-02-11
 * @description: 微信支付服务
 **/
-public interface WechatPayService {
+public interface WechatAlonePayService {
 
     /**
      *

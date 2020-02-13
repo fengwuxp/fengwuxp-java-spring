@@ -1,6 +1,5 @@
 package com.oak.cms.services.advposition;
 
-import com.alibaba.druid.util.StringUtils;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.UpdateDao;
 import com.oak.api.helper.SimpleCommonDaoHelper;
@@ -17,15 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
 
 /**
  * 广告位信息服务
- * 2020-2-6 16:50:23
- *
- * @author chenPC
+ * 2020-2-12 18:54:50
  */
 @Service
 @Slf4j
@@ -103,6 +101,7 @@ public class AdvPositionServiceImpl implements AdvPositionService {
                     .appendColumn("deleted", true)
                     .appendByQueryObj(req)
                     .update() > 0;
+            //return RestfulApiRespFactory.error("无法删除广告位信息");
         }
 
         if (!r) {

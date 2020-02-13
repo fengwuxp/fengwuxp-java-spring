@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author chenPC
  */
-@Schema(description = "查找广告信息")
+@Schema(description = "查找广告")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

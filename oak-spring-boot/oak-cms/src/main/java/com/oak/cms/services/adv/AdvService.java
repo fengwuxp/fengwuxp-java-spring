@@ -12,6 +12,8 @@ import com.wuxp.api.model.Pagination;
 /**
  * 广告信息服务
  * 2020-2-10 18:55:01
+ *
+ * @author chenPC
  */
 public interface AdvService {
 

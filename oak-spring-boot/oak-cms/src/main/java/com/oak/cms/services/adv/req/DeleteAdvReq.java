@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  *
  * @author chenPC
  */
-@Schema(description = "删除广告信息")
+@Schema(description = "删除广告")
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
