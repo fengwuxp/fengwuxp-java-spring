@@ -3,6 +3,7 @@ package com.oak.member.management.member;
 import com.oak.member.management.member.info.AccountInfo;
 import com.oak.member.management.member.req.MemberAccountInfoReq;
 import com.oak.member.management.member.req.RegisterMemberFromWxMaReq;
+import com.oak.member.management.member.req.RegisterMemberFromWxReq;
 import com.oak.member.management.member.req.RegisterMemberReq;
 import com.wuxp.api.ApiResp;
 
@@ -25,13 +26,13 @@ public interface MemberManagementService {
      */
     ApiResp<Long> register(RegisterMemberReq req);
 
-    ///**
-    // * 从微信公众号注册帐号
-    // *
-    // * @param req
-    // * @return
-    // */
-    //ApiResp<Long> registerFromWx(RegisterMemberFromWxMaReq req);
+    /**
+     * 从微信公众号注册帐号
+     *
+     * @param req
+     * @return
+     */
+    ApiResp<Long> registerFromWx(RegisterMemberFromWxReq req);
 
     /**
      * 从微信小程序注册帐号

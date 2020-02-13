@@ -9,14 +9,12 @@ import com.oak.api.entities.system.E_ClientChannel;
 import com.oak.api.enums.ClientType;
 import com.oak.member.entities.E_Member;
 import com.oak.member.entities.Member;
-import com.oak.member.enums.AccountStatus;
-import com.oak.member.enums.MemberVerifyStatus;
-import com.oak.member.enums.OpenType;
-import com.oak.member.enums.VipGrade;
+import com.oak.member.enums.*;
 import com.oak.member.helper.WxMaHelper;
 import com.oak.member.management.member.info.AccountInfo;
 import com.oak.member.management.member.req.MemberAccountInfoReq;
 import com.oak.member.management.member.req.RegisterMemberFromWxMaReq;
+import com.oak.member.management.member.req.RegisterMemberFromWxReq;
 import com.oak.member.management.member.req.RegisterMemberReq;
 import com.oak.member.services.account.MemberAccountService;
 import com.oak.member.services.account.info.MemberAccountInfo;
@@ -31,6 +29,9 @@ import com.oak.member.services.secure.req.CreateMemberSecureReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,23 +128,49 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     }
 
     @Override
+    public ApiResp<Long> registerFromWx(RegisterMemberFromWxReq req) {
+        ApiResp<WxMpOAuth2AccessToken> tokenResp = WxMaHelper.getOAuth2AccessToken(req.getCode());
+        if (!tokenResp.isSuccess()) {
+            return RestfulApiRespFactory.error(tokenResp.getMessage());
+        }
+        ApiResp<WxMpUser> userResp = WxMaHelper.getWxMpUserInfo(tokenResp.getData());
+        if (!tokenResp.isSuccess()) {
+            return RestfulApiRespFactory.error(userResp.getMessage());
+        }
+        RegisterMemberReq registerMemberReq = new RegisterMemberReq();
+        BeanUtils.copyProperties(req, registerMemberReq);
+        registerMemberReq.setClientType(ClientType.MOBILE)
+                .setOpenType(OpenType.WEIXIN)
+                .setOpenId(tokenResp.getData().getOpenId())
+                .setUserName(userResp.getData().getNickname())
+                .setAvatarUrl(userResp.getData().getHeadImgUrl())
+                .setNickName(userResp.getData().getNickname())
+                .setUnionId(userResp.getData().getUnionId())
+                .setGender(formatUserGender(userResp.getData().getSex()))
+                .setNotPassword(Boolean.FALSE)
+                .setVerify(MemberVerifyStatus.APPROVED);
+
+        return register(registerMemberReq);
+    }
+
+    @Override
     public ApiResp<Long> registerFromWxMa(RegisterMemberFromWxMaReq req) {
         //获取用户SessionKey和openId
-        WxMaJscode2SessionResult sessionResult = WxMaHelper.getWxSessionInfo(req.getCode());
-        if (sessionResult == null) {
-            return RestfulApiRespFactory.error("错误");
+        ApiResp<WxMaJscode2SessionResult> sessionResult = WxMaHelper.getWxMaSessionInfo(req.getCode());
+        if (!sessionResult.isSuccess()) {
+            return RestfulApiRespFactory.error(sessionResult.getMessage());
         }
         //解密用户信息
-        WxMaUserInfo userInfo = WxMaHelper.getWxUserInfo(sessionResult.getSessionKey(), req.getUserEncryptedData(), req.getUserIvStr());
+        ApiResp<WxMaUserInfo> userInfo = WxMaHelper.getWxMaUserInfo(sessionResult.getData().getSessionKey(), req.getUserEncryptedData(), req.getUserIvStr());
         //解密用户手机号
-        WxMaPhoneNumberInfo phoneNumberInfo = WxMaHelper.getPhoneNoInfo(sessionResult.getSessionKey(), req.getEncryptedData(), req.getIvStr());
+        ApiResp<WxMaPhoneNumberInfo> phoneNumberInfo = WxMaHelper.getWxMaPhoneNoInfo(sessionResult.getData().getSessionKey(), req.getEncryptedData(), req.getIvStr());
 
         RegisterMemberReq registerReq = new RegisterMemberReq();
         BeanUtils.copyProperties(req, registerReq);
         registerReq.setOpenType(OpenType.WEIXIN_MA)
-                .setOpenId(sessionResult.getOpenid())
-                .setUnionId(userInfo.getUnionId())
-                .setMobilePhone(phoneNumberInfo.getPhoneNumber())
+                .setOpenId(sessionResult.getData().getOpenid())
+                .setUnionId(userInfo.getData().getUnionId())
+                .setMobilePhone(phoneNumberInfo.getData().getPhoneNumber())
                 .setNotPassword(Boolean.FALSE)
                 .setVerify(MemberVerifyStatus.APPROVED)
                 .setClientType(ClientType.MOBILE);
@@ -170,5 +197,16 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setVipGrade(memberAccount.getVipGrade());
         //TODO 月卡数据
         return RestfulApiRespFactory.created(accountInfo);
+    }
+
+    public Gender formatUserGender(Integer wxSex) {
+        switch (wxSex) {
+            case 1:
+                return Gender.MAN;
+            case 2:
+                return Gender.WOMEN;
+            default:
+                return Gender.SECRET;
+        }
     }
 }
