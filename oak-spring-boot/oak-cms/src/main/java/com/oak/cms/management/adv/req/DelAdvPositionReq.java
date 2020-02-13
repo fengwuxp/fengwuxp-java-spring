@@ -3,10 +3,7 @@ package com.oak.cms.management.adv.req;
 import com.levin.commons.dao.annotation.In;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -19,6 +16,7 @@ import lombok.experimental.Accessors;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
 public class DelAdvPositionReq extends ApiBaseReq {

@@ -34,7 +34,7 @@ public interface AdvManagementService {
      * @param req
      * @return
      */
-    ApiResp<Void> editEnabled(UpdateAdvReq req);
+    ApiResp<Void> editAdv(UpdateAdvReq req);
 
 
     /**

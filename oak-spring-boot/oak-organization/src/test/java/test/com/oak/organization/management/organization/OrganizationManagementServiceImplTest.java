@@ -6,18 +6,14 @@ import com.oak.organization.management.organization.OrganizationManagementServic
 import com.oak.organization.management.organization.req.AddOrganizationReq;
 import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.wuxp.api.ApiResp;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
-import org.junit.runner.RunWith;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import test.com.oak.organization.OakApplicationTest;
+
+import java.util.Locale;
 
 /**
  * OrganizationManagementServiceImpl Tester.
@@ -26,16 +22,13 @@ import test.com.oak.organization.OakApplicationTest;
  * @version 1.0
  * @since <pre>1月 19, 2020</pre>
  */
-@ActiveProfiles("dev")
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {OakApplicationTest.class})
-@Slf4j
+
 public class OrganizationManagementServiceImplTest {
 
     @Autowired
     private OrganizationManagementService organizationManagementService;
 
-    private Faker faker = new Faker();
+    private Faker faker = new Faker(Locale.CHINA);
 
     @Before
     public void before() throws Exception {

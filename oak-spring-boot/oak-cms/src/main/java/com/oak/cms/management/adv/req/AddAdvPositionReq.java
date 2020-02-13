@@ -1,14 +1,14 @@
 package com.oak.cms.management.adv.req;
 
 import com.oak.api.model.ApiBaseReq;
-import com.oaknt.ncms.enums.AdvCheckState;
+import com.oak.cms.enums.AdvDisplayType;
+import com.oak.cms.enums.AdvType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 
 /**
@@ -26,64 +26,64 @@ import java.util.Date;
 @Accessors(chain = true)
 public class AddAdvPositionReq extends ApiBaseReq {
 
-    @Schema(description = "广告位id")
+
+    @Schema(description = "引用编码")
     @NotNull
-    private Long apId;
+    @Size(max = 32)
+    private String code;
 
-    @Schema(description = "广告内容描述")
+    @Schema(description = "广告位置名称")
     @NotNull
-    private String title;
+    @Size(max = 64)
+    private String name;
 
-    @Schema(description = "广告内容")
+    @Schema(description = "广告位简介")
     @NotNull
-    @Size(max = 1024)
-    private String content;
+    private String description;
 
-    @Schema(description = "广告URL")
-    @Size(max = 200)
-    private String url;
-
-    @Schema(description = "广告开始时间")
-    private Date startDate;
-
-    @Schema(description = "广告结束时间")
-    private Date endDate;
-
-    @Schema(description = "幻灯片排序")
+    @Schema(description = "广告类别")
     @NotNull
-    private Integer slideSort;
+    private AdvType type;
 
-    @Schema(description = "广告拥有者")
-    private Long memberId;
+    @Schema(description = "广告展示方式")
+    @NotNull
+    private AdvDisplayType displayType;
 
-    @Schema(description = "会员用户名")
-    @Size(max = 50)
-    private String memberName;
+    @Schema(description = "广告位是否启用")
+    @NotNull
+    private Boolean enabled;
 
-    @Schema(description = "广告点击率")
+    @Schema(description = "广告位宽度")
+    @NotNull
+    private Integer width;
+
+    @Schema(description = "广告位高度")
+    @NotNull
+    private Integer height;
+
+    @Schema(description = "广告位单价")
+    @NotNull
+    private Integer price;
+
+    @Schema(description = "拥有的广告数")
+    @NotNull
+    private Integer num;
+
+    @Schema(description = "广告位点击率")
     @NotNull
     private Integer clickNum;
 
-    @Schema(description = "会员购买的广告是否通过审核")
+    @Schema(description = "广告位默认内容")
     @NotNull
-    private AdvCheckState state;
-
-    @Schema(description = "购买方式")
-    @NotNull
-    @Size(max = 16)
-    private String buyStyle;
-
-    @Schema(description = "购买所支付的金币")
-    @NotNull
-    private Integer goldpay;
+    @Size(max = 512)
+    private String defaultContent;
 
     @Schema(description = "归属地区id")
     @Size(max = 50)
     private String areaId;
 
-    @Schema(description = "是否启用")
-    @NotNull
-    private Boolean enabled;
-
+    @Schema(description = "广告规格")
+    @Size(max = 64)
+    private String spec;
 
 }
