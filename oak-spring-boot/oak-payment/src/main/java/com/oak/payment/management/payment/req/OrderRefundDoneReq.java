@@ -53,6 +53,12 @@ public class OrderRefundDoneReq extends ApiBaseReq {
 
     @Schema(description = "订单交易流水号")
     private String tradeNo;
+
+    @Schema(description = "交易返回码")
+    private String returnCode;
+
+    @Schema(description = "交易返回信息")
+    private String returnInfo;
     /**
      * 是否全额退款
      *

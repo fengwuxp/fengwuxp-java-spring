@@ -1,17 +1,19 @@
 package com.oak.payment.services.payment.req;
 
+import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
-import com.levin.commons.dao.annotation.*;
 import com.oak.api.model.ApiBaseReq;
+import com.oak.payment.enums.PaymentStatus;
+import com.oak.payment.enums.PaymentType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import com.oak.payment.enums.PaymentType;
-import com.oak.payment.enums.PaymentStatus;
 
 
 /**
@@ -137,6 +139,14 @@ public class EditPaymentReq extends ApiBaseReq {
     @Schema(description = "校验码")
     @UpdateColumn
     private String checkCode;
+
+    @Schema(description = "退款单号")
+    @UpdateColumn
+    private String refundSn;
+
+    @Schema(description = "第三方退款单号")
+    @UpdateColumn
+    private String outRefundSn;
 
     public EditPaymentReq() {
     }
