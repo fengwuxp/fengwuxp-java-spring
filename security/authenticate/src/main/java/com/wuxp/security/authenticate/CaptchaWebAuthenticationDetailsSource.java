@@ -1,19 +1,15 @@
 package com.wuxp.security.authenticate;
 
-import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.captcha.Captcha;
 import com.wuxp.security.captcha.CombinationCaptcha;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

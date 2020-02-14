@@ -25,6 +25,7 @@ import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -35,13 +36,16 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.oak.rbac.authority.OakRequestUrlResourceProvider.ROLE_PREFIX;
+
+
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -216,7 +220,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AffirmativeBased affirmativeBased() {
         List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy("ROLE_");
+        hierarchy.setHierarchy(ROLE_PREFIX);
         decisionVoters.add(new RoleHierarchyVoter(hierarchy));
         return new AffirmativeBased(decisionVoters);
     }
@@ -226,8 +230,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public FormAuthenticationFailureHandler formAuthenticationFailureHandler() {
         return new FormAuthenticationFailureHandler();
     }
-
-
 
 
     @Bean

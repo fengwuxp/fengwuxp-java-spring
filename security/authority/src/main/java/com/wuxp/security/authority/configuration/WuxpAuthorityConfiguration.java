@@ -16,8 +16,8 @@ public class WuxpAuthorityConfiguration {
 
 
     @Bean
-    @ConditionalOnMissingBean(FilterInvocationSecurityMetadataSource.class)
-    public FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource() {
+    @ConditionalOnMissingBean(RequestUrlSecurityMetadataSource.class)
+    public RequestUrlSecurityMetadataSource filterInvocationSecurityMetadataSource() {
 
         return new RequestUrlSecurityMetadataSource();
     }

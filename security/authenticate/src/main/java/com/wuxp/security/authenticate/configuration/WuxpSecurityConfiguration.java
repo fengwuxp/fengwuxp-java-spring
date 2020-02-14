@@ -5,7 +5,6 @@ import com.wuxp.security.authenticate.JwtAuthenticationFilter;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaAuthenticationFailureHandler;
 import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationFailureHandler;
-import com.wuxp.security.jwt.JwtProperties;
 import com.wuxp.security.openid.SocialOpenIdAuthenticationFailureHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableConfigurationProperties(WuxpSecurityProperties.class)
@@ -41,11 +39,10 @@ public class WuxpSecurityConfiguration {
     }
 
     @Bean
-   @ConditionalOnMissingBean(JwtProperties.class)
+    @ConditionalOnMissingBean(JwtAuthenticationFilter.class)
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
-
 
 
     @Bean
