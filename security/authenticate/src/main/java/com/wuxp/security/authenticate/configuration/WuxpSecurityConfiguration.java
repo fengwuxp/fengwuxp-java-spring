@@ -41,7 +41,7 @@ public class WuxpSecurityConfiguration {
     }
 
     @Bean
-   @ConditionalOnMissingBean(JwtProperties.class)
+    //@ConditionalOnMissingBean(JwtProperties.class)
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
