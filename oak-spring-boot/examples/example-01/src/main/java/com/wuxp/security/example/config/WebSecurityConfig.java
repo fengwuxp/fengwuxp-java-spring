@@ -44,6 +44,7 @@ import java.util.List;
 
 @EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 

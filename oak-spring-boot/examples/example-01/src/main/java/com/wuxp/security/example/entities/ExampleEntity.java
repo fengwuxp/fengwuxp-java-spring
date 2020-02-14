@@ -61,9 +61,9 @@ public class ExampleEntity extends AbstractBaseEntityObject<Long> {
     @Column(name = "example_id", nullable = false)
     private Long exampleId;
 
-    @Schema(description = "例子")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "example_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private ExampleEntity exampleEntity;
+//    @Schema(description = "例子")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "example_id", referencedColumnName = "id", insertable = false, updatable = false)
+//    private ExampleEntity exampleEntity;
 
 }
