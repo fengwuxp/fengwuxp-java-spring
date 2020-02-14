@@ -3,6 +3,10 @@ package com.oak.rbac.enums;
 import com.wuxp.basic.enums.DescriptiveEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * @author chenPC
+ */
+
 @Schema(description = "资源类型")
 public enum ResourceType implements DescriptiveEnum {
 
