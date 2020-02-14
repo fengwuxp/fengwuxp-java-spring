@@ -2,7 +2,7 @@ package test.com.oak.admin;//package test.com.wuxp.security.example.codegen;
 
 
 import com.oak.api.entities.system.Area;
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

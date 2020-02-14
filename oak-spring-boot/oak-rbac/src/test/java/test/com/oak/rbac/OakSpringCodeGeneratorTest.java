@@ -1,8 +1,8 @@
 package test.com.oak.rbac;
 
 
-import com.oak.codegen.ServiceModelUtil;
-import com.oak.rbac.entities.Menu;
+import com.oak.codegen.controller.ServiceModelUtil;
+import com.oak.rbac.entities.OakAdminUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.util.AntPathMatcher;
@@ -27,10 +27,10 @@ public class OakSpringCodeGeneratorTest {
             log.debug("删除原有的输出目录{}", delete);
         }
 
-        String basePackageName = "com.oak.rbac.services.menu";
+        String basePackageName = "com.oak.rbac.services.user";
 
         Map<String, Class> entityMapping = new HashMap<>();
-        ServiceModelUtil.entity2ServiceModel(Menu.class, entityMapping, basePackageName, targetFilePath);
+        ServiceModelUtil.entity2ServiceModel(OakAdminUser.class, entityMapping, basePackageName, targetFilePath);
     }
 
     @Test

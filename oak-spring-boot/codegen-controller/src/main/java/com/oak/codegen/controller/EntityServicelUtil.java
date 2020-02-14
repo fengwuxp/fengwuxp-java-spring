@@ -1,4 +1,4 @@
-package com.oak.codegen;
+package com.oak.codegen.controller;
 
 import cn.hutool.core.io.FileUtil;
 import org.apache.commons.lang3.StringUtils;

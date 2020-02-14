@@ -1,8 +1,7 @@
 package test.com.oak.member;
 
 
-import com.oak.api.services.infoprovide.info.AreaInfo;
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import com.oak.member.entities.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

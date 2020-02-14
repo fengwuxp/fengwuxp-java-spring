@@ -1,4 +1,4 @@
-package com.oak.codegen;
+package com.oak.codegen.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;

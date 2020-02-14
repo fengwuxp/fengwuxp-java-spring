@@ -1,7 +1,7 @@
 package test.com.oak.payment;
 
 
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import com.oak.payment.entities.Payment;
 import com.oak.payment.entities.PaymentOrder;
 import lombok.extern.slf4j.Slf4j;

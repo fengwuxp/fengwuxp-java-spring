@@ -1,7 +1,7 @@
 package test.com.wuxp.security.example.codegen;
 
 
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import com.wuxp.security.example.entities.ExampleEntity;
 import org.junit.Test;
 
