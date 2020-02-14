@@ -1,6 +1,6 @@
 package test.com.oak.codegen;
 
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import org.junit.Test;
 import test.com.oak.codegen.entites.ExampleEntity;
 

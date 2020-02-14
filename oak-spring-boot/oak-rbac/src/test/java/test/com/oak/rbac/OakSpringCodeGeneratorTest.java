@@ -1,7 +1,7 @@
 package test.com.oak.rbac;
 
 
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import com.oak.rbac.entities.OakAdminUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

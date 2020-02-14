@@ -1,6 +1,8 @@
 package test.com.wuxp.security.example;
 
+import com.oak.codegen.OakFeignTypescriptCodegenBuilder;
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.model.Pagination;
 import com.wuxp.codegen.dragon.strategy.TypescriptPackageMapStrategy;
 import com.wuxp.codegen.model.CommonCodeGenClassMeta;
 import com.wuxp.codegen.model.LanguageDescription;
@@ -32,8 +34,8 @@ public class SwaggerFeignSdkCodegenTypescriptTest {
     public void testAnt() {
 
 
-      log.debug("{}",  pathMatcher.match("com.wuxp.security.**.controller**", "com.wuxp.security.example.controller.simple"));
-      log.debug("{}",  pathMatcher.isPattern("com.wuxp.security.example.**.controller"));
+        log.debug("{}", pathMatcher.match("com.wuxp.security.**.controller**", "com.wuxp.security.example.controller.simple"));
+        log.debug("{}", pathMatcher.isPattern("com.wuxp.security.example.**.controller"));
 
 
     }
@@ -43,7 +45,6 @@ public class SwaggerFeignSdkCodegenTypescriptTest {
 
         //设置基础数据类型的映射关系
         Map<Class<?>, CommonCodeGenClassMeta> baseTypeMapping = new HashMap<>();
-        baseTypeMapping.put(ApiResp.class, TypescriptClassMeta.PROMISE);
 
         //包名映射关系
         Map<String, String> packageMap = new LinkedHashMap<>();
@@ -68,13 +69,12 @@ public class SwaggerFeignSdkCodegenTypescriptTest {
 
         Map<String, Object> classNameTransformers = new HashMap<>();
 
-        Swagger3FeignTypescriptCodegenBuilder.builder()
+        OakFeignTypescriptCodegenBuilder.builder()
                 .baseTypeMapping(baseTypeMapping)
                 .languageDescription(LanguageDescription.TYPESCRIPT)
                 .packageMapStrategy(new TypescriptPackageMapStrategy(packageMap, classNameTransformers))
                 .outPath(Paths.get(System.getProperty("user.dir")).resolveSibling(String.join(File.separator, outPaths)).toString())
                 .scanPackages(packagePaths)
-                .templateFileVersion(TemplateFileVersion.V_2_0_0)
                 .isDeletedOutputDirectory(true)
                 .buildCodeGenerator()
                 .generate();

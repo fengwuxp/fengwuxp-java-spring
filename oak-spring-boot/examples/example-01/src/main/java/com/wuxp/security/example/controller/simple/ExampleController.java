@@ -51,12 +51,12 @@ public class ExampleController {
     @Operation(summary = "查询example", description = "描述的文字")
     public ApiResp<Pagination<ExampleInfo>> query(QueryExampleReq req) {
 
-        return RestfulApiRespFactory.ok(exampleService.query(req));
+        return RestfulApiRespFactory.queryOk(exampleService.query(req));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "example详情", description = "描述的文字")
-    public ApiResp<ExampleInfo> query(@PathVariable Long id) {
+    public ApiResp<ExampleInfo> detail(@PathVariable Long id) {
         return RestfulApiRespFactory.ok(exampleService.findById(id));
     }
 

@@ -3,7 +3,7 @@ package test.com.oak.cms;
 
 import com.oak.api.services.infoprovide.info.AreaInfo;
 import com.oak.cms.entities.AdvPosition;
-import com.oak.codegen.ServiceModelUtil;
+import com.oak.codegen.controller.ServiceModelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

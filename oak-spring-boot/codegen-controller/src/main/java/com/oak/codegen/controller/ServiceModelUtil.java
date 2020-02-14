@@ -1,4 +1,4 @@
-package com.oak.codegen;
+package com.oak.codegen.controller;
 
 import com.levin.commons.dao.annotation.Ignore;
 import com.levin.commons.dao.annotation.Like;
@@ -17,7 +17,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -32,7 +31,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.*;

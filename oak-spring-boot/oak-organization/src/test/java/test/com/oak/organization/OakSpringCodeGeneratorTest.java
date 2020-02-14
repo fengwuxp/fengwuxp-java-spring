@@ -1,11 +1,8 @@
 package test.com.oak.organization;
 
 
-import com.oak.codegen.ServiceModelUtil;
-import com.oak.organization.entities.Department;
-import com.oak.organization.entities.Organization;
+import com.oak.codegen.controller.ServiceModelUtil;
 import com.oak.organization.entities.OrganizationExtendedInfo;
-import com.oak.organization.entities.Staff;
 import com.oak.organization.services.organization.info.OrganizationInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
