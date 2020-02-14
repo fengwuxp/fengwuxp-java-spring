@@ -36,13 +36,14 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableWebSecurity
+import static com.oak.rbac.authority.OakRequestUrlResourceProvider.ROLE_PREFIX;
+
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -219,7 +220,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AffirmativeBased affirmativeBased() {
         List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy("ROLE_");
+        hierarchy.setHierarchy(ROLE_PREFIX);
         decisionVoters.add(new RoleHierarchyVoter(hierarchy));
         return new AffirmativeBased(decisionVoters);
     }
@@ -229,8 +230,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public FormAuthenticationFailureHandler formAuthenticationFailureHandler() {
         return new FormAuthenticationFailureHandler();
     }
-
-
 
 
     @Bean
