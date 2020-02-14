@@ -79,9 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         if (this.authorizationDetailsService == null) {
             this.authorizationDetailsService = beanFactory.getBean(RequestHeaderAuthorizationDetailsService.class);
         }
-        if (this.jwtProperties == null) {
-            this.jwtProperties = beanFactory.getBean(JwtProperties.class);
-        }
+
         if (this.authenticationEntryPoint == null) {
             this.authenticationEntryPoint = beanFactory.getBean(AuthenticationEntryPoint.class);
         }
