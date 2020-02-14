@@ -10,8 +10,10 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- *  删除菜单
- *  2020-1-14 16:32:16
+ * 删除菜单
+ * 2020-1-14 16:32:16
+ *
+ * @author chenPC
  */
 @Schema(description = "删除菜单")
 @Data

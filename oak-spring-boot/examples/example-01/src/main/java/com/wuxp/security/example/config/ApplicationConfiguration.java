@@ -2,12 +2,10 @@ package com.wuxp.security.example.config;
 
 
 import com.wuxp.api.context.ApiRequestContextFactory;
-import com.wuxp.api.log.ApiLogRecorder;
 import com.wuxp.basic.uuid.JdkUUIDGenerateStrategy;
 import com.wuxp.basic.uuid.UUIDGenerateStrategy;
 import com.wuxp.security.example.advisor.OrderedAbstractBeanFactoryAwareAdvisingPostProcessor;
 import com.wuxp.security.example.context.MockApiRequestContextFactory;
-import com.wuxp.security.example.log.MockApiLogRecorder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;

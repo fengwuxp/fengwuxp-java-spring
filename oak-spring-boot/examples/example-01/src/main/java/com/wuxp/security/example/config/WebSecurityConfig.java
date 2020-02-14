@@ -36,6 +36,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+import org.springframework.web.accept.ContentNegotiationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Override
+    public void setContentNegotationStrategy(ContentNegotiationStrategy contentNegotiationStrategy) {
+        super.setContentNegotationStrategy(contentNegotiationStrategy);
+    }
 
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;

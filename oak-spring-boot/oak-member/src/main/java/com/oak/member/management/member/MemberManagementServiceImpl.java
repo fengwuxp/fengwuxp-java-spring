@@ -27,6 +27,7 @@ import com.oak.member.services.open.req.CreateMemberOpenReq;
 import com.oak.member.services.secure.MemberSecureService;
 import com.oak.member.services.secure.req.CreateMemberSecureReq;
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.exception.AssertThrow;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -34,6 +35,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -64,6 +66,7 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     private JpaDao jpaDao;
 
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ApiResp<Long> register(RegisterMemberReq req) {
         if (StringUtils.hasText(req.getMobilePhone())) {
@@ -91,7 +94,9 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setRegSource(regSource.getCode())
                 .setName(req.getNickName());
         ApiResp<Long> rsp = memberService.create(createMemberReq);
-        Assert.isTrue(rsp.isSuccess(), rsp.getMessage());
+        if (!rsp.isSuccess()) {
+            return RestfulApiRespFactory.error(rsp.getMessage());
+        }
         Long memberId = rsp.getData();
         //会员账号信息
         CreateMemberAccountReq accountReq = new CreateMemberAccountReq();
@@ -104,16 +109,16 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setFrozenPoints(0)
                 .setStatus(AccountStatus.AVAILABLE)
                 .setVipGrade(VipGrade.M_COMMON);
-        rsp = accountService.create(accountReq);
-        Assert.isTrue(rsp.isSuccess(), rsp.getMessage());
+        ApiResp<Long> accountRsp = accountService.create(accountReq);
+        AssertThrow.assertResp(accountRsp);
 
         //会员安全信息
         CreateMemberSecureReq secureReq = new CreateMemberSecureReq();
         secureReq.setId(memberId)
                 .setLoginPassword(req.getLoginPassword())
                 .setLoginPwdUpdateTime(new Date());
-        rsp = secureService.create(secureReq);
-        Assert.isTrue(rsp.isSuccess(), rsp.getMessage());
+        ApiResp<Long> secureRsp = secureService.create(secureReq);
+        AssertThrow.assertResp(secureRsp);
 
         if (req.getOpenType() != null) {
             //会员绑定信息
@@ -122,8 +127,8 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                     .setOpenId(req.getOpenId())
                     .setOpenType(req.getOpenType())
                     .setUnionId(req.getUnionId());
-            rsp = openService.create(openReq);
-            Assert.isTrue(rsp.isSuccess(), rsp.getMessage());
+            ApiResp<Long> openRsp = openService.create(openReq);
+            AssertThrow.assertResp(openRsp);
         }
 
         return RestfulApiRespFactory.ok(memberId);
@@ -152,16 +157,6 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setNotPassword(Boolean.TRUE)
                 .setMobileAuth(Boolean.FALSE)
                 .setVerify(MemberVerifyStatus.APPROVED);
-                //.setOpenType(OpenType.WEIXIN)
-                //.setOpenId("oQoUs5OFGiCBRPqHMR0Eghxd-u8E")
-                //.setUserName("L、")
-                //.setAvatarUrl("https://wx.qlogo.cn/mmopen/vi_32/aj70XCXjADAeDEoteLsFgbq3klTicKib0GXTEcurTrKJX3iayicIApEBmoFicgibIYxgqZcvrhPaqp1u86gQVMQ0Gqtw/132")
-                //.setNickName("L、")
-                //.setUnionId("")
-                //.setGender(Gender.SECRET)
-                //.setNotPassword(Boolean.TRUE)
-                //.setMobileAuth(Boolean.FALSE)
-                //.setVerify(MemberVerifyStatus.APPROVED);
 
         return register(registerMemberReq);
     }
@@ -210,7 +205,6 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setFrozenPoints(memberAccount.getFrozenPoints())
                 .setStatus(memberAccount.getStatus())
                 .setVipGrade(memberAccount.getVipGrade());
-        //TODO 月卡数据
         return RestfulApiRespFactory.created(accountInfo);
     }
 

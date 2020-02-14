@@ -1,8 +1,11 @@
 package com.wuxp.security.example.entities;
 
+import com.levin.commons.dao.domain.support.AbstractBaseEntityObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,12 +13,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
+@Schema(name = "Demo例子", description = "Demo例子")
 @Table(name = "t_demo")
 @Entity
-@Schema(description = "例子")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Tag(name = "simple")
-public class DemoEntity implements Serializable {
+public class DemoEntity extends AbstractBaseEntityObject<Long> {
 
     private static final long serialVersionUID = 5273901349043495181L;
     @Id
