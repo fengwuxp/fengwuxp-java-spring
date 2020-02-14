@@ -24,6 +24,9 @@ public enum PaymentStatus implements DescriptiveEnum {
     REFUNDED,
 
     @Schema(description = "已取消")
-    CANCEL;
+    CANCEL,
+
+    @Schema(description = "支付失败")
+    FAILURE;
 
 }

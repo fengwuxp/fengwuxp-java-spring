@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotNull;
 
 /**
- * 订单查询响应信息
+ * 订单支付完成
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

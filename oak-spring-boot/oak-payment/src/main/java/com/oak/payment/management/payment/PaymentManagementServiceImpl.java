@@ -54,10 +54,8 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         //支付单入库
         CreatePaymentReq createPaymentReq = new CreatePaymentReq();
         createPaymentReq.setPayOrderSn(sn)
-                .setPaymentMethodName(req.getPaymentMethodName())
                 .setType(req.getType())
                 .setAmount(req.getAmount())
-                .setPaymentMethod(req.getPaymentMethod())
                 .setStatus(PaymentStatus.UNPAID);
 
         return paymentService.create(createPaymentReq);
@@ -65,7 +63,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ApiResp<Void> paymentDone(PaymentDoneReq req) {
+    public ApiResp<String> paymentDone(PaymentDoneReq req) {
         PaymentInfo paymentInfo = paymentService.findById(req.getTradeNo());
         if (paymentInfo == null) {
             return RestfulApiRespFactory.error("支付单不存在");
@@ -75,13 +73,14 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         }
         //修改支付单信息
         EditPaymentReq editPaymentReq = new EditPaymentReq(paymentInfo.getSn());
-        editPaymentReq.setPaymentMethodName(req.getPaymentMethod().name());
-        editPaymentReq.setPayerAccount(req.getPayerAccount());
-        editPaymentReq.setReturnSn(req.getOutTradeNo());
-        editPaymentReq.setFinishedTime(new Date());
-        editPaymentReq.setStatus(this.transformPaymentStatus(req.getTradeStatus().name()));
-        editPaymentReq.setReturnCode(req.getReturnCode());
-        editPaymentReq.setReturnInfo(req.getReturnInfo());
+        editPaymentReq.setPaymentMethodName(req.getPaymentMethod().getDesc())
+                .setPaymentMethod(req.getPaymentMethod().name())
+                .setPayerAccount(req.getPayerAccount())
+                .setReturnSn(req.getOutTradeNo())
+                .setFinishedTime(new Date())
+                .setStatus(this.transformPaymentStatus(req.getTradeStatus().name()))
+                .setReturnCode(req.getReturnCode())
+                .setReturnInfo(req.getReturnInfo());
         paymentService.edit(editPaymentReq);
         //修改支付订单
         PaymentOrderInfo paymentOrderInfo = paymentOrderService.findById(paymentInfo.getPayOrderSn());
@@ -89,14 +88,34 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         editPaymentOrderReq.setPaidAmount(req.getBuyerPayAmount());
         editPaymentOrderReq.setStatus(editPaymentReq.getStatus());
         paymentOrderService.edit(editPaymentOrderReq);
-        return RestfulApiRespFactory.ok();
+        return RestfulApiRespFactory.ok(paymentInfo.getPayOrderSn());
     }
 
 
     @Override
     public ApiResp<Void> orderRefundDone(OrderRefundDoneReq req) {
         PaymentInfo paymentInfo = paymentService.findById(req.getTradeNo());
-
+        if (paymentInfo == null) {
+            return RestfulApiRespFactory.error("支付单不存在");
+        }
+        if (paymentInfo.getStatus().equals(PaymentStatus.REFUNDED)
+                || paymentInfo.getStatus().equals(PaymentStatus.PARTIAL_REFUNDS)) {
+            return RestfulApiRespFactory.error("订单已退款");
+        }
+        //修改支付单信息
+        EditPaymentReq editPaymentReq = new EditPaymentReq(paymentInfo.getSn());
+        editPaymentReq.setStatus(this.transformPaymentStatus(req.getTradeStatus().name()))
+                .setRefundAmount(req.getRefundAmount())
+                .setOutRefundSn(req.getOutTradeRefundNo())
+                .setRefundSn(req.getTradeRefundNo())
+                .setReturnCode(req.getReturnCode())
+                .setReturnInfo(req.getReturnInfo());
+        paymentService.edit(editPaymentReq);
+        //修改支付订单
+        PaymentOrderInfo paymentOrderInfo = paymentOrderService.findById(paymentInfo.getPayOrderSn());
+        EditPaymentOrderReq editPaymentOrderReq = new EditPaymentOrderReq(paymentOrderInfo.getSn());
+        editPaymentOrderReq.setStatus(editPaymentReq.getStatus());
+        paymentOrderService.edit(editPaymentOrderReq);
         return RestfulApiRespFactory.ok();
     }
 
@@ -111,7 +130,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
             return PaymentStatus.UNPAID;
         }
         if (tradeStatus.equals(TradeStatus.FAILURE.name())) {
-            return PaymentStatus.UNPAID;
+            return PaymentStatus.FAILURE;
         }
         if (tradeStatus.equals(TradeStatus.UNKNOWN.name())) {
             return PaymentStatus.UNPAID;
