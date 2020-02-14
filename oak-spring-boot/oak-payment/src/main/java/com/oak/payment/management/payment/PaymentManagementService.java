@@ -24,7 +24,7 @@ public interface PaymentManagementService {
      * @param req
      * @return
      */
-    ApiResp<Void> paymentDone(PaymentDoneReq req);
+    ApiResp<String> paymentDone(PaymentDoneReq req);
 
     /**
      * 退款完成

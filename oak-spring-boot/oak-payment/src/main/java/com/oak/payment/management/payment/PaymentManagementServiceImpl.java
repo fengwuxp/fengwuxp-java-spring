@@ -63,7 +63,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ApiResp<Void> paymentDone(PaymentDoneReq req) {
+    public ApiResp<String> paymentDone(PaymentDoneReq req) {
         PaymentInfo paymentInfo = paymentService.findById(req.getTradeNo());
         if (paymentInfo == null) {
             return RestfulApiRespFactory.error("支付单不存在");
@@ -88,7 +88,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         editPaymentOrderReq.setPaidAmount(req.getBuyerPayAmount());
         editPaymentOrderReq.setStatus(editPaymentReq.getStatus());
         paymentOrderService.edit(editPaymentOrderReq);
-        return RestfulApiRespFactory.ok();
+        return RestfulApiRespFactory.ok(paymentInfo.getPayOrderSn());
     }
 
 
