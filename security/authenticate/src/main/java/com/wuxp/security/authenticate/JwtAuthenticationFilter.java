@@ -1,18 +1,28 @@
 package com.wuxp.security.authenticate;
 
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wuxp.security.jwt.JwtProperties;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.session.SessionInformationExpiredEvent;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,6 +31,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -58,11 +70,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(headerPrefix)) {
             if (StringUtils.hasText(authorizationHeader)) {
 //                Jws<Claims> claimsJws = jwtTokenProvider.parse(jwtToken);
-                UserDetails userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                UserDetails userDetails = null;
+                try {
+                    userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } catch (UsernameNotFoundException exception) {
+                    exception.printStackTrace();
+//                    Map<String, Object> map = new HashMap<>();
+//                    map.put("message", exception.getMessage());
+//                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+//                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//                    response.getWriter().write(JSON.toJSONString(map));
+//                    return;
+                }
+
             } else {
                 // 带安全头 没有带token
                 authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));

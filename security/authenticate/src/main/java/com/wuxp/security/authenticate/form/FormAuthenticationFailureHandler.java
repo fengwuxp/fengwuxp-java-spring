@@ -81,7 +81,7 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
         //是否需要图片验证码验证
         map.put("needPictureCaptcha", loginEnvironmentContext.isNeedPictureCaptcha());
         //返回Json数据
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.getWriter().write(JSON.toJSONString(map));
 

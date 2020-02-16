@@ -9,7 +9,6 @@ import com.wuxp.codegen.model.LanguageDescription;
 import com.wuxp.codegen.model.TemplateFileVersion;
 import com.wuxp.codegen.model.languages.typescript.TypescriptClassMeta;
 import com.wuxp.codegen.swagger3.builder.Swagger3FeignTypescriptCodegenBuilder;
-import com.wuxp.security.example.controller.simple.ExampleController;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.util.AntPathMatcher;

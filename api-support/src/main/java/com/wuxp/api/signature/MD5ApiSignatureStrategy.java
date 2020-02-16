@@ -1,5 +1,11 @@
 package com.wuxp.api.signature;
 
+import lombok.Data;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.DigestUtils;
 
 import javax.validation.constraints.NotNull;
@@ -12,10 +18,16 @@ import static com.wuxp.api.ApiRequest.*;
 /**
  * md5 验证签名
  */
-public class MD5ApiSignatureStrategy implements ApiSignatureStrategy {
+@Slf4j
+@Data
+public class MD5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactoryAware, InitializingBean {
 
+    private BeanFactory beanFactory;
 
     private AppInfoStore apiSignatureStore;
+
+    public MD5ApiSignatureStrategy() {
+    }
 
     public MD5ApiSignatureStrategy(AppInfoStore apiSignatureStore) {
         this.apiSignatureStore = apiSignatureStore;
@@ -40,6 +52,13 @@ public class MD5ApiSignatureStrategy implements ApiSignatureStrategy {
         String apiSignatureString = request.getApiSignature();
         if (!sign.equals(apiSignatureString)) {
             throw new ApiSignatureException("签名验证失败");
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (this.apiSignatureStore == null) {
+            this.apiSignatureStore = beanFactory.getBean(AppInfoStore.class);
         }
     }
 

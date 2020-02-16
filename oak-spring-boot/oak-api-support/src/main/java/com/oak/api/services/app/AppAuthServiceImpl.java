@@ -85,7 +85,7 @@ public class AppAuthServiceImpl implements AppAuthService {
     @Cacheable(value = APP_STORE_CACHE_NAME,
             key = "#appId",
             condition = "#appId !=null",
-            unless = "!#result!=null")
+            unless = "#result==null")
     @Override
     public AppAuthAccountInfo getAppInfo(@NotNull String appId) {
         return this.findAppAuthAccount(new FindAuthReq(appId));

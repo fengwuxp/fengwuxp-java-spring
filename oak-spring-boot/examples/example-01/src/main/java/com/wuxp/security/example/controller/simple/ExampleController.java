@@ -4,12 +4,12 @@ import com.wuxp.api.ApiResp;
 import com.wuxp.api.log.ApiLog;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.restful.RestfulApiRespFactory;
-import com.wuxp.security.example.services.simple.ExampleService;
-import com.wuxp.security.example.services.simple.info.ExampleInfo;
-import com.wuxp.security.example.services.simple.req.CreateExampleReq;
-import com.wuxp.security.example.services.simple.req.DeleteExampleReq;
-import com.wuxp.security.example.services.simple.req.EditExampleReq;
-import com.wuxp.security.example.services.simple.req.QueryExampleReq;
+import com.wuxp.security.example.services.simple.ExampleEntityService;
+import com.wuxp.security.example.services.simple.info.ExampleEntityInfo;
+import com.wuxp.security.example.services.simple.req.CreateExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.DeleteExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.EditExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.QueryExampleEntityReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -23,40 +23,40 @@ import org.springframework.web.bind.annotation.*;
 public class ExampleController {
 
     @Autowired
-    private ExampleService exampleService;
+    private ExampleEntityService exampleService;
 
     @PostMapping("/create")
     @Operation(summary = "创建example", description = "描述的文字")
     @ApiLog(value = "#JSON.toJSONString(req)")
-    public ApiResp<Long> create(CreateExampleReq req) {
+    public ApiResp<Long> create(CreateExampleEntityReq req) {
 
         return exampleService.create(req);
     }
 
     @PutMapping("/edit")
     @Operation(summary = "编辑example", description = "描述的文字")
-    public ApiResp<Void> edit(EditExampleReq req) {
+    public ApiResp<Void> edit(EditExampleEntityReq req) {
 
         return exampleService.edit(req);
     }
 
     @GetMapping("/delete")
     @Operation(summary = "删除example", description = "描述的文字")
-    public ApiResp<Void> delete(DeleteExampleReq req) {
+    public ApiResp<Void> delete(DeleteExampleEntityReq req) {
         return exampleService.delete(req);
     }
 
 
     @GetMapping("/query")
     @Operation(summary = "查询example", description = "描述的文字")
-    public ApiResp<Pagination<ExampleInfo>> query(QueryExampleReq req) {
+    public ApiResp<Pagination<ExampleEntityInfo>> query(QueryExampleEntityReq req) {
 
         return RestfulApiRespFactory.queryOk(exampleService.query(req));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "example详情", description = "描述的文字")
-    public ApiResp<ExampleInfo> detail(@PathVariable Long id) {
+    public ApiResp<ExampleEntityInfo> detail(@PathVariable Long id) {
         return RestfulApiRespFactory.ok(exampleService.findById(id));
     }
 

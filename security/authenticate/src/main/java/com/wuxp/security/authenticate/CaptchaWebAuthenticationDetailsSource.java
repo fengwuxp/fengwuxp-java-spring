@@ -10,6 +10,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,7 @@ public class CaptchaWebAuthenticationDetailsSource
         String captchaValue = context.getParameter(captchaValueName);
 
         if (!StringUtils.hasText(captchaValue)) {
-            throw new RuntimeException("验证码不能为空");
+            throw new CaptchaException("验证码不能为空");
         }
 
         //verify captcha

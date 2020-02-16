@@ -59,6 +59,13 @@ public class PageInfo<T> implements Pagination<T> {
 
     @Override
     public boolean isEmpty() {
+        QueryType queryType = this.getQueryType();
+        if (queryType != null) {
+            if (queryType.isQueryNum()) {
+                return total == 0;
+            }
+        }
+
         List<T> records = this.records;
         if (records == null) {
             return true;

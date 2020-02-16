@@ -26,7 +26,7 @@ import java.util.Map;
 public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final static String DEFAULT_MESSAGE_KEY = "message";
-    private final static String ANONYMOUS_ERROR_MESSAGE = "您的权限不足";
+    private final static String ANONYMOUS_ERROR_MESSAGE = "登录状态已失效或未登录";
 
     /**
      * 在认证失败的时候返回响应内容
@@ -61,7 +61,7 @@ public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         if (e instanceof InsufficientAuthenticationException) {
             // 匿名用户
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
             httpServletResponse.getWriter().write(this.anonymousResp);
             return;
         }

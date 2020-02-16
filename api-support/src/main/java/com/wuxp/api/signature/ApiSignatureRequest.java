@@ -11,6 +11,10 @@ import java.util.Map;
  */
 public interface ApiSignatureRequest extends ApiRequest {
 
+    String APP_SIGNATURE_KEY = "apiSignature";
+
+    String INJECT_APP_SIGNATURE = "#apiSignature";
+
 
     /**
      * 获取api签名的键值对

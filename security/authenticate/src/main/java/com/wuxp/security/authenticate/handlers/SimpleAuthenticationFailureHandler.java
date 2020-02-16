@@ -1,5 +1,6 @@
 package com.wuxp.security.authenticate.handlers;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,12 @@ import java.util.Map;
 public class SimpleAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         Map<String, Object> map = new HashMap<>();
         map.put("message", exception.getMessage());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.getWriter().write(mapper.writeValueAsString(map));
+        response.getWriter().write(JSON.toJSONString(map));
     }
 }

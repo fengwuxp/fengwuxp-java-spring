@@ -27,6 +27,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -163,6 +164,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .maximumSessions(wuxpSecurityProperties.getMaximumSessions())
                 .expiredSessionStrategy(oakSessionInformationExpiredStrategy);
 

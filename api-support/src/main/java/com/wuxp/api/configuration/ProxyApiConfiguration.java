@@ -4,6 +4,8 @@ import com.wuxp.api.interceptor.AnnotationApiOperationSource;
 import com.wuxp.api.interceptor.ApiInterceptor;
 import com.wuxp.api.interceptor.ApiOperationSource;
 import com.wuxp.api.interceptor.BeanFactoryApiOperationSourceAdvisor;
+import com.wuxp.api.signature.ApiSignatureStrategy;
+import com.wuxp.api.signature.MD5ApiSignatureStrategy;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -63,6 +65,11 @@ public class ProxyApiConfiguration implements ImportAware {
         return threadPoolTaskScheduler;
     }
 
+    @Bean
+    @ConditionalOnMissingBean(MD5ApiSignatureStrategy.class)
+    public ApiSignatureStrategy mD5ApiSignatureStrategy() {
+        return new MD5ApiSignatureStrategy();
+    }
 
 //    @Bean
 //    @ConditionalOnMissingBean(Validator.class)

@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcCallOperations;
@@ -28,6 +29,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
+@ImportResource("classpath:/applicationContext-*.xml")
 @EnableCaching
 public class ApplicationConfiguration implements WebMvcConfigurer {
 
@@ -107,6 +109,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     public OrderedAbstractBeanFactoryAwareAdvisingPostProcessor orderedAbstractBeanFactoryAwareAdvisingPostProcessor() {
         return new OrderedAbstractBeanFactoryAwareAdvisingPostProcessor();
     }
+
 
 //    @Bean
 //    public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion) {

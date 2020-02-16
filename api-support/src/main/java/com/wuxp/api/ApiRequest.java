@@ -15,6 +15,13 @@ public interface ApiRequest {
 
     String TIME_STAMP = "timeStamp";
 
+    String INJECT_APP_ID_KEY = "#appId";
+
+    String INJECT_NONCE_STR_KEY = "#nonceStr";
+
+    String INJECT_TIME_STAMP = "#timeStamp";
+
+
     /**
      * 获取签名的AppId
      */

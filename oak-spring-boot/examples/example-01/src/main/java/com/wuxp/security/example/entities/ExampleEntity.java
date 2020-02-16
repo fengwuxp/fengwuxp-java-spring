@@ -42,17 +42,19 @@ public class ExampleEntity extends AbstractBaseEntityObject<Long> {
     @Column(name = "aeg")
     private Integer age;
 
-    @Schema(description = "是否删除")
-    @NotNull
-    @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
+    @Schema(description = "头像")
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 
-    @Schema(description = "创建日期")
-    @Column(name = "add_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date addTime;
+    @Schema(description = "账户余额")
+    @Column(name = "money")
+    private Integer money;
 
-    @Schema(description = "创建日期")
+    @Schema(description = "生日")
+    @Column(name = "birthday")
+    private Date birthday;
+
+    @Schema(description = "星期")
     @Column(name = "week", nullable = false)
     @Enumerated(EnumType.STRING)
     private Week week;
@@ -60,6 +62,12 @@ public class ExampleEntity extends AbstractBaseEntityObject<Long> {
     @Schema(description = "例子id")
     @Column(name = "example_id", nullable = false)
     private Long exampleId;
+
+    @Schema(description = "是否删除")
+    @NotNull
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
 
 //    @Schema(description = "例子")
 //    @ManyToOne(fetch = FetchType.LAZY)

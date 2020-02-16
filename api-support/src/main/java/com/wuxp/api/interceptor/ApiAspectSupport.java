@@ -29,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -37,16 +38,15 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.executable.ExecutableValidator;
 import javax.validation.groups.Default;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.wuxp.api.ApiRequest.APP_ID_KEY;
 import static com.wuxp.api.context.ApiRequestContextFactory.AUTHENTICATE;
 import static com.wuxp.api.interceptor.ApiEvaluationContext.*;
 import static com.wuxp.api.log.ApiLogModel.USER_AGENT_HEADER;
+import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 
 /**
  * api aspect support
@@ -138,6 +138,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         AnnotatedElementKey methodKey = apiOperationMetadata.methodKey;
         this.tryInjectApiRequestFiledValue(args, evaluationContext, methodKey);
         this.tryInjectParameterValue(args, method.getParameters(), evaluationContext, methodKey);
+
     }
 
 
@@ -233,7 +234,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
         InternalApiSignatureRequest signatureRequest = null;
         if (request == null) {
-            // 聚合参数列表
+            // 非签名对象的子类或聚合参数列表
             HttpServletRequest httpServletRequest = getHttpServletRequest();
             if (httpServletRequest == null) {
                 return;
@@ -343,6 +344,14 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         HttpServletRequest httpServletRequest = this.getHttpServletRequest();
         if (httpServletRequest != null) {
             Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
+
+            context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
+            context.put(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
+            context.put(APP_SIGNATURE_KEY, httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
+            String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
+            if (StringUtils.hasText(timeStamp)) {
+                context.put(TIME_STAMP, Long.parseLong(timeStamp));
+            }
             context.forEach(evaluationContext::setVariable);
         }
         return evaluationContext;
@@ -532,11 +541,24 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
     private Field[] getFields(Class<?> aClass) {
         Map<Class<?>, Field[]> fieldCache = this.fieldCache;
-        Field[] fields = fieldCache.get(aClass);
-        if (fields == null) {
-            fields = aClass.getDeclaredFields();
-            Field.setAccessible(fields, true);
-            fieldCache.put(aClass, fields);
+        Field[] cacheFields = fieldCache.get(aClass);
+        if (cacheFields == null) {
+            cacheFields = this.getALLFields(aClass)
+                    .stream()
+                    .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                    .toArray(Field[]::new);
+            Field.setAccessible(cacheFields, true);
+            fieldCache.put(aClass, cacheFields);
+        }
+        return cacheFields;
+    }
+
+    private List<Field> getALLFields(Class<?> aClass) {
+        List<Field> fields = new ArrayList<>(16);
+        fields.addAll(Arrays.asList(aClass.getDeclaredFields()));
+        Class<?> superclass = aClass.getSuperclass();
+        if (!Object.class.equals(superclass)) {
+            fields.addAll(this.getALLFields(superclass));
         }
         return fields;
     }
