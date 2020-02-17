@@ -28,7 +28,7 @@ public class TestFliedAccess {
     @Test
     public void testFileAccess() {
 
-        int count = 100000; //Integer.MAX_VALUE;
+        int count = 1; //Integer.MAX_VALUE;
         int max = count;
         TestDTO testDTO = new TestDTO();
 

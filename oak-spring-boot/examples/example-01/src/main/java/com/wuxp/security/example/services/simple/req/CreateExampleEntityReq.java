@@ -46,19 +46,8 @@ public class CreateExampleEntityReq extends ApiBaseReq {
     @NotNull
     private Week week;
 
-    @Schema(description = "例子id")
-    @NotNull
-    private Long exampleId;
-
-    @Schema(description = "是否删除")
-    @NotNull
-    private Boolean deleted;
-
     @Schema(description = "排序代码")
     private Integer orderCode;
-
-    @Schema(description = "更新时间")
-    private Date lastUpdateTime;
 
     @Schema(description = "备注")
     @Size(max = 1000)

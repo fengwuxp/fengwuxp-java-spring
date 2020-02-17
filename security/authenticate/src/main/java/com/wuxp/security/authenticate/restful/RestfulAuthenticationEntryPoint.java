@@ -48,7 +48,6 @@ public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint
         HashMap<String, Object> unAuthorizedResp = new HashMap<>();
         unAuthorizedResp.put(DEFAULT_MESSAGE_KEY, errorMessage);
         this.unAuthorizedResp = JSON.toJSONString(unAuthorizedResp);
-
         unAuthorizedResp.put(DEFAULT_MESSAGE_KEY, ANONYMOUS_ERROR_MESSAGE);
         this.anonymousResp = JSON.toJSONString(unAuthorizedResp);
     }
@@ -57,19 +56,24 @@ public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint
     }
 
     @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException exception) throws IOException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("用户鉴权失败 {}", exception.getMessage());
+        }
+
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        if (e instanceof InsufficientAuthenticationException) {
+        if (exception instanceof InsufficientAuthenticationException) {
             // 匿名用户
             httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            httpServletResponse.getWriter().write(this.anonymousResp);
+            httpServletResponse.getWriter().println(this.anonymousResp);
             return;
         }
 
         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         String unAuthorizedResp = this.unAuthorizedResp;
         if (unAuthorizedResp != null) {
-            httpServletResponse.getWriter().write(unAuthorizedResp);
+            httpServletResponse.getWriter().println(unAuthorizedResp);
         }
     }
 }

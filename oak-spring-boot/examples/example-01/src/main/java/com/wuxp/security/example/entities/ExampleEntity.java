@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -38,7 +39,7 @@ public class ExampleEntity extends AbstractBaseEntityObject<Long> {
     private String name;
 
     @Schema(description = "年龄")
-    @Size(max = 200)
+    @Max(value = 200)
     @Column(name = "aeg")
     private Integer age;
 
@@ -60,7 +61,7 @@ public class ExampleEntity extends AbstractBaseEntityObject<Long> {
     private Week week;
 
     @Schema(description = "例子id")
-    @Column(name = "example_id", nullable = false)
+    @Column(name = "example_id")
     private Long exampleId;
 
     @Schema(description = "是否删除")

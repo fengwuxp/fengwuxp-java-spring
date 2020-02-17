@@ -13,12 +13,13 @@ import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.example.entities.ExampleEntity;
 import com.wuxp.security.example.services.simple.req.*;
 import com.wuxp.security.example.services.simple.info.ExampleEntityInfo;
+
 import java.util.Date;
 
 
 /**
- *  example例子服务
- *  2020-2-16 10:20:18
+ * example例子服务
+ * 2020-2-16 10:20:18
  */
 @Service
 @Slf4j
@@ -34,8 +35,10 @@ public class ExampleEntityServiceImpl implements ExampleEntityService {
 
         ExampleEntity entity = new ExampleEntity();
         BeanUtils.copyProperties(req, entity);
-
-            entity.setCreateTime(new Date());
+        Date date = new Date();
+        entity.setCreateTime(date);
+        entity.setLastUpdateTime(date);
+        entity.setDeleted(false);
 
         jpaDao.create(entity);
 
@@ -48,14 +51,14 @@ public class ExampleEntityServiceImpl implements ExampleEntityService {
 
         ExampleEntity entity = jpaDao.find(ExampleEntity.class, req.getId());
         if (entity == null) {
-            return  RestfulApiRespFactory.error("example例子数据不存在");
+            return RestfulApiRespFactory.error("example例子数据不存在");
         }
 
         UpdateDao<ExampleEntity> updateDao = jpaDao.updateTo(ExampleEntity.class).appendByQueryObj(req);
 
         int update = updateDao.update();
         if (update < 1) {
-            return  RestfulApiRespFactory.error("更新example例子失败");
+            return RestfulApiRespFactory.error("更新example例子失败");
         }
 
         return RestfulApiRespFactory.ok();
@@ -67,7 +70,7 @@ public class ExampleEntityServiceImpl implements ExampleEntityService {
 
         if (req.getId() == null
                 && (req.getIds() == null || req.getIds().length == 0)) {
-            return  RestfulApiRespFactory.error("删除参数不能为空");
+            return RestfulApiRespFactory.error("删除参数不能为空");
         }
 
         boolean r;
@@ -82,7 +85,7 @@ public class ExampleEntityServiceImpl implements ExampleEntityService {
         }
 
         if (!r) {
-            return  RestfulApiRespFactory.error("删除失败");
+            return RestfulApiRespFactory.error("删除失败");
         }
 
         return RestfulApiRespFactory.ok();
@@ -99,7 +102,7 @@ public class ExampleEntityServiceImpl implements ExampleEntityService {
     @Override
     public Pagination<ExampleEntityInfo> query(QueryExampleEntityReq req) {
 
-        return SimpleCommonDaoHelper.queryObject(jpaDao,ExampleEntity.class,ExampleEntityInfo.class,req);
+        return SimpleCommonDaoHelper.queryObject(jpaDao, ExampleEntity.class, ExampleEntityInfo.class, req);
 
     }
 }
