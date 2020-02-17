@@ -2,8 +2,6 @@ package com.oak.payment.management.payment.req;
 
 
 import com.oak.api.model.ApiBaseReq;
-import com.wuxp.payment.enums.PaymentMethod;
-import com.wuxp.payment.enums.TradeStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -62,7 +60,7 @@ public class PaymentDoneReq extends ApiBaseReq {
      * 交易状态
      */
     @Schema(description = "交易状态")
-    private TradeStatus tradeStatus;
+    private String tradeStatus;
 
     /**
      * 付款账号
@@ -71,10 +69,13 @@ public class PaymentDoneReq extends ApiBaseReq {
     private String payerAccount;
 
     /**
-     * 支付方式
+     * 支付方式名称
      */
+    @Schema(description = "支付方式名称")
+    private String paymentMethodName;
+
     @Schema(description = "支付方式")
-    private PaymentMethod paymentMethod;
+    private String paymentMethod;
 
     @Schema(description = "交易返回码")
     private String returnCode;

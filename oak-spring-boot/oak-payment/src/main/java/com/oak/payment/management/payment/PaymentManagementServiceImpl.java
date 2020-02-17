@@ -1,6 +1,7 @@
 package com.oak.payment.management.payment;
 
 import com.oak.payment.enums.PaymentStatus;
+import com.oak.payment.enums.TradeStatus;
 import com.oak.payment.management.payment.req.CreateOrderReq;
 import com.oak.payment.management.payment.req.OrderRefundDoneReq;
 import com.oak.payment.management.payment.req.PaymentDoneReq;
@@ -14,7 +15,6 @@ import com.oak.payment.services.paymentorder.req.CreatePaymentOrderReq;
 import com.oak.payment.services.paymentorder.req.EditPaymentOrderReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
-import com.wuxp.payment.enums.TradeStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,12 +73,12 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         }
         //修改支付单信息
         EditPaymentReq editPaymentReq = new EditPaymentReq(paymentInfo.getSn());
-        editPaymentReq.setPaymentMethodName(req.getPaymentMethod().getDesc())
-                .setPaymentMethod(req.getPaymentMethod().name())
+        editPaymentReq.setPaymentMethodName(req.getPaymentMethodName())
+                .setPaymentMethod(req.getPaymentMethod())
                 .setPayerAccount(req.getPayerAccount())
                 .setReturnSn(req.getOutTradeNo())
                 .setFinishedTime(new Date())
-                .setStatus(this.transformPaymentStatus(req.getTradeStatus().name()))
+                .setStatus(this.transformPaymentStatus(req.getTradeStatus()))
                 .setReturnCode(req.getReturnCode())
                 .setReturnInfo(req.getReturnInfo());
         paymentService.edit(editPaymentReq);
@@ -104,7 +104,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         }
         //修改支付单信息
         EditPaymentReq editPaymentReq = new EditPaymentReq(paymentInfo.getSn());
-        editPaymentReq.setStatus(this.transformPaymentStatus(req.getTradeStatus().name()))
+        editPaymentReq.setStatus(this.transformPaymentStatus(req.getTradeStatus()))
                 .setRefundAmount(req.getRefundAmount())
                 .setOutRefundSn(req.getOutTradeRefundNo())
                 .setRefundSn(req.getTradeRefundNo())

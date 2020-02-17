@@ -1,7 +1,6 @@
 package com.oak.payment.management.payment.req;
 
 import com.oak.api.model.ApiBaseReq;
-import com.wuxp.payment.enums.TradeStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +22,7 @@ public class OrderRefundDoneReq extends ApiBaseReq {
      * 交易状态
      */
     @Schema(description = "交易状态")
-    private TradeStatus tradeStatus;
+    private String tradeStatus;
 
     /**
      * 退款的金额
