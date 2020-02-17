@@ -7,15 +7,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
+
 import com.wuxp.security.example.enums.Week;
 
 
 /**
- *  编辑example例子
- *  2020-2-16 10:20:18
+ * 编辑example例子
+ * 2020-2-16 10:20:18
  */
 @Schema(description = "编辑example例子")
 @Data
@@ -29,12 +31,12 @@ public class EditExampleEntityReq extends ApiBaseReq {
     @Eq(require = true)
     private Long id;
 
-    @Size(min = 0 , max = 16)
+    @Size(min = 0, max = 16)
     @Schema(description = "name")
     @UpdateColumn
     private String name;
 
-    @Size(min = 0 , max = 200)
+    @Max(value = 200)
     @Schema(description = "年龄")
     @UpdateColumn
     private Integer age;

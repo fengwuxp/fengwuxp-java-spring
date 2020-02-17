@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -35,7 +36,7 @@ public class DemoEntity extends AbstractBaseEntityObject<Long> {
 
     @Schema(description = "年龄")
     @NotNull
-    @Size(max = 200)
+    @Max(value = 200)
     @Column(name = "aeg")
     private Integer age;
 

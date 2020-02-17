@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.levin.commons.dao.annotation.*;
+
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -13,8 +15,8 @@ import com.wuxp.security.example.enums.Week;
 
 
 /**
- *  创建ExampleEntity
- *  2020-2-16 10:20:18
+ * 创建ExampleEntity
+ * 2020-2-16 10:20:18
  */
 @Schema(description = "创建CreateExampleEntityReq的请求")
 @Data
@@ -24,11 +26,11 @@ public class CreateExampleEntityReq extends ApiBaseReq {
 
     @Schema(description = "name")
     @NotNull
-    @Size(min = 0 , max = 16)
+    @Size(min = 0, max = 16)
     private String name;
 
     @Schema(description = "年龄")
-    @Size(min = 0 , max = 200)
+    @Max(value = 200)
     private Integer age;
 
     @Schema(description = "头像")
