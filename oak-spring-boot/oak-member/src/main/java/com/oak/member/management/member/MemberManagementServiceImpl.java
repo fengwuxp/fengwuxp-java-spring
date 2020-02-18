@@ -9,16 +9,17 @@ import com.oak.api.entities.system.E_ClientChannel;
 import com.oak.api.enums.ClientType;
 import com.oak.member.entities.E_Member;
 import com.oak.member.entities.Member;
+import com.oak.member.entities.MemberAccountLog;
 import com.oak.member.enums.*;
 import com.oak.member.helper.WxMaHelper;
 import com.oak.member.management.member.info.AccountInfo;
-import com.oak.member.management.member.req.MemberAccountInfoReq;
-import com.oak.member.management.member.req.RegisterMemberFromWxMaReq;
-import com.oak.member.management.member.req.RegisterMemberFromWxReq;
-import com.oak.member.management.member.req.RegisterMemberReq;
+import com.oak.member.management.member.req.*;
 import com.oak.member.services.account.MemberAccountService;
 import com.oak.member.services.account.info.MemberAccountInfo;
 import com.oak.member.services.account.req.CreateMemberAccountReq;
+import com.oak.member.services.account.req.EditMemberAccountReq;
+import com.oak.member.services.accountlog.MemberAccountLogService;
+import com.oak.member.services.accountlog.req.CreateMemberAccountLogReq;
 import com.oak.member.services.member.MemberService;
 import com.oak.member.services.member.info.MemberInfo;
 import com.oak.member.services.member.req.CreateMemberReq;
@@ -64,6 +65,9 @@ public class MemberManagementServiceImpl implements MemberManagementService {
 
     @Autowired
     private JpaDao jpaDao;
+
+    @Autowired
+    private MemberAccountLogService memberAccountLogService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -217,5 +221,27 @@ public class MemberManagementServiceImpl implements MemberManagementService {
             default:
                 return Gender.SECRET;
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ApiResp<Void> recharge(RechargeReq req) {
+        MemberAccountInfo accountInfo = accountService.findById(req.getId());
+        EditMemberAccountReq editMemberAccountReq = new EditMemberAccountReq(accountInfo.getId());
+        editMemberAccountReq.setMoney(accountInfo.getMoney() + req.getAmount());
+        ApiResp<Void> editResp = accountService.edit(editMemberAccountReq);
+        AssertThrow.assertFalse(editResp.getMessage(), editResp.isSuccess());
+        //会员账户信息日志入库
+        CreateMemberAccountLogReq accountLogReq = new CreateMemberAccountLogReq();
+        accountLogReq.setMemberId(accountInfo.getId())
+                .setMoney(req.getAmount())
+                .setCurrMoney(editMemberAccountReq.getMoney())
+                .setFrozenMoney(0)
+                .setCurrFrozenMoney(accountInfo.getFrozenMoney())
+                .setStatus(AccountStatus.AVAILABLE)
+                .setDescription("充值余额")
+                .setOrderSn(req.getOrderSn());
+        memberAccountLogService.create(accountLogReq);
+        return RestfulApiRespFactory.ok();
     }
 }

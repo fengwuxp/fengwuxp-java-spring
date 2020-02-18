@@ -3,6 +3,7 @@ package test.com.oak.member;
 
 import com.oak.codegen.controller.ServiceModelUtil;
 import com.oak.member.entities.Member;
+import com.oak.member.entities.MemberAccountLog;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -25,9 +26,9 @@ public class OakSpringCodeGeneratorTest {
             log.debug("删除原有的输出目录{}", delete);
         }
 
-        String basePackageName = "com.oak.cms.services.member";
+        String basePackageName = "com.oak.cms.services.accountlog";
         Map<String, Class> entityMapping = new HashMap<>();
 //        entityMapping.put("area", AreaInfo.class);
-        ServiceModelUtil.entity2ServiceModel(Member.class, entityMapping, basePackageName, targetFilePath);
+        ServiceModelUtil.entity2ServiceModel(MemberAccountLog.class, entityMapping, basePackageName, targetFilePath);
     }
 }

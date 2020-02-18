@@ -1,10 +1,7 @@
 package com.oak.member.management.member;
 
 import com.oak.member.management.member.info.AccountInfo;
-import com.oak.member.management.member.req.MemberAccountInfoReq;
-import com.oak.member.management.member.req.RegisterMemberFromWxMaReq;
-import com.oak.member.management.member.req.RegisterMemberFromWxReq;
-import com.oak.member.management.member.req.RegisterMemberReq;
+import com.oak.member.management.member.req.*;
 import com.wuxp.api.ApiResp;
 
 /**
@@ -49,7 +46,12 @@ public interface MemberManagementService {
     ApiResp<AccountInfo> getMemberInfo(MemberAccountInfoReq req);
 
 
-
+    /**
+     * 充值余额
+     * @param req
+     * @return
+     */
+    ApiResp<Void> recharge(RechargeReq req);
 
 
 }
