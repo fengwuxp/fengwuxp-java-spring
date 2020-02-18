@@ -53,5 +53,10 @@ public interface MemberManagementService {
      */
     ApiResp<Void> recharge(RechargeReq req);
 
-
+    /**
+     * 扣除余额
+     * @param req
+     * @return
+     */
+    ApiResp<Void> deductMoney(DeductMoneyReq req);
 }
