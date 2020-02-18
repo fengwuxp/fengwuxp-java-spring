@@ -1,11 +1,14 @@
 package com.oak.member.services.accountlog.info;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
 import com.levin.commons.service.domain.Desc;
-        import com.oak.member.enums.AccountStatus;
-
+import com.oak.member.enums.AccountStatus;
+import com.oak.member.services.member.info.MemberInfo;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
