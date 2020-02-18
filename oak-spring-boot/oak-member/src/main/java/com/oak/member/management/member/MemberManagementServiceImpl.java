@@ -240,7 +240,32 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setCurrFrozenMoney(accountInfo.getFrozenMoney())
                 .setStatus(AccountStatus.AVAILABLE)
                 .setDescription("充值余额")
-                .setOrderSn(req.getOrderSn());
+                .setOrderSn(req.getOrderSn())
+                .setType(AccountLogType.RECHARGE.name());
+        memberAccountLogService.create(accountLogReq);
+        return RestfulApiRespFactory.ok();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ApiResp<Void> deductMoney(DeductMoneyReq req) {
+        MemberAccountInfo accountInfo = accountService.findById(req.getId());
+        AssertThrow.assertTrue("余额不足", accountInfo.getMoney() < req.getAmount());
+        EditMemberAccountReq editMemberAccountReq = new EditMemberAccountReq(accountInfo.getId());
+        editMemberAccountReq.setMoney(accountInfo.getMoney() - req.getAmount());
+        ApiResp<Void> editResp = accountService.edit(editMemberAccountReq);
+        AssertThrow.assertFalse(editResp.getMessage(), editResp.isSuccess());
+        //会员账户信息日志入库
+        CreateMemberAccountLogReq accountLogReq = new CreateMemberAccountLogReq();
+        accountLogReq.setMemberId(accountInfo.getId())
+                .setMoney(-req.getAmount())
+                .setCurrMoney(editMemberAccountReq.getMoney())
+                .setFrozenMoney(0)
+                .setCurrFrozenMoney(accountInfo.getFrozenMoney())
+                .setStatus(AccountStatus.AVAILABLE)
+                .setDescription(req.getReason())
+                .setOrderSn(req.getOrderSn())
+                .setType(AccountLogType.DEDUCT.name());
         memberAccountLogService.create(accountLogReq);
         return RestfulApiRespFactory.ok();
     }
