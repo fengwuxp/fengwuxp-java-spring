@@ -47,8 +47,8 @@ public class AdvController {
      * @param req QueryAdvReq
      * @return ApiResp<Pagination < AdvInfo>>
      */
-    @GetMapping("/query")
-    @Operation(summary = "查询Adv", description = "广告信息")
+    @GetMapping("/query_adv")
+    @Operation(summary = "查询广告", description = "查询广告")
     public ApiResp<Pagination<AdvInfo>> queryAdvInfo(QueryAdvInfoReq req) {
         return RestfulApiRespFactory.ok(advManagementService.queryAdv(req));
     }
@@ -61,7 +61,7 @@ public class AdvController {
      * @return ApiResp
      */
     @PostMapping("/add_adv")
-    @Operation(summary = "创建Adv", description = "广告信息")
+    @Operation(summary = "添加广告", description = "添加广告")
     public ApiResp<Long> AddAdv(AddAdvInfoReq req) {
         return advManagementService.createAdv(req);
     }
@@ -73,7 +73,7 @@ public class AdvController {
      * @param id Long
      */
     @GetMapping("/{id}")
-    @Operation(summary = "详情Adv", description = "广告信息")
+    @Operation(summary = "广告详情", description = "广告详情")
     public ApiResp<AdvInfo> detailAdv(@PathVariable Long id) {
         return RestfulApiRespFactory.ok(advService.findById(id));
     }
@@ -83,7 +83,7 @@ public class AdvController {
      * 修改广告
      */
     @PutMapping("/edit_adv")
-    @Operation(summary = "编辑Adv", description = "广告信息")
+    @Operation(summary = "修改广告", description = "修改广告")
     public ApiResp<Void> editAdv(UpdateAdvReq req) {
         return advManagementService.editAdv(req);
     }
@@ -93,7 +93,7 @@ public class AdvController {
      * 删除广告
      */
     @GetMapping("/del_adv")
-    @Operation(summary = "删除Adv", description = "广告信息")
+    @Operation(summary = "删除广告", description = "删除广告")
     public ApiResp<Void> deleteAdv(DelAdvReq req) {
         return advManagementService.deleteAdvById(req);
     }
@@ -106,7 +106,7 @@ public class AdvController {
      * @return ApiResp<Pagination < AdvPositionInfo>>
      */
     @GetMapping("/query_adv_position")
-    @Operation(summary = "查询AdvPosition", description = "广告位信息")
+    @Operation(summary = "查询广告位", description = "查询广告位")
     public ApiResp<Pagination<AdvPositionInfo>> queryAdvPosition(QueryAdvPositionReq req) {
         return RestfulApiRespFactory.ok(advPositionService.query(req));
     }
@@ -119,7 +119,7 @@ public class AdvController {
      * @return ApiResp
      */
     @PostMapping("/add_adv_position")
-    @Operation(summary = "创建AdvPosition", description = "广告位信息")
+    @Operation(summary = "创建广告位", description = "创建广告位")
     public ApiResp<Long> addAdvPosition(CreateAdvPositionReq req) {
         return advPositionService.create(req);
     }
@@ -131,7 +131,7 @@ public class AdvController {
      * @param id Long
      */
     @GetMapping("/{id}")
-    @Operation(summary = "广告位详情", description = "广告位信息")
+    @Operation(summary = "广告位详情", description = "广告位详情")
     public ApiResp<AdvPositionInfo> AdvPositionDetailById(@PathVariable Long id) {
         return RestfulApiRespFactory.ok(advPositionService.findById(id));
     }
@@ -141,7 +141,7 @@ public class AdvController {
      * 修改保存
      */
     @PutMapping("/edit_adv_position")
-    @Operation(summary = "广告位更新", description = "广告位信息")
+    @Operation(summary = "广告位更新", description = "广告位更新")
     public ApiResp<Void> editAdvPosition(EditAdvPositionReq req) {
         return advPositionService.edit(req);
     }
@@ -151,7 +151,7 @@ public class AdvController {
      * 删除
      */
     @GetMapping("/del_adv_position")
-    @Operation(summary = "删除广告位", description = "广告位信息")
+    @Operation(summary = "删除广告位", description = "删除广告位")
     public ApiResp<Void> delAdvPosition(DeleteAdvPositionReq req) {
         return advPositionService.delete(req);
     }
