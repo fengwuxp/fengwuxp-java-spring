@@ -93,7 +93,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
 
 
     @Override
-    public ApiResp<Void> orderRefundDone(OrderRefundDoneReq req) {
+    public ApiResp<String> orderRefundDone(OrderRefundDoneReq req) {
         PaymentInfo paymentInfo = paymentService.findById(req.getTradeNo());
         if (paymentInfo == null) {
             return RestfulApiRespFactory.error("支付单不存在");
@@ -116,7 +116,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         EditPaymentOrderReq editPaymentOrderReq = new EditPaymentOrderReq(paymentOrderInfo.getSn());
         editPaymentOrderReq.setStatus(editPaymentReq.getStatus());
         paymentOrderService.edit(editPaymentOrderReq);
-        return RestfulApiRespFactory.ok();
+        return RestfulApiRespFactory.ok(paymentInfo.getPayOrderSn());
     }
 
     private PaymentStatus transformPaymentStatus(String tradeStatus) {

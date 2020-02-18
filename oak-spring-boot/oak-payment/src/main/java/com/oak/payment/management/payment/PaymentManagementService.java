@@ -31,5 +31,5 @@ public interface PaymentManagementService {
      * @param req
      * @return
      */
-    ApiResp<Void> orderRefundDone(OrderRefundDoneReq req);
+    ApiResp<String> orderRefundDone(OrderRefundDoneReq req);
 }
