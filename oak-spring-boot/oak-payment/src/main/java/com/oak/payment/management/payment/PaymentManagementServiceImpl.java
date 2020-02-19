@@ -2,6 +2,7 @@ package com.oak.payment.management.payment;
 
 import com.oak.payment.enums.PaymentStatus;
 import com.oak.payment.enums.TradeStatus;
+import com.oak.payment.management.payment.req.CreateImmediateOrderReq;
 import com.oak.payment.management.payment.req.CreateOrderReq;
 import com.oak.payment.management.payment.req.OrderRefundDoneReq;
 import com.oak.payment.management.payment.req.PaymentDoneReq;
@@ -38,7 +39,7 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ApiResp<String> createPaymentOrder(CreateOrderReq req) {
+    public ApiResp<PaymentInfo> createPaymentOrder(CreateOrderReq req) {
         //支付定单入库
         CreatePaymentOrderReq createPaymentOrderReq = new CreatePaymentOrderReq();
         createPaymentOrderReq.setAmount(req.getAmount())
@@ -55,10 +56,10 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         CreatePaymentReq createPaymentReq = new CreatePaymentReq();
         createPaymentReq.setPayOrderSn(sn)
                 .setType(req.getType())
-                .setAmount(req.getAmount())
+                .setAmount(0)
                 .setStatus(PaymentStatus.UNPAID);
-
-        return paymentService.create(createPaymentReq);
+        ApiResp<String> resp = paymentService.create(createPaymentReq);
+        return RestfulApiRespFactory.ok(paymentService.findById(resp.getData()));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -80,7 +81,8 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
                 .setFinishedTime(new Date())
                 .setStatus(this.transformPaymentStatus(req.getTradeStatus()))
                 .setReturnCode(req.getReturnCode())
-                .setReturnInfo(req.getReturnInfo());
+                .setReturnInfo(req.getReturnInfo())
+                .setAmount(req.getBuyerPayAmount());
         paymentService.edit(editPaymentReq);
         //修改支付订单
         PaymentOrderInfo paymentOrderInfo = paymentOrderService.findById(paymentInfo.getPayOrderSn());
@@ -117,6 +119,32 @@ public class PaymentManagementServiceImpl implements PaymentManagementService {
         editPaymentOrderReq.setStatus(editPaymentReq.getStatus());
         paymentOrderService.edit(editPaymentOrderReq);
         return RestfulApiRespFactory.ok(paymentInfo.getPayOrderSn());
+    }
+
+    @Override
+    public ApiResp<String> createImmediatePaymentOrder(CreateImmediateOrderReq req) {
+        //支付定单入库
+        CreatePaymentOrderReq createPaymentOrderReq = new CreatePaymentOrderReq();
+        createPaymentOrderReq.setAmount(req.getAmount())
+                .setBuyerId(req.getBuyerId())
+                .setSellerId(req.getSellerId())
+                .setOrderTypes(req.getOrderTypes())
+                .setStatus(PaymentStatus.PAID)
+                .setType(req.getType())
+                .setPaidAmount(req.getAmount());
+
+        ApiResp<String> apiResp = paymentOrderService.create(createPaymentOrderReq);
+        String sn = apiResp.getData();
+        //支付单入库
+        CreatePaymentReq createPaymentReq = new CreatePaymentReq();
+        createPaymentReq.setPayOrderSn(sn)
+                .setType(req.getType())
+                .setAmount(req.getAmount())
+                .setStatus(PaymentStatus.PAID)
+                .setPaymentMethod(req.getPaymentMethod())
+                .setPaymentMethodName(req.getPaymentMethodName());
+
+        return paymentService.create(createPaymentReq);
     }
 
     private PaymentStatus transformPaymentStatus(String tradeStatus) {

@@ -10,6 +10,12 @@ public enum AccountLogType implements DescriptiveEnum {
     RECHARGE,
 
     @Schema(description = "余额扣减")
-    DEDUCT
+    DEDUCT,
+
+    @Schema(description = "余额冻结")
+    FREEZE,
+
+    @Schema(description = "余额解冻")
+    UNFREEZE
 
 }
