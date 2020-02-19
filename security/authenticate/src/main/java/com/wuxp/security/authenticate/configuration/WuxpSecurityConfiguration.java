@@ -4,6 +4,7 @@ import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.JwtAuthenticationFilter;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaAuthenticationFailureHandler;
+import com.wuxp.security.authenticate.restful.RestfulAuthenticationEntryPoint;
 import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationFailureHandler;
 import com.wuxp.security.openid.SocialOpenIdAuthenticationFailureHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Configuration
 @EnableConfigurationProperties(WuxpSecurityProperties.class)
@@ -63,6 +65,12 @@ public class WuxpSecurityConfiguration {
     @ConditionalOnMissingBean(SocialOpenIdAuthenticationFailureHandler.class)
     public SocialOpenIdAuthenticationFailureHandler socialOpenIdAuthenticationFailureHandler() {
         return new SocialOpenIdAuthenticationFailureHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new RestfulAuthenticationEntryPoint("请先登陆");
     }
 
 }

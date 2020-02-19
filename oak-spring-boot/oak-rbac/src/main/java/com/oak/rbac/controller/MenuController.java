@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author chenPC
  */
 @RestController
-@RequestMapping("/Menu")
+@RequestMapping("/menu")
 @Tag(name = "菜单", description = "菜单管理")
 @Slf4j
 public class MenuController {
