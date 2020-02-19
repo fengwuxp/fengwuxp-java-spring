@@ -6,12 +6,18 @@ import com.oak.organization.management.organization.OrganizationManagementServic
 import com.oak.organization.management.organization.req.AddOrganizationReq;
 import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.wuxp.api.ApiResp;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import test.com.oak.organization.OakApplicationTest;
 
 import java.util.Locale;
 
@@ -22,7 +28,10 @@ import java.util.Locale;
  * @version 1.0
  * @since <pre>1月 19, 2020</pre>
  */
-
+@ActiveProfiles("dev")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {OakApplicationTest.class})
+@Slf4j
 public class OrganizationManagementServiceImplTest {
 
     @Autowired

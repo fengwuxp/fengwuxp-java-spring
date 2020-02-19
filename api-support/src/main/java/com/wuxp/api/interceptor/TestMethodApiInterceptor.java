@@ -5,14 +5,24 @@ import com.wuxp.api.ApiRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.wuxp.api.ApiRequest.*;
+import static com.wuxp.api.signature.ApiSignatureRequest.APP_SIGNATURE_KEY;
+import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
+import static com.wuxp.api.signature.InternalApiSignatureRequest.TIME_STAMP_HEADER_KEY;
 
 /**
  * 用于测试方法拦截
@@ -66,5 +76,27 @@ public class TestMethodApiInterceptor extends ApiAspectSupport implements Method
         }
 
         return result;
+    }
+
+    /**
+     * 创建 spel执行上下文
+     *
+     * @param method
+     * @param args
+     * @param target
+     * @return
+     */
+    @Override
+    protected EvaluationContext createEvaluationContext(Method method,
+                                                        Object[] args,
+                                                        Object target,
+                                                        Class<?> targetClass) {
+        EvaluationContext evaluationContext = super.createEvaluationContext(method, args, target, targetClass);
+        evaluationContext.setVariable(APP_ID_KEY, "mock_app_id");
+        evaluationContext.setVariable(APP_SECRET_KEY, "mock_s");
+        evaluationContext.setVariable(NONCE_STR_KEY, RandomStringUtils.randomAlphabetic(32));
+        evaluationContext.setVariable(TIME_STAMP, System.currentTimeMillis());
+        evaluationContext.setVariable("apiSignature", RandomStringUtils.randomAlphabetic(32));
+        return evaluationContext;
     }
 }

@@ -56,13 +56,13 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 public abstract class ApiAspectSupport implements BeanFactoryAware, InitializingBean, SmartInitializingSingleton, DisposableBean {
 
 
-    private final Map<ApiAspectSupport.ApiOperationCacheKey, ApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentHashMap<>(1024);
+    protected final Map<ApiAspectSupport.ApiOperationCacheKey, ApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentHashMap<>(1024);
 
-    private final Map<Class<?>, Field[]> fieldCache = new ConcurrentHashMap<>(1024);
+    protected final Map<Class<?>, Field[]> fieldCache = new ConcurrentHashMap<>(1024);
 
-    private BeanFactory beanFactory;
+    protected BeanFactory beanFactory;
 
-    private ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    protected ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
     protected ApiRequestContextFactory apiRequestContextFactory;
 
@@ -530,8 +530,9 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     }
 
 
-    private HttpServletRequest getHttpServletRequest() {
+    protected HttpServletRequest getHttpServletRequest() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
         if (requestAttributes == null) {
             return null;
         }
@@ -591,13 +592,13 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     protected static class ApiOperationMetadata {
 
 
-        private final Method method;
+        protected final Method method;
 
-        private final Class<?> targetClass;
+        protected final Class<?> targetClass;
 
-        private final Method targetMethod;
+        protected final Method targetMethod;
 
-        private final AnnotatedElementKey methodKey;
+        protected final AnnotatedElementKey methodKey;
 
         public ApiOperationMetadata(Method method, Class<?> targetClass) {
 
@@ -610,11 +611,11 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     }
 
 
-    private static final class ApiOperationCacheKey implements Comparable<ApiAspectSupport.ApiOperationCacheKey> {
+    protected static final class ApiOperationCacheKey implements Comparable<ApiAspectSupport.ApiOperationCacheKey> {
 
         private final AnnotatedElementKey methodCacheKey;
 
-        private ApiOperationCacheKey(Method method, Class<?> targetClass) {
+        protected ApiOperationCacheKey(Method method, Class<?> targetClass) {
 
             this.methodCacheKey = new AnnotatedElementKey(method, targetClass);
         }
