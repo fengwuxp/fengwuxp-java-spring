@@ -2,6 +2,7 @@ package com.oak.payment.management.payment;
 
 import com.oak.payment.management.payment.req.*;
 import com.oak.payment.management.payment.rsp.WechatJsPaymentPreOrderRsp;
+import com.oak.payment.services.payment.info.PaymentInfo;
 import com.wuxp.api.ApiResp;
 
 /**
@@ -17,7 +18,7 @@ public interface PaymentManagementService {
      * @param req
      * @return 支付订单对象SN编号
      */
-    ApiResp<String> createPaymentOrder(CreateOrderReq req);
+    ApiResp<PaymentInfo> createPaymentOrder(CreateOrderReq req);
 
     /**
      * 支付完成
@@ -32,4 +33,11 @@ public interface PaymentManagementService {
      * @return
      */
     ApiResp<String> orderRefundDone(OrderRefundDoneReq req);
+
+    /**
+     * 生成支付单，完成支付
+     * @param req
+     * @return
+     */
+    ApiResp<String> createImmediatePaymentOrder(CreateImmediateOrderReq req);
 }

@@ -269,4 +269,54 @@ public class MemberManagementServiceImpl implements MemberManagementService {
         memberAccountLogService.create(accountLogReq);
         return RestfulApiRespFactory.ok();
     }
+
+    @Override
+    public ApiResp<Void> freezeMoney(FreezeMoneyReq req) {
+        MemberAccountInfo accountInfo = accountService.findById(req.getId());
+        AssertThrow.assertTrue("余额不足", accountInfo.getMoney() < req.getAmount());
+        EditMemberAccountReq editMemberAccountReq = new EditMemberAccountReq(accountInfo.getId());
+        editMemberAccountReq.setMoney(accountInfo.getMoney() - req.getAmount())
+                .setFrozenMoney(accountInfo.getFrozenMoney() + req.getAmount());
+        ApiResp<Void> editResp = accountService.edit(editMemberAccountReq);
+        AssertThrow.assertFalse(editResp.getMessage(), editResp.isSuccess());
+        //会员账户信息日志入库
+        CreateMemberAccountLogReq accountLogReq = new CreateMemberAccountLogReq();
+        accountLogReq.setMemberId(accountInfo.getId())
+                .setMoney(-req.getAmount())
+                .setCurrMoney(editMemberAccountReq.getMoney())
+                .setFrozenMoney(req.getAmount())
+                .setCurrFrozenMoney(editMemberAccountReq.getFrozenMoney())
+                .setStatus(AccountStatus.AVAILABLE)
+                .setDescription(req.getReason())
+                .setOrderSn(req.getOrderSn())
+                .setType(AccountLogType.FREEZE.name());
+        memberAccountLogService.create(accountLogReq);
+        return RestfulApiRespFactory.ok();
+    }
+
+    @Override
+    public ApiResp<Void> unfreezeMoney(UnfreezeMoneyReq req) {
+        MemberAccountInfo accountInfo = accountService.findById(req.getId());
+        AssertThrow.assertTrue("冻结余额不足", accountInfo.getFrozenMoney() < req.getAmount());
+        EditMemberAccountReq editMemberAccountReq = new EditMemberAccountReq(accountInfo.getId());
+        editMemberAccountReq.setMoney(accountInfo.getMoney() + req.getAmount())
+                .setFrozenMoney(accountInfo.getFrozenMoney() - req.getAmount());
+        ApiResp<Void> editResp = accountService.edit(editMemberAccountReq);
+        AssertThrow.assertFalse(editResp.getMessage(), editResp.isSuccess());
+        //会员账户信息日志入库
+        CreateMemberAccountLogReq accountLogReq = new CreateMemberAccountLogReq();
+        accountLogReq.setMemberId(accountInfo.getId())
+                .setMoney(req.getAmount())
+                .setCurrMoney(editMemberAccountReq.getMoney())
+                .setFrozenMoney(-req.getAmount())
+                .setCurrFrozenMoney(editMemberAccountReq.getFrozenMoney())
+                .setStatus(AccountStatus.AVAILABLE)
+                .setDescription(req.getReason())
+                .setOrderSn(req.getOrderSn())
+                .setType(AccountLogType.UNFREEZE.name());
+        memberAccountLogService.create(accountLogReq);
+        return RestfulApiRespFactory.ok();
+    }
+
+
 }

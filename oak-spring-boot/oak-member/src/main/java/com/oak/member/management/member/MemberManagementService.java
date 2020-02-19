@@ -59,4 +59,18 @@ public interface MemberManagementService {
      * @return
      */
     ApiResp<Void> deductMoney(DeductMoneyReq req);
+
+    /**
+     * 冻结余额
+     * @param req
+     * @return
+     */
+    ApiResp<Void> freezeMoney(FreezeMoneyReq req);
+
+    /**
+     * 解冻余额
+     * @param req
+     * @return
+     */
+    ApiResp<Void> unfreezeMoney(UnfreezeMoneyReq req);
 }
