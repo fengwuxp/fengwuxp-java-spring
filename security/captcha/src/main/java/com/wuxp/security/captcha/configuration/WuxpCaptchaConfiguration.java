@@ -53,7 +53,6 @@ public class WuxpCaptchaConfiguration {
     @Bean
     @ConditionalOnMissingBean(QrCodeCaptcha.class)
     public QrCodeCaptcha qrCodeCaptcha() {
-
         return new SimpleQrCodeCaptcha();
     }
 

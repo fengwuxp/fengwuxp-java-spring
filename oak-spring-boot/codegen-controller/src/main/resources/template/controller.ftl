@@ -16,7 +16,7 @@ import ${packageName}.info.${entityName}Info;
 
 
 @RestController
-@RequestMapping("/${entityName}")
+@RequestMapping("/${entityName?lower_case}")
 @Tag(name = "${desc}", description = "${desc}管理")
 @Slf4j
 public class ${entityName}Controller {
