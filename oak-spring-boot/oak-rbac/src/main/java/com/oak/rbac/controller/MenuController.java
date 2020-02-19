@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author chenPC
  */
 @RestController
-@RequestMapping("/Menu")
+@RequestMapping("/menu")
 @Tag(name = "菜单", description = "菜单管理")
 @Slf4j
 public class MenuController {
@@ -66,14 +66,14 @@ public class MenuController {
      * @return
      */
     @GetMapping("/update_menu_info")
-    @Operation(summary = "添加菜单", description = "添加菜单")
+    @Operation(summary = "编辑菜单", description = "编辑菜单")
     public ApiResp<Void> updateMenuInfo(UpdateMenuInfoReq dto) {
         return menuManagementService.updateMenuInfo(dto);
     }
 
 
     @GetMapping("/del_menu_info")
-    @Operation(summary = "添加菜单", description = "添加菜单")
+    @Operation(summary = "删除菜单", description = "删除菜单")
     public ApiResp<Void> delMenuInfo(DelMenuInfoReq dto) {
         return menuManagementService.delMenuInfo(dto);
 
