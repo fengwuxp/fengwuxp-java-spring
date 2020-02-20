@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 public class MemberAccountInfoReq extends ApiBaseReq {
 
-    @Schema(name = "用户id")
+    @Schema(name = "用户id", hidden = true)
     @InjectField(value = MemberApiContextInjectExprConstant.INJECT_MEMBER_ID_EXPR)
     private Long id;
 

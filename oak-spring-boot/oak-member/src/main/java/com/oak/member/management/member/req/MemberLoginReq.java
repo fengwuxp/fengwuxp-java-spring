@@ -55,8 +55,4 @@ public class MemberLoginReq extends ApiBaseReq {
     @InjectField(value = INJECT_REQUEST_IP_EXPR)
     private String remoteIp;
 
-    //校验会类
-    @Desc(value = "会员类型")
-    private String memberType;
-
 }

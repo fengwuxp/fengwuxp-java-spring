@@ -112,40 +112,40 @@ public class WxMaHelper {
         mpAesKey = aesKey;
     }
 
-    @Value("${wechat.mp.partnerId}")
-    public void setMpPartnerId(String mppartnerId) {
-        mpPartnerId = mppartnerId;
-    }
-
-    @Value("${wechat.mp.partnerKey}")
-    public void setMpPartnerKey(String mppartnerKey) {
-        mpPartnerKey = mppartnerKey;
-    }
-
-    @Value("${wechat.mp.keyPath}")
-    public void setMpKeyPath(String mpkeyPath) {
-        mpKeyPath = mpkeyPath;
-    }
-
-    @Value("${wechat.mp.templateId}")
-    public void setMpTemplateId(String mptemplateId) {
-        mpTemplateId = mptemplateId;
-    }
-
-    @Value("${wechat.mp.oauth2RedirectURI}")
-    public void setMpOauth2RedirectURI(String mpoauth2RedirectURI) {
-        mpOauth2RedirectURI = mpoauth2RedirectURI;
-    }
-
-    @Value("${wechat.mp.qrConnectRedirectURL}")
-    public void setMpQRConnectRedirectURL(String mpqRConnectRedirectURL) {
-        mpQRConnectRedirectURL = mpqRConnectRedirectURL;
-    }
-
-    @Value("${wechat.mp.kfAccount}")
-    public void setMpKFAccount(String mpkFAccount) {
-        mpKFAccount = mpkFAccount;
-    }
+    //@Value("${wechat.mp.partnerId}")
+    //public void setMpPartnerId(String mppartnerId) {
+    //    mpPartnerId = mppartnerId;
+    //}
+    //
+    //@Value("${wechat.mp.partnerKey}")
+    //public void setMpPartnerKey(String mppartnerKey) {
+    //    mpPartnerKey = mppartnerKey;
+    //}
+    //
+    //@Value("${wechat.mp.keyPath}")
+    //public void setMpKeyPath(String mpkeyPath) {
+    //    mpKeyPath = mpkeyPath;
+    //}
+    //
+    //@Value("${wechat.mp.templateId}")
+    //public void setMpTemplateId(String mptemplateId) {
+    //    mpTemplateId = mptemplateId;
+    //}
+    //
+    //@Value("${wechat.mp.oauth2RedirectURI}")
+    //public void setMpOauth2RedirectURI(String mpoauth2RedirectURI) {
+    //    mpOauth2RedirectURI = mpoauth2RedirectURI;
+    //}
+    //
+    //@Value("${wechat.mp.qrConnectRedirectURL}")
+    //public void setMpQRConnectRedirectURL(String mpqRConnectRedirectURL) {
+    //    mpQRConnectRedirectURL = mpqRConnectRedirectURL;
+    //}
+    //
+    //@Value("${wechat.mp.kfAccount}")
+    //public void setMpKFAccount(String mpkFAccount) {
+    //    mpKFAccount = mpkFAccount;
+    //}
 
     /**
      * 获取 WxMaService 对象 (小程序)
@@ -220,9 +220,7 @@ public class WxMaHelper {
         WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
         config.setAppId(mpAppId);
         config.setSecret(mpSecret);
-        //config.setAesKey(MP_AESKEY);
-        //config.setAccessToken(MP_ACCESSTOKEN);
-        //config.setToken(MP_TOKEN);
+        config.setAesKey(mpAesKey);
         wxMpService.setWxMpConfigStorage(config);
         return wxMpService;
     }

@@ -191,7 +191,6 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setGender(formatUserGender(userResp.getData().getSex()))
                 .setNotPassword(Boolean.TRUE)
                 .setMobileAuth(Boolean.FALSE)
-                .setMemberType("会员")
                 .setVerify(MemberVerifyStatus.APPROVED);
 
         return register(registerMemberReq);
@@ -218,7 +217,6 @@ public class MemberManagementServiceImpl implements MemberManagementService {
                 .setMobilePhone(phoneNumberInfo.getData().getPhoneNumber())
                 .setNotPassword(Boolean.TRUE)
                 .setMobileAuth(Boolean.FALSE)
-                .setMemberType("会员")
                 .setVerify(MemberVerifyStatus.APPROVED)
                 .setClientType(ClientType.MOBILE);
         ApiResp<Long> rsp = register(registerReq);
@@ -273,11 +271,6 @@ public class MemberManagementServiceImpl implements MemberManagementService {
             return RestfulApiRespFactory.error("用户已被禁用");
         } else if (!MemberVerifyStatus.APPROVED.equals(memberInfo.getVerify())) {
             return RestfulApiRespFactory.error("用户未审核");
-        }
-
-        if (!StringUtils.isEmpty(req.getMemberType())
-                && !req.getMemberType().equals(memberInfo.getMemberType())) {
-            return RestfulApiRespFactory.error("登录角色不一致，拒绝登录");
         }
 
         BeanUtils.copyProperties(memberInfo, loginInfo);
