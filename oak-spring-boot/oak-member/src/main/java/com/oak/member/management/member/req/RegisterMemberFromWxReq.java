@@ -26,15 +26,12 @@ public class RegisterMemberFromWxReq {
     private String code;
 
     @Schema(description =  "区域编码")
-    @NotNull
     private String areaId;
 
     @Schema(description =  "区域名称")
-    @NotNull
     private String areaName;
 
     @Schema(description =  "地址")
-    @NotNull
     private String address;
 
 }

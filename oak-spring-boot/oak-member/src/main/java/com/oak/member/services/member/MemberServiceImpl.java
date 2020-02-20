@@ -3,13 +3,11 @@ package com.oak.member.services.member;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.UpdateDao;
 import com.oak.api.helper.SimpleCommonDaoHelper;
+import com.oak.member.entities.E_Member;
 import com.oak.member.entities.Member;
 import com.oak.member.helper.SnHelper;
 import com.oak.member.services.member.info.MemberInfo;
-import com.oak.member.services.member.req.CreateMemberReq;
-import com.oak.member.services.member.req.DeleteMemberReq;
-import com.oak.member.services.member.req.EditMemberReq;
-import com.oak.member.services.member.req.QueryMemberReq;
+import com.oak.member.services.member.req.*;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.restful.RestfulApiRespFactory;
@@ -143,5 +141,16 @@ public class MemberServiceImpl implements MemberService {
 
         return SimpleCommonDaoHelper.queryObject(jpaDao, Member.class, MemberInfo.class, req);
 
+    }
+
+    @Override
+    public ApiResp<Long> checkMember(CheckMemberReq req) {
+        Long memberId = jpaDao.selectFrom(Member.class)
+                .select(E_Member.id)
+                .appendWhere(StringUtils.hasText(req.getUserName()), E_Member.userName + " = ?", req.getUserName())
+                .appendWhere(StringUtils.hasText(req.getMobilePhone()), E_Member.mobilePhone + " = ?",req.getMobilePhone())
+                .appendWhere(StringUtils.hasText(req.getEmail()), E_Member.email + " = ?", req.getEmail())
+                .findOne();
+        return RestfulApiRespFactory.ok(memberId);
     }
 }

@@ -4,6 +4,7 @@ package com.oak.member.entities;
 import com.oak.api.entities.system.ClientChannel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Schema(description = "会员登录的token信息")
 @Table(name = "t_member_token")
 @Data
+@Accessors(chain = true)
 public class MemberToken implements java.io.Serializable {
 
     private static final long serialVersionUID = -6312123664440141268L;

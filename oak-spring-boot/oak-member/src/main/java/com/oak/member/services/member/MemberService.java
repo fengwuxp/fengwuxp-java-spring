@@ -1,10 +1,7 @@
 package com.oak.member.services.member;
 
 import com.oak.member.services.member.info.MemberInfo;
-import com.oak.member.services.member.req.CreateMemberReq;
-import com.oak.member.services.member.req.DeleteMemberReq;
-import com.oak.member.services.member.req.EditMemberReq;
-import com.oak.member.services.member.req.QueryMemberReq;
+import com.oak.member.services.member.req.*;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 
@@ -30,4 +27,5 @@ public interface MemberService {
 
     Pagination<MemberInfo> query(QueryMemberReq req);
 
+    ApiResp<Long> checkMember(CheckMemberReq req);
 }

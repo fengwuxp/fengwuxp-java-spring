@@ -1,5 +1,6 @@
 package com.oak.member.services.secure;
 
+import com.oak.member.services.secure.info.LoginFail;
 import com.oak.member.services.secure.info.MemberSecureInfo;
 import com.oak.member.services.secure.req.CreateMemberSecureReq;
 import com.oak.member.services.secure.req.DeleteMemberSecureReq;
@@ -30,4 +31,11 @@ public interface MemberSecureService {
 
     Pagination<MemberSecureInfo> query(QueryMemberSecureReq req);
 
+    LoginFail findLoginFail(Long uid);
+
+    LoginFail saveLoginFail(Long uid, LoginFail loginFail);
+
+    Integer addLoginFail(Long id);
+
+    void resetLoginFail(Long uid);
 }

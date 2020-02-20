@@ -1,10 +1,7 @@
 package com.oak.member.services.open;
 
 import com.oak.member.services.open.info.MemberOpenInfo;
-import com.oak.member.services.open.req.CreateMemberOpenReq;
-import com.oak.member.services.open.req.DeleteMemberOpenReq;
-import com.oak.member.services.open.req.EditMemberOpenReq;
-import com.oak.member.services.open.req.QueryMemberOpenReq;
+import com.oak.member.services.open.req.*;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 
@@ -30,4 +27,5 @@ public interface MemberOpenService {
 
     Pagination<MemberOpenInfo> query(QueryMemberOpenReq req);
 
+    ApiResp<Boolean> checkBindOpen(CheckBindOpenReq checkBindOpenEvt);
 }

@@ -16,19 +16,15 @@ public interface ThirdService {
     @Desc(value = "获取微信UnionID")
     ApiResp<String> getWxUnionID(GetWxUnionIDReq evt);
 
-    @ApiService(ignoreAuth = true)
     @Desc(value = "获取微信用户信息")
     ApiResp<WxUserInfo> getWxUserInfo(GetWxUserInfoReq evt);
 
-    @ApiService(ignoreAuth = true)
     @Desc(value = "获取微信小程序会话信息")
     ApiResp<WxSessionInfo> getWxMaSessionInfo(GetWxMaSessionReq evt);
 
-    @ApiService(ignoreAuth = true)
     @Desc(value = "获取微信小程序用户信息")
     ApiResp<WxUserInfo> getWxMaUserInfo(GetWxMaUserReq evt);
 
-    @ApiService(ignoreAuth = true)
     @Desc(value = "获取微信小程序用户手机号")
     ApiResp<String> getWxMaPhoneNumber(GetWxMaPhoneNumberReq evt);
 

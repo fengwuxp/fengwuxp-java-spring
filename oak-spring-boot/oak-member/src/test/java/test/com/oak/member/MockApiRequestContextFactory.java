@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.oak.member.constant.MemberApiContextInjectExprConstant.IP_ADDRESS_KEY;
 import static com.wuxp.api.ApiRequest.*;
 
 @Component
@@ -21,6 +22,7 @@ public class MockApiRequestContextFactory implements ApiRequestContextFactory {
         FIXED_MAP.put(NONCE_STR_KEY, RandomStringUtils.randomAlphabetic(32));
         FIXED_MAP.put(TIME_STAMP, System.currentTimeMillis());
         FIXED_MAP.put("apiSignature", RandomStringUtils.randomAlphabetic(32));
+        FIXED_MAP.put(IP_ADDRESS_KEY, "127.0.0.1");
 //        OakAdminUser value = new OakAdminUser();
 //        value.setId(1L);
 //        value.setName("测试");

@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author wxup
  * @create 2018-07-21 17:44
  **/
-public class OpenWeChatInterceptor extends AbstractWeChatInterceptor {
+public class
+OpenWeChatInterceptor extends AbstractWeChatInterceptor {
 
 
     public OpenWeChatInterceptor() {

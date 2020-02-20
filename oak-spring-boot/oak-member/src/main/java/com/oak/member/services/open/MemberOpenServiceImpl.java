@@ -1,14 +1,14 @@
 package com.oak.member.services.open;
 
 import com.levin.commons.dao.JpaDao;
+import com.levin.commons.dao.SelectDao;
 import com.levin.commons.dao.UpdateDao;
 import com.oak.api.helper.SimpleCommonDaoHelper;
+import com.oak.member.entities.E_MemberOpen;
 import com.oak.member.entities.MemberOpen;
+import com.oak.member.enums.OpenType;
 import com.oak.member.services.open.info.MemberOpenInfo;
-import com.oak.member.services.open.req.CreateMemberOpenReq;
-import com.oak.member.services.open.req.DeleteMemberOpenReq;
-import com.oak.member.services.open.req.EditMemberOpenReq;
-import com.oak.member.services.open.req.QueryMemberOpenReq;
+import com.oak.member.services.open.req.*;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.restful.RestfulApiRespFactory;
@@ -16,8 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -107,5 +110,27 @@ public class MemberOpenServiceImpl implements MemberOpenService {
 
         return SimpleCommonDaoHelper.queryObject(jpaDao, MemberOpen.class, MemberOpenInfo.class,req);
 
+    }
+
+    @Override
+    public ApiResp<Boolean> checkBindOpen(CheckBindOpenReq req) {
+        List<OpenType> wxOpenTypes = new ArrayList<>();
+        wxOpenTypes.add(OpenType.WEIXIN);
+        wxOpenTypes.add(OpenType.WEIXIN_OPEN);
+        wxOpenTypes.add(OpenType.WEIXIN_MA);
+        SelectDao<MemberOpen> selectDao = jpaDao.selectFrom(MemberOpen.class)
+                .eq(E_MemberOpen.memberId, req.getMemberId())
+                .appendWhere(!StringUtils.isEmpty(req.getOpenId()) && !StringUtils.isEmpty(req.getUnionId()),
+                        "( openId = ? or unionId = ?)", req.getOpenId(), req.getUnionId())
+                .eq(E_MemberOpen.openId, req.getOpenId())
+                .eq(E_MemberOpen.unionId, req.getUnionId());
+
+        if (wxOpenTypes.contains(req.getOpenType())) {
+            selectDao.in(E_MemberOpen.openType, wxOpenTypes.toArray());
+        } else {
+            selectDao.eq(E_MemberOpen.openType, req.getOpenType());
+        }
+
+        return RestfulApiRespFactory.ok(selectDao.count() > 0);
     }
 }

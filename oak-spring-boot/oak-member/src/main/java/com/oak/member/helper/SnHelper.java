@@ -1,6 +1,7 @@
 package com.oak.member.helper;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,6 +49,21 @@ public class SnHelper {
 
         return headBuffer.append(middleBuffer).append(tailBuffer).toString();
 
+    }
+
+    public static String makeRandom(int digit) throws IllegalArgumentException {
+        if (digit <= 0) {
+            throw new IllegalArgumentException();
+        } else {
+            String code = "";
+            Random random = new Random();
+
+            for(int i = 1; i <= digit; ++i) {
+                int r = random.nextInt(10);
+                code = code + r;
+            }
+            return code;
+        }
     }
 
     public static void main(String[] args) {

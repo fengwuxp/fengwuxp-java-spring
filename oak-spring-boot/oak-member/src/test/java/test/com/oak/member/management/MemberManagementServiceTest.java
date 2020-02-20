@@ -5,12 +5,11 @@ import com.levin.commons.dao.JpaDao;
 import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.enums.ClientType;
 import com.oak.member.enums.Gender;
+import com.oak.member.enums.LoginModel;
 import com.oak.member.management.member.MemberManagementService;
 import com.oak.member.management.member.info.AccountInfo;
-import com.oak.member.management.member.req.MemberAccountInfoReq;
-import com.oak.member.management.member.req.RegisterMemberFromWxMaReq;
-import com.oak.member.management.member.req.RegisterMemberFromWxReq;
-import com.oak.member.management.member.req.RegisterMemberReq;
+import com.oak.member.management.member.info.MemberLoginInfo;
+import com.oak.member.management.member.req.*;
 import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
@@ -65,7 +64,7 @@ public class MemberManagementServiceTest {
     @Test
     public void test()  throws Exception {
         testRegister();
-        getMemberAccountInfo();
+        login();
     }
 
     @Test
@@ -132,6 +131,16 @@ public class MemberManagementServiceTest {
         req.setId(1L);
         ApiResp<AccountInfo> resp = memberManagementService.getMemberInfo(req);
 
+        Assert.assertTrue(resp.getMessage(), resp.isSuccess());
+        System.out.println(resp.toString());
+    }
+
+    public void login() {
+        MemberLoginReq req = new MemberLoginReq();
+        req.setLoginModel(LoginModel.PASSWORD);
+        req.setMobilePhone("13107685221");
+        req.setPassword("543210");
+        ApiResp<MemberLoginInfo> resp = memberManagementService.login(req);
         Assert.assertTrue(resp.getMessage(), resp.isSuccess());
         System.out.println(resp.toString());
     }
