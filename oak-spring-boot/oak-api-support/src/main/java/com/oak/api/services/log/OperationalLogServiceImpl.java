@@ -56,8 +56,10 @@ public class OperationalLogServiceImpl implements OperationalLogService {
         req.setContent(apiLogModel.getContent());
         req.setUrl(apiLogModel.getUri());
 
-        Authentication authentication = apiLogModel.getAuthentication();
-        req.setOperationalName(authentication.getName());
+        Object authentication = apiLogModel.getAuthentication();
+        if (authentication instanceof Authentication) {
+            req.setOperationalName(((Authentication) authentication).getName());
+        }
 
         this.createOperationalLog(req);
 

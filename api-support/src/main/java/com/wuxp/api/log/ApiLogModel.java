@@ -2,7 +2,6 @@ package com.wuxp.api.log;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.Authentication;
 
 /**
  * 操作日志描述对象
@@ -58,9 +57,9 @@ public class ApiLogModel implements java.io.Serializable {
 
 
     /**
-     * 操作人id
+     * 操作人
      */
-    private Authentication authentication;
+    private Object authentication;
 
 
 }

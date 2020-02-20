@@ -21,7 +21,6 @@ import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -508,7 +507,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
         Object authentication = evaluationContext.lookupVariable(AUTHENTICATE);
         if (authentication != null) {
-            apiLogModel.setAuthentication((Authentication) authentication);
+            apiLogModel.setAuthentication(authentication);
         }
 
         return apiLogModel;
