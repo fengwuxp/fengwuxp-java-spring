@@ -29,12 +29,16 @@ import com.oak.member.services.member.MemberService;
 import com.oak.member.services.member.info.MemberInfo;
 import com.oak.member.services.member.req.CheckMemberReq;
 import com.oak.member.services.member.req.CreateMemberReq;
+import com.oak.member.services.member.req.EditMemberReq;
 import com.oak.member.services.open.MemberOpenService;
+import com.oak.member.services.open.req.ChangePasswordReq;
 import com.oak.member.services.open.req.CheckBindOpenReq;
 import com.oak.member.services.open.req.CreateMemberOpenReq;
 import com.oak.member.services.secure.MemberSecureService;
 import com.oak.member.services.secure.info.LoginFail;
+import com.oak.member.services.secure.info.MemberSecureInfo;
 import com.oak.member.services.secure.req.CreateMemberSecureReq;
+import com.oak.member.services.secure.req.EditMemberSecureReq;
 import com.oak.member.services.token.MemberTokenService;
 import com.oak.member.services.token.info.MemberTokenInfo;
 import com.wuxp.api.ApiResp;
@@ -43,17 +47,15 @@ import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.jwt.JwtTokenPair;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
-import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.oak.member.constant.MemberCacheKeyConstant.LOGIN_REFRESH_TOKEN;
 import static com.oak.member.constant.MemberCacheKeyConstant.LOGIN_TOKEN_VALID_HOUR;
@@ -91,7 +93,7 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     @Autowired
     private MemberTokenService tokenService;
 
-    @Autowired(required=true)
+    @Autowired(required = true)
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -170,30 +172,26 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     }
 
     @Override
-    public ApiResp<Long> registerFromWx(RegisterMemberFromWxReq req) {
-        ApiResp<WxMpOAuth2AccessToken> tokenResp = WxMaHelper.getOAuth2AccessToken(req.getCode());
-        if (!tokenResp.isSuccess()) {
-            return RestfulApiRespFactory.error(tokenResp.getMessage());
-        }
-        ApiResp<WxMpUser> userResp = WxMaHelper.getWxMpUserInfo(req.getCode());
-        if (!userResp.isSuccess()) {
-            return RestfulApiRespFactory.error(userResp.getMessage());
-        }
+    public ApiResp<MemberInfo> registerFromWx(RegisterMemberFromWxReq req) {
+
         RegisterMemberReq registerMemberReq = new RegisterMemberReq();
         BeanUtils.copyProperties(req, registerMemberReq);
         registerMemberReq.setClientType(ClientType.MOBILE)
                 .setOpenType(OpenType.WEIXIN)
-                .setOpenId(userResp.getData().getOpenId())
-                .setUserName(userResp.getData().getNickname())
-                .setAvatarUrl(userResp.getData().getHeadImgUrl())
-                .setNickName(userResp.getData().getNickname())
-                .setUnionId(userResp.getData().getUnionId())
-                .setGender(formatUserGender(userResp.getData().getSex()))
+                .setOpenId(req.getOpenId())
+                .setUserName(req.getNickname())
+                .setAvatarUrl(req.getHeadImgUrl())
+                .setNickName(req.getNickname())
+                .setUnionId(req.getUnionId())
+                .setGender(formatUserGender(req.getSex()))
                 .setNotPassword(Boolean.TRUE)
                 .setMobileAuth(Boolean.FALSE)
                 .setVerify(MemberVerifyStatus.APPROVED);
+        ApiResp<Long> registerResp = register(registerMemberReq);
+        AssertThrow.assertResp(registerResp);
+        MemberInfo memberInfo = memberService.findById(registerResp.getData());
 
-        return register(registerMemberReq);
+        return RestfulApiRespFactory.ok(memberInfo);
     }
 
     @Override
@@ -558,12 +556,11 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     }
 
 
-
     private MemberToken saveLogin(LoginModel loginModel, MemberInfo memberInfo, String ip) {
         //记录用户日志
         MemberLog log = new MemberLog();
         log.setMemberId(memberInfo.getId());
-        log.setType( loginModel.name() + " 登录");
+        log.setType(loginModel.name() + " 登录");
         log.setOperator(memberInfo.getUserName() == null ? memberInfo.getMobilePhone() : memberInfo.getUserName());
         log.setOperatingTime(new Date());
         log.setShowName(!StringUtils.isEmpty(memberInfo.getNickName()) ? memberInfo.getNickName() : memberInfo.getUserName());
@@ -675,5 +672,80 @@ public class MemberManagementServiceImpl implements MemberManagementService {
         BeanUtils.copyProperties(memberToken, memberTokenInfo);
 
         return RestfulApiRespFactory.ok(memberTokenInfo);
+    }
+
+    @Override
+    public ApiResp<MemberInfo> queryMemberByOpenId(QueryMemberByOpenIdReq req) {
+        List<OpenType> wxOpenTypes = new ArrayList<>();
+        wxOpenTypes.add(OpenType.WEIXIN);
+        wxOpenTypes.add(OpenType.WEIXIN_OPEN);
+        wxOpenTypes.add(OpenType.WEIXIN_MA);
+        SelectDao<MemberOpen> selectDao = jpaDao.selectFrom(MemberOpen.class)
+                .eq(E_MemberOpen.openId, req.getOpenId());
+
+        if (wxOpenTypes.contains(req.getOpenType())) {
+            selectDao.in(E_MemberOpen.openType, wxOpenTypes.toArray());
+        } else {
+            selectDao.eq(E_MemberOpen.openType, req.getOpenType());
+        }
+        MemberOpen open = selectDao.findOne();
+        if (open != null) {
+            MemberInfo memberInfo = memberService.findById(open.getMemberId());
+            return RestfulApiRespFactory.ok(memberInfo);
+        }
+        return RestfulApiRespFactory.error("不存在绑定此OpenId的用户");
+    }
+
+    @Override
+    public ApiResp<Void> modifyAvatar(ModifyAvatarReq req) {
+        EditMemberReq editReq = new EditMemberReq();
+        editReq.setAvatarUrl(req.getUrl()).setId(req.getUid()).setLastUpdateTime(new Date());
+        return memberService.edit(editReq);
+    }
+
+    @Override
+    public ApiResp changePassword(ChangePasswordReq req) {
+        MemberInfo memberInfo = memberService.findById(req.getUid());
+        if (memberInfo == null) {
+            return RestfulApiRespFactory.error("用户不存在");
+        }
+        MemberSecureInfo secureInfo = secureService.findById(req.getUid());
+        if (secureInfo == null) {
+            return RestfulApiRespFactory.error("用户安全信息不存在");
+        }
+        if (req.getOldPassword().equals(secureInfo.getPayPassword())) {
+            return RestfulApiRespFactory.error("密码错误");
+        }
+        EditMemberSecureReq eSecureReq = new EditMemberSecureReq();
+        eSecureReq.setId(req.getUid())
+                .setLoginPassword(req.getNewPassword())
+                .setLoginPwdUpdateTime(new Date());
+        ApiResp resp = secureService.edit(eSecureReq);
+        AssertThrow.assertResp(resp);
+        return RestfulApiRespFactory.ok();
+    }
+
+    @Override
+    public ApiResp frozen(FrozenReq req) {
+        MemberInfo member = memberService.findById(req.getUid());
+        if (member == null) {
+            return RestfulApiRespFactory.error("用户不存在");
+        }
+
+        Calendar ca = new GregorianCalendar();
+        if (req.getDays() > -1) {
+            ca.add(Calendar.DAY_OF_YEAR, req.getDays());
+        }
+        String atTime = DateFormatUtils.format(ca, "yyyy-MM-dd HH:mm:ss");
+
+        boolean success = jpaDao.updateTo(Member.class)
+                .appendColumn(E_Member.frozenDate, (req.getDays() > -1 ? atTime : null))
+                .eq(E_Member.id, req.getUid())
+                .update() > 0;
+        if (!success) {
+            return RestfulApiRespFactory.error("操作失败");
+        }
+
+        return RestfulApiRespFactory.ok();
     }
 }

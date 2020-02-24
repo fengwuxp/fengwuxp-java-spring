@@ -65,17 +65,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ApiResp<Void> edit(EditMemberReq req) {
 
-
-        if (!StringUtils.isEmpty(req.getNo())) {
-            long noC = jpaDao.selectFrom(Member.class)
-                    .eq("no", req.getNo())
-                    .appendWhere("id != ?", req.getId())
-                    .count();
-            if (noC > 0) {
-                return RestfulApiRespFactory.error("会员编号已被使用");
-            }
-        }
-
         if (!StringUtils.isEmpty(req.getUserName())) {
             long userNameC = jpaDao.selectFrom(Member.class)
                     .eq("userName", req.getUserName())

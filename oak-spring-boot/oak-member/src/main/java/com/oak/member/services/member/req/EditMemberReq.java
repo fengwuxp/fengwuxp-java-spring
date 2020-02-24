@@ -3,8 +3,10 @@ package com.oak.member.services.member.req;
 import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
 import com.oak.api.model.ApiBaseReq;
+import com.oak.member.constant.MemberApiContextInjectExprConstant;
 import com.oak.member.enums.Gender;
 import com.oak.member.enums.MemberVerifyStatus;
+import com.wuxp.api.context.InjectField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,15 +29,11 @@ import java.util.Date;
 @Accessors(chain = true)
 public class EditMemberReq extends ApiBaseReq {
 
-    @Schema(description = "会员ID")
+    @Schema(description = "会员ID", hidden = true)
     @NotNull
     @Eq(require = true)
+    @InjectField(value = MemberApiContextInjectExprConstant.INJECT_MEMBER_ID_EXPR)
     private Long id;
-
-    @Size(max = 20)
-    @Schema(description = "会员编号")
-    @UpdateColumn
-    private String no;
 
     @Size(max = 11)
     @Schema(description = "手机号")

@@ -21,9 +21,20 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 public class RegisterMemberFromWxReq {
 
-    @Desc("code")
-    @NotNull
-    private String code;
+    @Schema(name = "openId", description =  "OpenID")
+    private String openId;
+
+    @Schema(name = "nickname", description =  "昵称")
+    private String nickname;
+
+    @Schema(name = "sex", description =  "性别")
+    private Integer sex;
+
+    @Schema(name = "headImgUrl", description =  "头像")
+    private String headImgUrl;
+
+    @Schema(name = "unionId", description =  "unionId")
+    private String unionId;
 
     @Schema(description =  "区域编码")
     private String areaId;
