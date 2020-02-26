@@ -1,8 +1,8 @@
-package com.oak.rbac.management.user;
+package com.oak.organization.management.user;
 
 
-import com.oak.rbac.management.user.info.LoginAdminUserInfo;
-import com.oak.rbac.management.user.req.LoginAdminUserReq;
+import com.oak.organization.management.user.info.LoginAdminUserInfo;
+import com.oak.organization.management.user.req.LoginAdminUserReq;
 import com.wuxp.api.ApiResp;
 
 

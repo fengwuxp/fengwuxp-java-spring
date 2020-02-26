@@ -1,4 +1,4 @@
-package com.wuxp.security.example.services.user.info;
+package com.oak.organization.management.user.info;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
