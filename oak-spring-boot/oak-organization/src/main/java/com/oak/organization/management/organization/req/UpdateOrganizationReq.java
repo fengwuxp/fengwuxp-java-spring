@@ -5,6 +5,7 @@ import com.oak.api.model.ApiBaseReq;
 import com.oak.organization.enums.OrganizationType;
 import com.wuxp.api.context.InjectField;
 import com.wuxp.api.context.InjectFieldExpressionConstant;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

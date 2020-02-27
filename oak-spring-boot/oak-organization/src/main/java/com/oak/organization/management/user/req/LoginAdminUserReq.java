@@ -1,10 +1,6 @@
-package com.wuxp.security.example.services.user.req;
+package com.oak.organization.management.user.req;
 
-import com.levin.commons.dao.annotation.Gte;
-import com.levin.commons.dao.annotation.Like;
-import com.levin.commons.dao.annotation.Lte;
-import com.oak.api.model.ApiBaseQueryReq;
-import com.oak.rbac.entities.E_OakAdminUser;
+import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +8,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 /**
  * 查询管理员用户
@@ -24,7 +19,7 @@ import java.util.Date;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 
-public class LoginAdminUserReq extends ApiBaseQueryReq {
+public class LoginAdminUserReq extends ApiBaseReq {
 
     @Schema(description = "用户名")
     @NotNull
