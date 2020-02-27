@@ -1,6 +1,8 @@
 package com.wuxp.wehcat.interceptor;
 
 import com.wuxp.basic.utils.IpAddressUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -8,6 +10,9 @@ import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.DigestUtils;
@@ -31,7 +36,10 @@ import java.util.Map;
  * 微信开放平台扫码登录文档：https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN
  */
 @Slf4j
-public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapter implements WeChatAuthInterceptor {
+@Setter
+@Getter
+public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapter
+        implements WeChatAuthInterceptor, InitializingBean, BeanFactoryAware {
 
     public enum WxAuthScope {
 
@@ -50,39 +58,39 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
 
     public static final int WX_STATE_VALID_TIME = 5 * 60 * 1000;
 
-    private static final String WX_AUTH_RETRIES = AbstractWeChatInterceptor.class.getName() + ".WX_AUTH_RETRIES";
+    protected static final String WX_AUTH_RETRIES = AbstractWeChatInterceptor.class.getName() + ".WX_AUTH_RETRIES";
 
     //
-    private String wxAuthCallbackStateValuePrefix;
+    protected String wxAuthCallbackStateValuePrefix;
 
     //应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
-    private WxAuthScope wxAuthScope = WxAuthScope.snsapi_userinfo;
+    protected WxAuthScope wxAuthScope = WxAuthScope.snsapi_userinfo;
 
     //忽略拦截的地址
-    private String[] ignoreUrlPatterns;
+    protected String[] ignoreUrlPatterns;
 
 
     //是否保存到cookie
-    private boolean save2Cookie;
+    protected boolean save2Cookie;
 
     //cookie超时时间
-    private long cookieTimeout = 60 * 60 * 1000;
+    protected long cookieTimeout = 60 * 60 * 1000;
 
     //认证失败后的重定向地址
-    private String authFailUrl;
+    protected String authFailUrl;
 
     //认证重试次数
-    private int maxAuthRetries = 3;
+    protected int maxAuthRetries = 3;
 
     /**
      * 是否为模拟环境
      */
     protected boolean isMock;
 
+    protected BeanFactory beanFactory;
 
     protected WxMpService wxService;
 
-    @Autowired(required = false)
     protected UserAction userAction;
 
 
@@ -105,81 +113,8 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
         this.wxAuthCallbackStateValuePrefix = this.getClass().getSimpleName();
     }
 
-    public WxMpService getWxService() {
-        return wxService;
-    }
-
-    public void setWxService(WxMpService wxService) {
-        this.wxService = wxService;
-    }
-
-    public WxAuthScope getWxAuthScope() {
-        return wxAuthScope;
-    }
-
-    public void setWxAuthScope(WxAuthScope wxAuthScope) {
-        this.wxAuthScope = wxAuthScope;
-    }
-
-    public String[] getIgnoreUrlPatterns() {
-        return ignoreUrlPatterns;
-    }
-
-    public void setIgnoreUrlPatterns(String[] ignoreUrlPatterns) {
-        this.ignoreUrlPatterns = ignoreUrlPatterns;
-    }
-
-    public String getAuthFailUrl() {
-        return authFailUrl;
-    }
-
-    public void setAuthFailUrl(String authFailUrl) {
-        this.authFailUrl = authFailUrl;
-    }
-
-
-    public int getMaxAuthRetries() {
-        return maxAuthRetries;
-    }
-
-    public void setMaxAuthRetries(int maxAuthRetries) {
-
-        if (maxAuthRetries > 0) {
-            this.maxAuthRetries = maxAuthRetries;
-        }
-    }
-
-    public String getWxAuthCallbackStateValuePrefix() {
-        return this.wxAuthCallbackStateValuePrefix;
-    }
-
-    public void setWxAuthCallbackStateValuePrefix(String wxAuthCallbackStateValuePrefix) {
-        this.wxAuthCallbackStateValuePrefix = wxAuthCallbackStateValuePrefix;
-    }
-
-    public boolean isSave2Cookie() {
-        return save2Cookie;
-    }
-
-    public void setSave2Cookie(boolean save2Cookie) {
-        this.save2Cookie = save2Cookie;
-    }
-
-    public long getCookieTimeout() {
-        return cookieTimeout;
-    }
-
-    public void setCookieTimeout(long cookieTimeout) {
-        this.cookieTimeout = cookieTimeout;
-    }
-
-    public void setRedirectBasePath(String redirectBasePath) {
-        this.redirectBasePath = redirectBasePath;
-    }
-
-    @PostConstruct
-    public void postConstruct() {
-
+    @Override
+    public void afterPropertiesSet() throws Exception {
         if (this.wxAuthScope == null) {
             this.wxAuthScope = WxAuthScope.snsapi_userinfo;
         }
@@ -188,14 +123,22 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
             this.wxAuthCallbackStateValuePrefix = AbstractWeChatInterceptor.class.getSimpleName();
         }
 
+        BeanFactory beanFactory = this.beanFactory;
+        if (this.userAction == null) {
+            this.userAction = beanFactory.getBean(UserAction.class);
+        }
+        if (this.wxService == null) {
+            this.wxService = beanFactory.getBean(WxMpService.class);
+        }
     }
 
 
-
-    @Override
-    public boolean isMock() {
-        return this.isMock;
+    public void setMaxAuthRetries(int maxAuthRetries) {
+        if (maxAuthRetries > 0) {
+            this.maxAuthRetries = maxAuthRetries;
+        }
     }
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -389,7 +332,6 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
         String delim = "_P";
         return wxAuthCallbackStateValuePrefix + delim + currentTimeMillis + delim + DigestUtils.md5DigestAsHex(stateValue.getBytes(StandardCharsets.UTF_8)) + delim + remaining;
     }
-
 
 
     /**

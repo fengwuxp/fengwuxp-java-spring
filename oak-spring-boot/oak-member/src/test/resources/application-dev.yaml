@@ -29,8 +29,17 @@ spring:
       hibernate.id.new_generator_mappings: false
       hibernate.dialect.storage_engine: innodb
 
-test:
-  value: 1,2
+wx:
+  # 小程序
+  miniapp:
+    appid: 111
+    secret: 111
+    token: 111
+    aesKey: 111
+    msgDataFormat: JSON
+    # 公众号
+  mp:
+    app-id:
 
 logging:
   level:
