@@ -10,6 +10,7 @@ import com.oak.member.management.member.MemberManagementService;
 import com.oak.member.management.member.info.AccountInfo;
 import com.oak.member.management.member.info.MemberLoginInfo;
 import com.oak.member.management.member.req.*;
+import com.oak.member.services.member.info.MemberInfo;
 import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
@@ -115,10 +116,9 @@ public class MemberManagementServiceTest {
 
         RegisterMemberFromWxReq req = new RegisterMemberFromWxReq();
         req.setAddress(faker.address().streetAddress())
-                .setCode("oPGID1ZEH5Rg5Xen3L-QAm11ts3w")
                 .setAreaId("350102")
                 .setAreaName("鼓楼区");
-        ApiResp<Long> resp = memberManagementService.registerFromWx(req);
+        ApiResp<MemberInfo> resp = memberManagementService.registerFromWx(req);
 
         Assert.assertTrue(resp.getMessage(), resp.isSuccess());
 

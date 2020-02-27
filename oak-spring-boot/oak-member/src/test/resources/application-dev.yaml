@@ -47,3 +47,21 @@ logging:
     com.oak: debug
 #    org.springframework: debug
 #    org.hibernate: debug
+wechat:
+  ma:
+    appId: wxf7aa3f25069cf527
+    secret: 82dfc32a790aa3e66547935d8ae7a3a6
+    aesKey: EncodingAESKey
+    msgDataFormat: JSON
+  mp:
+    appId: wx9bbf82a4639c9c8b
+    secret: ee8b7211676c6992b43d1d5468e25c88
+    aesKey: EncodingAESKey
+    msgDataFormat: JSON
+    partnerId:
+    partnerKey:
+    keyPath:
+    templateId:
+    oauth2RedirectURI:
+    qrConnectRedirectURL:
+    kfAccount:

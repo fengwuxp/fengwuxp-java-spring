@@ -1,6 +1,7 @@
 package com.oak.member.cache;
 
 import com.oak.member.management.member.info.MemberLoginInfo;
+import com.oak.member.services.member.info.MemberInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Component;
 public class MemberSessionCacheHelper {
 
     public static final String OAK_MEMBER_LOGIN_INFO_CACHE = "OAK_MEMBER_LOGIN_INFO_CACHE";
+    public static final String OAK_MEMBER_KEY = "OAK_MEMBER_KEY";
+    public static final String OAK_SESSION_MEMBER_KEY = "OAK_SESSION_MEMBER_KEY";
 
 
     @Cacheable(value = {OAK_MEMBER_LOGIN_INFO_CACHE}, key = "#token", condition = "#token!=null")
@@ -34,4 +37,8 @@ public class MemberSessionCacheHelper {
 
     }
 
+    @CachePut(value = {OAK_MEMBER_LOGIN_INFO_CACHE}, key = "#token", condition = "#token!=null")
+    public MemberInfo save(String token, MemberInfo memberInfo) {
+        return memberInfo;
+    }
 }

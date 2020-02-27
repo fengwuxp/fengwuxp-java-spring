@@ -6,7 +6,9 @@ import com.oak.member.enums.LoginModel;
 import com.oak.member.enums.OpenType;
 import com.wuxp.api.context.InjectField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
@@ -16,31 +18,47 @@ import static com.oak.member.constant.MemberApiContextInjectExprConstant.INJECT_
 
 /**
  * @author laiy
- * create at 2020-02-17 10:04
+ * create at 2020-02-27 15:27
  * @Description
  */
 @Data
-@Desc(value = "会员登录")
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString(callSuper = true)
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class MemberLoginReq extends ApiBaseReq {
-    @Desc(value = "登陆模式")
-    private LoginModel loginModel = LoginModel.PASSWORD;
+@ToString(callSuper = true)
+public class UniloginReq extends ApiBaseReq {
 
-    //密码登录-------------------------------------------------------
-    @Desc(value = "用户名")
+    @Schema(description = "登录模式")
+    @NotNull
+    private LoginModel loginModel;
+
+    @Schema(description = "注册会员类型")
+    private String memberType;
+
+    @Schema(description = "注册地区")
+    private String areaId;
+
+    @Schema(description = "用户名")
     private String userName;
 
-    @Desc(value = "手机号码")
+    @Schema(description = "手机号码")
     private String mobilePhone;
 
-    @Desc(value = "登录密码")
+    @Schema(description = "EMAIL")
+    private String email;
+
+    @Schema(description = "昵称")
+    private String nickName;
+
+    @Schema(description = "姓名")
+    private String realName;
+
+    @Schema(description = "头像URL")
+    private String avatarUrl;
+
+    @Schema(description = "密码")
     private String password;
 
-    //开放平台登录---------------------------------------------------------
-    @Desc(value = "平台类型")
+    @Schema(description = "绑定第三方平台类型")
     private OpenType openType;
 
     @Desc(value = "OPENID")
@@ -49,12 +67,7 @@ public class MemberLoginReq extends ApiBaseReq {
     @Desc(value = "UNIONID，有值优先使用")
     private String unionId;
 
-    //刷新TOKEN------------------------------------------------------------
-    @Desc(value = "Token")
-    private String token;
-
     @Desc(value = "登录IP")
     @InjectField(value = INJECT_REQUEST_IP_EXPR)
     private String remoteIp;
-
 }

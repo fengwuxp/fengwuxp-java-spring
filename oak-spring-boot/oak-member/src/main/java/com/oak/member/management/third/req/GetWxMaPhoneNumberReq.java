@@ -2,9 +2,13 @@ package com.oak.member.management.third.req;
 
 import com.levin.commons.service.domain.Desc;
 import com.oak.api.model.ApiBaseReq;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-@Desc(value = "微信小程序用户手机号")
+/**
+ * 微信小程序用户手机号
+ *
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,13 +16,13 @@ import lombok.*;
 @ToString(callSuper = true)
 public class GetWxMaPhoneNumberReq extends ApiBaseReq {
 
-    @Desc(value = "sessionKey")
+    @Schema(description = "sessionKey")
     private String sessionKey;
 
-    @Desc(value = "加密数据")
+    @Schema(description = "加密数据")
     private String encryptedData;
 
-    @Desc(value = "ivStr")
+    @Schema(description = "ivStr")
     private String ivStr;
 
 }
