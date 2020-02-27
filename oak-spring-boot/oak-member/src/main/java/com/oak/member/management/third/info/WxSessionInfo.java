@@ -1,6 +1,7 @@
 package com.oak.member.management.third.info;
 
 import com.levin.commons.service.domain.Desc;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,12 +11,12 @@ public class WxSessionInfo implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Desc(value = "session_key")
+    @Schema(description = "session_key")
     private String sessionKey;
 
-    @Desc(value = "openid")
+    @Schema(description = "openid")
     private String openid;
 
-    @Desc(value = "unionid")
+    @Schema(description = "unionid")
     private String unionid;
 }

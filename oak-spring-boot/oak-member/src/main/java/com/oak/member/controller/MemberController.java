@@ -1,16 +1,11 @@
 package com.oak.member.controller;
 
 import com.levin.commons.dao.JpaDao;
-import com.levin.commons.service.domain.Desc;
 import com.oak.member.management.member.MemberManagementService;
 import com.oak.member.management.member.info.AccountInfo;
 import com.oak.member.management.member.info.CheckMobilePhoneAndOpenIdInfo;
 import com.oak.member.management.member.info.MemberLoginInfo;
 import com.oak.member.management.member.req.*;
-import com.oak.member.management.third.ThirdService;
-import com.oak.member.management.third.info.WxSessionInfo;
-import com.oak.member.management.third.info.WxUserInfo;
-import com.oak.member.management.third.req.*;
 import com.oak.member.services.member.MemberService;
 import com.oak.member.services.member.info.MemberInfo;
 import com.oak.member.services.member.req.EditMemberReq;
@@ -27,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author laiy
@@ -73,16 +66,6 @@ public class MemberController {
         return memberManagementService.registerFromWxMa(dto);
     }
 
-//    /**
-//     * 用户注册 (从微信公众号注册)
-//     * @return
-//     */
-//    @GetMapping("/registerWxMa")
-//    @Operation(summary = "用户注册 (从微信公众号注册)", description = "用户注册 (从微信公众号注册)")
-//    public ApiResp<Long> registerFromWx(RegisterMemberFromWxReq dto) {
-//        return memberManagementService.registerFromWx(dto);
-//    }
-
     /**
      * 获取账户信息
      *
@@ -99,6 +82,12 @@ public class MemberController {
     @Operation(summary = "用户登录)", description = "用户登录")
     public ApiResp<MemberLoginInfo> login(MemberLoginReq req) {
         return memberManagementService.login(req);
+    }
+
+    @GetMapping("/unilogin")
+    @Operation(summary = "统一登录注册)", description = "统一登录注册")
+    public ApiResp<MemberLoginInfo> unilogin(UniloginReq req) {
+        return memberManagementService.unilogin(req);
     }
 
     /**

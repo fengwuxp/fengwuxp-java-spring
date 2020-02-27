@@ -284,6 +284,99 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     }
 
     @Override
+    public ApiResp<MemberLoginInfo> unilogin(UniloginReq req) {
+        if (LoginModel.PASSWORD.equals(req.getLoginModel())
+                && (StringUtils.isEmpty(req.getPassword())
+                || (StringUtils.isEmpty(req.getUserName())
+                && StringUtils.isEmpty(req.getMobilePhone())))) {
+            return RestfulApiRespFactory.error("用户名/手机号或密码为空");
+        }
+
+        if (LoginModel.OPEN_ID.equals(req.getLoginModel())
+                && (req.getOpenType() == null
+                || (StringUtils.isEmpty(req.getOpenId()))
+                && StringUtils.isEmpty(req.getUnionId()))) {
+            return RestfulApiRespFactory.error("第三方开放平台，必填参数为空");
+        }
+
+        // 是否已注册
+        boolean registered = exixtsMember(req);
+        MemberLoginInfo memberInfo = null;
+
+        if (registered) {
+            // 去登录
+            MemberLoginReq loginReq = new MemberLoginReq();
+            BeanUtils.copyProperties(req, loginReq);
+            ApiResp<MemberLoginInfo> loginResp = login(loginReq);
+            if (!loginResp.isSuccess()) {
+                return loginResp;
+            }
+            memberInfo = loginResp.getData();
+        } else if (!StringUtils.isEmpty(req.getMobilePhone())) {
+            //未注册
+            RegisterMemberReq registerReq = new RegisterMemberReq();
+            BeanUtils.copyProperties(req, registerReq);
+            registerReq.setLoginPassword(req.getPassword());
+            ApiResp<Long> registerResp = register(registerReq);
+            if (!registerResp.isSuccess()) {
+                return RestfulApiRespFactory.error(registerResp.getMessage());
+            }
+
+            //内部登录
+            MemberInfo member = memberService.findById(registerResp.getData());
+
+            BeanUtils.copyProperties(member, memberInfo);
+            MemberToken memberToken = saveLogin(LoginModel.INTERNAL, member, req.getRemoteIp());
+
+            memberInfo.setToken(memberToken.getToken());
+            memberInfo.setTokenExpireTimeSeconds((memberToken.getExpirationDate().getTime() - System.currentTimeMillis()) / 1000);
+
+
+        } else if (req.getLoginModel().equals(LoginModel.OPEN_ID)) {
+            return RestfulApiRespFactory.error("未绑定" + req.getOpenType().getDesc() + "，请先进行绑定！");
+        } else {
+            return RestfulApiRespFactory.error("登录失败");
+        }
+
+        return RestfulApiRespFactory.ok(memberInfo);
+    }
+
+    private boolean exixtsMember(UniloginReq evt) {
+        long count = 0;
+        List<OpenType> wxOpenTypes = new ArrayList<>();
+        wxOpenTypes.add(OpenType.WEIXIN);
+        wxOpenTypes.add(OpenType.WEIXIN_OPEN);
+        wxOpenTypes.add(OpenType.WEIXIN_MA);
+
+        if (LoginModel.PASSWORD.equals(evt.getLoginModel())) {
+            SelectDao<Member> memberDao = jpaDao.selectFrom(Member.class);
+            if (!StringUtils.isEmpty(evt.getMobilePhone())) {
+                memberDao.appendWhere(!StringUtils.isEmpty(evt.getMobilePhone()), "mobilePhone=?", evt.getMobilePhone());
+            } else {
+                memberDao.appendWhere("(userName=? or mobilePhone=? or email=? or no=?)",
+                        evt.getUserName(), evt.getUserName(), evt.getUserName(), evt.getUserName());
+            }
+            count = memberDao.count();
+        } else if (LoginModel.OPEN_ID.equals(evt.getLoginModel())) {
+
+            SelectDao<MemberOpen> selectDao = jpaDao.selectFrom(MemberOpen.class)
+                    .appendWhere(!StringUtils.isEmpty(evt.getOpenId()) && !StringUtils.isEmpty(evt.getUnionId()),
+                            "( openId = ? or unionId = ?)", evt.getOpenId(), evt.getUnionId())
+                    .eq("openId", evt.getOpenId())
+                    .eq("unionId", evt.getUnionId());
+
+            if (wxOpenTypes.contains(evt.getOpenType())) {
+                selectDao.in("openType", wxOpenTypes.toArray());
+            } else {
+                selectDao.eq("openType", evt.getOpenType());
+            }
+
+            count = selectDao.count();
+        }
+        return count > 0;
+    }
+
+    @Override
     public ApiResp checkPassword(CheckPasswordReq req) {
         MemberSecure memberSecure = jpaDao.find(MemberSecure.class, req.getUid());
 

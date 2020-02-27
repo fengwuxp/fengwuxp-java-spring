@@ -65,6 +65,12 @@ public interface MemberManagementService {
     ApiResp<MemberLoginInfo> login(MemberLoginReq req);
 
     /**
+     * 统一登录注册
+     */
+    ApiResp<MemberLoginInfo> unilogin(UniloginReq req);
+
+
+    /**
      * 充值余额
      *
      * @param req
