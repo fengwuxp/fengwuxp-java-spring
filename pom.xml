@@ -24,14 +24,13 @@
         <spring-social.version>1.1.6.RELEASE</spring-social.version>
         <google-zxing.version>3.4.0</google-zxing.version>
         <springdoc.version>1.2.26</springdoc.version>
+<!--        <hibernate.version>5.2.18.Final</hibernate.version>-->
 
         <!--1.8编译参数 保留方法名称-->
         <compilerArgument>-parameters</compilerArgument>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven-source-plugin.attach>false</maven-source-plugin.attach>
-        <hibernate.version>5.2.18.Final</hibernate.version>
-
     </properties>
 
     <profiles>
