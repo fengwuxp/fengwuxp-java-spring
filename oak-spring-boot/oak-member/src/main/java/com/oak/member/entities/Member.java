@@ -95,7 +95,7 @@ public class Member extends AbstractNamedEntityObject<Long> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date regDateTime;
 
-    @Schema(description =  "注册时间")
+    @Schema(description =  "注册来源")
     @Column(name = "reg_source", nullable = false, length = 32)
     private String regSource;
 

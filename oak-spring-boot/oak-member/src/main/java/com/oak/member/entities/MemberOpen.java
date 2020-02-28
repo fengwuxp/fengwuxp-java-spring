@@ -1,5 +1,6 @@
 package com.oak.member.entities;
 
+import com.oak.api.entities.system.ClientChannel;
 import com.oak.member.enums.OpenType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -57,6 +58,15 @@ public class MemberOpen implements java.io.Serializable {
     @Schema(description = "是否关注")
     @Column(name = "subscribe")
     private Boolean subscribe;
+
+    @Schema(description =  "绑定的渠道")
+    @Column(name = "bind_channel_code", nullable = false, length = 32)
+    private String bindChannelCode;
+
+    @Schema(description =  "绑定的渠道")
+    @JoinColumn(name = "bind_channel_code", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ClientChannel bindChannel;
 
     @Schema(description = "登记日期")
     @Column(name = "create_time", nullable = false, length = 19)
