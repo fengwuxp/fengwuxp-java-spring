@@ -1,8 +1,5 @@
 package com.oak.member.management.member;
 
-import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.SelectDao;
 import com.oak.api.entities.system.ClientChannel;
@@ -14,11 +11,16 @@ import com.oak.member.constant.MemberCacheKeyConstant;
 import com.oak.member.entities.*;
 import com.oak.member.enums.*;
 import com.oak.member.helper.SnHelper;
-import com.oak.member.helper.WxMaHelper;
 import com.oak.member.management.member.info.AccountInfo;
 import com.oak.member.management.member.info.CheckMobilePhoneAndOpenIdInfo;
 import com.oak.member.management.member.info.MemberLoginInfo;
 import com.oak.member.management.member.req.*;
+import com.oak.member.management.third.ThirdService;
+import com.oak.member.management.third.info.WxSessionInfo;
+import com.oak.member.management.third.info.WxUserInfo;
+import com.oak.member.management.third.req.GetWxMaPhoneNumberReq;
+import com.oak.member.management.third.req.GetWxMaSessionReq;
+import com.oak.member.management.third.req.GetWxMaUserReq;
 import com.oak.member.services.account.MemberAccountService;
 import com.oak.member.services.account.info.MemberAccountInfo;
 import com.oak.member.services.account.req.CreateMemberAccountReq;
@@ -50,7 +52,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -98,6 +99,9 @@ public class MemberManagementServiceImpl implements MemberManagementService {
 
     @Autowired
     private MemberSessionCacheHelper memberSessionCacheHelper;
+
+    @Autowired
+    private ThirdService thirdService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -197,22 +201,32 @@ public class MemberManagementServiceImpl implements MemberManagementService {
     @Override
     public ApiResp<Long> registerFromWxMa(RegisterMemberFromWxMaReq req) {
         //获取用户SessionKey和openId
-        ApiResp<WxMaJscode2SessionResult> sessionResult = WxMaHelper.getWxMaSessionInfo(req.getCode());
+        GetWxMaSessionReq getWxMaSessionReq = new GetWxMaSessionReq();
+        getWxMaSessionReq.setCode(req.getCode());
+        ApiResp<WxSessionInfo> sessionResult = thirdService.getWxMaSessionInfo(getWxMaSessionReq);
         if (!sessionResult.isSuccess()) {
             return RestfulApiRespFactory.error(sessionResult.getMessage());
         }
         //解密用户信息
-        ApiResp<WxMaUserInfo> userInfo = WxMaHelper.getWxMaUserInfo(sessionResult.getData().getSessionKey(), req.getUserEncryptedData(), req.getUserIvStr());
+        GetWxMaUserReq getWxMaUserReq = new GetWxMaUserReq();
+        getWxMaUserReq.setSessionKey(sessionResult.getData().getSessionKey());
+        getWxMaUserReq.setEncryptedData(req.getUserEncryptedData());
+        getWxMaUserReq.setIvStr(req.getUserIvStr());
+        ApiResp<WxUserInfo> userInfo = thirdService.getWxMaUserInfo(getWxMaUserReq);
         //解密用户手机号
-        ApiResp<WxMaPhoneNumberInfo> phoneNumberInfo = WxMaHelper.getWxMaPhoneNoInfo(sessionResult.getData().getSessionKey(), req.getEncryptedData(), req.getIvStr());
+        GetWxMaPhoneNumberReq getWxMaPhoneNumberReq = new GetWxMaPhoneNumberReq();
+        getWxMaPhoneNumberReq.setSessionKey(sessionResult.getData().getSessionKey());
+        getWxMaPhoneNumberReq.setEncryptedData(req.getEncryptedData());
+        getWxMaPhoneNumberReq.setIvStr(req.getIvStr());
+        ApiResp<String> phoneNumberInfo = thirdService.getWxMaPhoneNumber(getWxMaPhoneNumberReq);
 
         RegisterMemberReq registerReq = new RegisterMemberReq();
         BeanUtils.copyProperties(req, registerReq);
         registerReq.setOpenType(OpenType.WEIXIN_MA)
-                .setUserName(userInfo.getData().getNickName())
+                .setUserName(userInfo.getData().getNickname())
                 .setOpenId(sessionResult.getData().getOpenid())
                 .setUnionId(userInfo.getData().getUnionId())
-                .setMobilePhone(phoneNumberInfo.getData().getPhoneNumber())
+                .setMobilePhone(phoneNumberInfo.getData())
                 .setNotPassword(Boolean.TRUE)
                 .setMobileAuth(Boolean.FALSE)
                 .setVerify(MemberVerifyStatus.APPROVED)
@@ -703,10 +717,14 @@ public class MemberManagementServiceImpl implements MemberManagementService {
         CheckMobilePhoneAndOpenIdInfo result = new CheckMobilePhoneAndOpenIdInfo();
 
         //解密数据得到手机号
-        ApiResp<WxMaPhoneNumberInfo> getMobilePhoneResp = WxMaHelper.getWxMaPhoneNoInfo(req.getSessionKey(), req.getEncryptedData(), req.getIvStr());
+        GetWxMaPhoneNumberReq getWxMaPhoneNumberReq = new GetWxMaPhoneNumberReq();
+        getWxMaPhoneNumberReq.setSessionKey(req.getSessionKey());
+        getWxMaPhoneNumberReq.setEncryptedData(req.getEncryptedData());
+        getWxMaPhoneNumberReq.setIvStr(req.getIvStr());
+        ApiResp<String> getMobilePhoneResp = thirdService.getWxMaPhoneNumber(getWxMaPhoneNumberReq);
         AssertThrow.assertResp(getMobilePhoneResp);
 
-        String mobilePhone = getMobilePhoneResp.getData().getPhoneNumber();
+        String mobilePhone = getMobilePhoneResp.getData();
         result.setMobilePhone(mobilePhone);
 
         //手机号是否已注册

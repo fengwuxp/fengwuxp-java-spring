@@ -5,6 +5,8 @@ import com.binarywang.spring.starter.wxjava.miniapp.config.WxMaAutoConfiguration
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpAutoConfiguration;
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpServiceAutoConfiguration;
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpStorageAutoConfiguration;
+import com.oak.member.management.third.ThirdService;
+import com.oak.member.management.third.req.GetWxMaSessionReq;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.junit.Test;
@@ -36,11 +38,14 @@ public class WxjavaTest {
     @Autowired
     private WxMpService wxMpService;
 
+    @Autowired
+    private ThirdService thirdService;
+
     @Test
     public void testWxMinapp() {
-
-
-        System.out.println(wxMaService != null);
+        GetWxMaSessionReq req = new GetWxMaSessionReq();
+        req.setCode("1245");
+        System.out.println(thirdService.getWxMaSessionInfo(req));
 
     }
 }
