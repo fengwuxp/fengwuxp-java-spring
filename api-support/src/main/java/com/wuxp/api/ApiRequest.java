@@ -15,11 +15,15 @@ public interface ApiRequest {
 
     String TIME_STAMP = "timeStamp";
 
+    String CHANNEL_CODE = "channelCode";
+
     String INJECT_APP_ID_KEY = "#appId";
 
     String INJECT_NONCE_STR_KEY = "#nonceStr";
 
     String INJECT_TIME_STAMP = "#timeStamp";
+
+    String INJECT_CHANNEL_CODE = "#channelCode";
 
 
     /**
@@ -44,4 +48,9 @@ public interface ApiRequest {
     @Transient
     Long getTimeStamp();
 
+    /**
+     * 获取渠道号
+     * @return
+     */
+    String getChannelCode();
 }

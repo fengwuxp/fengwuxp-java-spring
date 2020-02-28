@@ -262,6 +262,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
             signatureRequest.setNonceStr(apiSignatureRequest.getNonceStr());
             signatureRequest.setApiSignature(apiSignatureRequest.getApiSignature());
             signatureRequest.setTimeStamp(apiSignatureRequest.getTimeStamp());
+            signatureRequest.setChannelCode(apiSignatureRequest.getChannelCode());
             signatureRequest.setApiSignatureValues(signatureMap);
         }
 

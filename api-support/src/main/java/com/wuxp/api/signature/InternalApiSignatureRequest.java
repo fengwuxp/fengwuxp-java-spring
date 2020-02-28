@@ -13,6 +13,7 @@ public class InternalApiSignatureRequest extends AbstractApiReq {
     public static final String NONCE_STR_HEADER_KEY = "Api-Nonce-Str";
     public static final String APP_SIGN_HEADER_KEY = "Api-Signature";
     public static final String TIME_STAMP_HEADER_KEY = "Api-Time-Stamp";
+    public static final String CHANNEL_CODE_KEY = "Api-Channel-Code";
 
 
     private Map<String, Object> apiSignatureValues;
@@ -25,6 +26,7 @@ public class InternalApiSignatureRequest extends AbstractApiReq {
         this.nonceStr = httpServletRequest.getHeader(NONCE_STR_HEADER_KEY);
         this.apiSignature = httpServletRequest.getHeader(APP_SIGN_HEADER_KEY);
         this.timeStamp = Long.parseLong(httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY));
+        this.channelCode = httpServletRequest.getHeader(CHANNEL_CODE_KEY);
     }
 
     @Override

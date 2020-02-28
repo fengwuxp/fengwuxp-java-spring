@@ -33,5 +33,8 @@ public class AbstractApiReq implements ApiSignatureRequest {
     @InjectField(value = INJECT_APP_SIGNATURE)
     protected String apiSignature;
 
-
+    @Schema(name = "channelCode", description = "渠道号")
+    @NotNull(message = "渠道号不能为空")
+    @InjectField(value = INJECT_CHANNEL_CODE)
+    protected String channelCode;
 }

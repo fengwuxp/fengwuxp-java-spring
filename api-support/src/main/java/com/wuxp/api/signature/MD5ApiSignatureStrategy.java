@@ -45,6 +45,7 @@ public class MD5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
         }
         apiSignatureValues.put(APP_ID_KEY, apiSignatureAppId);
         apiSignatureValues.put(APP_SECRET_KEY, apiSignatureInfo.getAppSecret());
+        apiSignatureValues.put(CHANNEL_CODE, request.getChannelCode());
         apiSignatureValues.put(NONCE_STR_KEY, request.getNonceStr());
         apiSignatureValues.put(TIME_STAMP, request.getTimeStamp());
 

@@ -40,5 +40,10 @@ public class ApiBaseReq implements ApiSignatureRequest {
     @InjectField(value = INJECT_APP_SIGNATURE)
     protected String apiSignature;
 
+    @Schema(name = "channelCode", description = "渠道号")
+    @NotNull(message = "渠道号不能为空")
+    @Ignore
+    @InjectField(value = INJECT_CHANNEL_CODE)
+    protected String channelCode;
 
 }

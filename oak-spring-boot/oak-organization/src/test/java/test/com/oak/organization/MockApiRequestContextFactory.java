@@ -24,6 +24,7 @@ public class MockApiRequestContextFactory implements ApiRequestContextFactory {
         FIXED_MAP.put(APP_SECRET_KEY, "222");
         FIXED_MAP.put(NONCE_STR_KEY, RandomStringUtils.randomAlphabetic(32));
         FIXED_MAP.put(TIME_STAMP, System.currentTimeMillis());
+        FIXED_MAP.put(CHANNEL_CODE, "mock");
         FIXED_MAP.put("apiSignature", RandomStringUtils.randomAlphabetic(32));
 //        OakAdminUser value = new OakAdminUser();
 //        value.setId(1L);
