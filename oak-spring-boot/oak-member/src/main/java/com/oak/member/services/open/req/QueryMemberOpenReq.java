@@ -3,6 +3,7 @@ package com.oak.member.services.open.req;
 import com.levin.commons.dao.annotation.Gte;
 import com.levin.commons.dao.annotation.Lte;
 import com.levin.commons.dao.annotation.misc.Fetch;
+import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.member.enums.OpenType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 
 /**
@@ -34,6 +39,14 @@ public class QueryMemberOpenReq extends ApiBaseQueryReq {
     @Schema(description = "加载会员信息")
     @Fetch(value = "member", condition = "#_val==true")
     private Boolean loadMember;
+
+    @Schema(description = "加载绑定渠道")
+    @Fetch(value = "bindChannel", condition = "#_val==true")
+    private Boolean loadBindChannel;
+
+    @Schema(description =  "绑定的渠道")
+    @Column(name = "bind_channel_code", nullable = false, length = 32)
+    private String bindChannelCode;
 
     @Schema(description = "平台类型")
     private OpenType openType;

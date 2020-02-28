@@ -2,6 +2,7 @@ package com.oak.member.services.open.req;
 
 import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
+import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.model.ApiBaseReq;
 import com.oak.member.enums.OpenType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,6 +11,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -59,6 +64,11 @@ public class EditMemberOpenReq extends ApiBaseReq {
     @Schema(description = "是否关注")
     @UpdateColumn
     private Boolean subscribe;
+
+    @Schema(description =  "绑定的渠道")
+    @UpdateColumn
+    @Column(name = "bind_channel_code", nullable = false, length = 32)
+    private String bindChannelCode;
 
     public EditMemberOpenReq() {
     }

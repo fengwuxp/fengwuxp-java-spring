@@ -1,5 +1,6 @@
 package com.oak.member.services.open.req;
 
+import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.model.ApiBaseReq;
 import com.oak.member.enums.OpenType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,6 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -45,5 +50,8 @@ public class CreateMemberOpenReq extends ApiBaseReq {
 
     @Schema(description = "是否关注")
     private Boolean subscribe;
+
+    @Schema(description =  "绑定的渠道")
+    private String bindChannelCode;
 
 }

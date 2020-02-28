@@ -4,6 +4,8 @@ import com.github.javafaker.Faker;
 import com.levin.commons.dao.JpaDao;
 import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.enums.ClientType;
+import com.oak.api.services.app.AppAuthService;
+import com.oak.api.services.app.req.QueryAppAuthAccountReq;
 import com.oak.member.enums.Gender;
 import com.oak.member.enums.LoginModel;
 import com.oak.member.management.member.MemberManagementService;
@@ -12,6 +14,7 @@ import com.oak.member.management.member.info.MemberLoginInfo;
 import com.oak.member.management.member.req.*;
 import com.oak.member.services.member.info.MemberInfo;
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.model.QueryType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Assert;
@@ -45,6 +48,9 @@ public class MemberManagementServiceTest {
 
     private Faker faker = new Faker();
 
+    @Autowired
+    private AppAuthService appAuthService;
+
     @Before
     public void before() throws Exception {
         ClientChannel clientChannel = new ClientChannel();
@@ -64,6 +70,9 @@ public class MemberManagementServiceTest {
 
     @Test
     public void test()  throws Exception {
+        QueryAppAuthAccountReq queryAuthAccountEvt = new QueryAppAuthAccountReq("agent");
+        queryAuthAccountEvt.setQueryType(QueryType.QUERY_NUM);
+        System.out.println(appAuthService.queryAppAuthAccount(queryAuthAccountEvt));
         testRegister();
         login();
     }
