@@ -35,7 +35,7 @@ import static java.util.Arrays.asList;
 @EnableConfigurationProperties(value = {WuxpCaptchaProperties.class})
 @ConditionalOnClass({Captcha.class})
 @ConditionalOnProperty(prefix = WuxpCaptchaProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
-public class WuxpCaptchaConfiguration {
+public class WuxpCaptchaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(PictureCaptcha.class)

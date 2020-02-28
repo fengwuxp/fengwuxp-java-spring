@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "wuxp.security",
-      "type": "com.wuxp.security.authenticate.configuration.WuxpSecurityProperties",
-      "sourceType": "com.wuxp.security.authenticate.configuration.WuxpSecurityProperties"
+      "type": "com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties",
+      "sourceType": "com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties"
     }
   ],
   "properties": [
@@ -11,7 +11,7 @@
       "name": "wuxp.security.form",
       "type": "com.wuxp.security.authenticate.form.FormLoginProperties",
       "description": "表单登录配置",
-      "sourceType": "com.wuxp.security.authenticate.configuration.WuxpSecurityProperties"
+      "sourceType": "com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties"
     }
   ],
   "hints": []

@@ -1,7 +1,6 @@
 package test.com.wuxp.security.captcha.picture;
 
 import com.wuxp.security.captcha.Captcha;
-import com.wuxp.security.captcha.CaptchaType;
 import com.wuxp.security.captcha.configuration.PictureCaptchaProperties;
 import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.constant.MessageKeyConstant;

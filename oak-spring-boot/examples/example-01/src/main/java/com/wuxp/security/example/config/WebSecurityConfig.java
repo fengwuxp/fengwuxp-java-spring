@@ -6,10 +6,9 @@ import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.JwtAuthenticationFilter;
 import com.wuxp.security.authenticate.PasswordAuthenticationProvider;
-import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
+import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import com.wuxp.security.authenticate.form.FormAuthenticationFailureHandler;
 import com.wuxp.security.authenticate.form.FormLoginProperties;
-import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.authenticate.restful.RestfulAuthenticationEntryPoint;
 import com.wuxp.security.authenticate.scancode.ScanCodeAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CaptchaWebAuthenticationDetailsSource authenticationDetailsAuthenticationDetailsSource;
 
     @Autowired
-    private WuxpSecurityProperties wuxpSecurityProperties;
+    private WuxpAuthenticateProperties wuxpSecurityProperties;
 
     @Autowired
     private ScanCodeAuthenticationSecurityConfig scanCodeAuthenticationSecurityConfig;

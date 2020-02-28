@@ -10,7 +10,6 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

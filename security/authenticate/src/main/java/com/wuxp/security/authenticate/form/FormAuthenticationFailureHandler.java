@@ -3,7 +3,7 @@ package com.wuxp.security.authenticate.form;
 import com.alibaba.fastjson.JSON;
 import com.wuxp.security.authenticate.LockedUserDetailsService;
 import com.wuxp.security.authenticate.LoginEnvironmentContext;
-import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
+import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
@@ -99,8 +99,8 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
             this.loginEnvironmentHolder = this.beanFactory.getBean(PasswordLoginEnvironmentHolder.class);
         }
 
-        this.loginFailureThreshold = beanFactory.getBean(WuxpSecurityProperties.class).getLoginFailureThreshold();
-        this.continuousLoginTimeRange = beanFactory.getBean(WuxpSecurityProperties.class).getContinuousLoginTimeRange();
-        this.limitLoginTimes = beanFactory.getBean(WuxpSecurityProperties.class).getLimitLoginTimes();
+        this.loginFailureThreshold = beanFactory.getBean(WuxpAuthenticateProperties.class).getLoginFailureThreshold();
+        this.continuousLoginTimeRange = beanFactory.getBean(WuxpAuthenticateProperties.class).getContinuousLoginTimeRange();
+        this.limitLoginTimes = beanFactory.getBean(WuxpAuthenticateProperties.class).getLimitLoginTimes();
     }
 }

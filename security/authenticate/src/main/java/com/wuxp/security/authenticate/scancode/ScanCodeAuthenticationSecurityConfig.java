@@ -1,7 +1,7 @@
 package com.wuxp.security.authenticate.scancode;
 
 import com.wuxp.security.authenticate.RequestHeaderAuthorizationDetailsService;
-import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
+import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ScanCodeAuthenticationSecurityConfig extends SecurityConfigurerAdap
     private ScanCodeAuthenticationFailureHandler scanCodeAuthenticationFailureHandler;
 
     @Autowired
-    private WuxpSecurityProperties wuxpSecurityProperties;
+    private WuxpAuthenticateProperties wuxpSecurityProperties;
 
     @Autowired(required = false)
     private RequestHeaderAuthorizationDetailsService requestHeaderAuthorizationDetailsService;

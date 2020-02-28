@@ -13,8 +13,8 @@ import java.time.Duration;
  * 配置 spring security
  */
 @Data
-@ConfigurationProperties(prefix = WuxpSecurityProperties.PREFIX)
-public class WuxpSecurityProperties {
+@ConfigurationProperties(prefix = WuxpAuthenticateProperties.PREFIX)
+public class WuxpAuthenticateProperties {
 
     public static final String PREFIX = "wuxp.security";
 

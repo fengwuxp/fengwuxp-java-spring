@@ -4,7 +4,6 @@ import com.wuxp.security.captcha.CaptchaGenerateResult;
 import lombok.Getter;
 
 import java.text.MessageFormat;
-import java.util.UUID;
 
 @Getter
 public class QrCodeCaptchaGenerateResult implements CaptchaGenerateResult {

@@ -1,29 +1,20 @@
 package com.wuxp.security.captcha.mobile;
 
-import com.wuxp.security.captcha.CaptchaStore;
+import com.wuxp.security.captcha.AbstractCaptchaBean;
 import com.wuxp.security.captcha.CaptchaType;
 import com.wuxp.security.captcha.CaptchaValue;
 import com.wuxp.security.captcha.configuration.MobileCaptchaProperties;
-import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.constant.MessageKeyConstant;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.StringUtils;
 
 @Slf4j
-public abstract class AbstractMobileCaptcha implements MobileCaptcha {
+@Setter
+public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implements MobileCaptcha {
 
-    @Autowired
-    protected CaptchaStore captchaStore;
 
-    @Autowired
-    protected MessageSource messageSource;
-
-    @Autowired
-    protected WuxpCaptchaProperties wuxpCaptchaProperties;
-
-    @Autowired
     private MobileCaptchaSender mobileCaptchaSender;
 
 
@@ -105,5 +96,14 @@ public abstract class AbstractMobileCaptcha implements MobileCaptcha {
         }
         captchaStore.removeCaptcha(key, captchaType);
         return CaptchaVerifyResult.success();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+        BeanFactory beanFactory = this.beanFactory;
+        if (this.mobileCaptchaSender == null) {
+            this.mobileCaptchaSender = beanFactory.getBean(MobileCaptchaSender.class);
+        }
     }
 }

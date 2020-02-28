@@ -1,23 +1,19 @@
 package com.wuxp.security.captcha;
 
-import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.mobile.MobileCaptchaValue;
 import com.wuxp.security.captcha.picture.PictureCaptchaValue;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptchaValue;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class CombinationCaptcha implements Captcha {
+public class CombinationCaptcha extends AbstractCaptchaBean implements Captcha {
 
     private Map<CaptchaType, Captcha> captchaMap;
 
-    @Autowired
-    private WuxpCaptchaProperties wuxpCaptchaProperties;
 
     public CombinationCaptcha(List<Captcha> captchaList) {
         Map<CaptchaType, Captcha> captchaMap = new HashMap<>(captchaList.size());

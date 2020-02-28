@@ -1,27 +1,17 @@
 package com.wuxp.security.captcha.picture;
 
-import com.wuxp.security.captcha.CaptchaStore;
+import com.wuxp.security.captcha.AbstractCaptchaBean;
 import com.wuxp.security.captcha.CaptchaType;
 import com.wuxp.security.captcha.CaptchaValue;
-import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.constant.MessageKeyConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 
+/**
+ * 抽象图片验证码实现
+ */
 @Slf4j
-public abstract class AbstractPictureCaptcha implements PictureCaptcha {
-
-
-    @Autowired
-    protected CaptchaStore captchaStore;
-
-    @Autowired
-    protected MessageSource messageSource;
-
-    @Autowired
-    protected WuxpCaptchaProperties wuxpCaptchaProperties;
+public abstract class AbstractPictureCaptcha extends AbstractCaptchaBean implements PictureCaptcha {
 
 
 

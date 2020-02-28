@@ -1,28 +1,20 @@
 package com.wuxp.security.captcha.qrcode;
 
-import com.wuxp.security.captcha.CaptchaStore;
+import com.wuxp.security.captcha.AbstractCaptchaBean;
 import com.wuxp.security.captcha.CaptchaType;
 import com.wuxp.security.captcha.CaptchaValue;
 import com.wuxp.security.captcha.configuration.QrCodeCaptchaProperties;
-import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.constant.MessageKeyConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 
 
+/**
+ * 抽象的二维码验证码
+ */
 @Slf4j
-public class AbstractQrCodeCaptcha implements QrCodeCaptcha {
+public class AbstractQrCodeCaptcha extends AbstractCaptchaBean implements QrCodeCaptcha {
 
-    @Autowired
-    protected CaptchaStore captchaStore;
-
-    @Autowired
-    protected MessageSource messageSource;
-
-    @Autowired
-    protected WuxpCaptchaProperties wuxpCaptchaProperties;
 
     @Override
     public QrCodeCaptchaGenerateResult generate(String useType, String key) {

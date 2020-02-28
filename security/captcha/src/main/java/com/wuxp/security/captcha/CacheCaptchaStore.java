@@ -1,7 +1,10 @@
 package com.wuxp.security.captcha;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
@@ -9,12 +12,14 @@ import org.springframework.cache.CacheManager;
  * use spring cache store captcha
  */
 @Slf4j
-public class CacheCaptchaStore implements CaptchaStore {
+@Setter
+public class CacheCaptchaStore implements CaptchaStore, BeanFactoryAware, InitializingBean {
+
 
     public final static String CACHE_CAPTCHA_STORE_KEY = "CAPTCHA_STORE";
 
+    protected BeanFactory beanFactory;
 
-    @Autowired
     private CacheManager cacheManager;
 
     @Override
@@ -41,6 +46,14 @@ public class CacheCaptchaStore implements CaptchaStore {
     public void removeCaptcha(String key, String captchaTyp) {
         Cache cache = getCache(captchaTyp);
         cache.evict(key);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        BeanFactory beanFactory = this.beanFactory;
+        if (this.cacheManager == null) {
+            this.cacheManager = beanFactory.getBean(CacheManager.class);
+        }
     }
 
     private Cache getCache(String captchaTyp) {

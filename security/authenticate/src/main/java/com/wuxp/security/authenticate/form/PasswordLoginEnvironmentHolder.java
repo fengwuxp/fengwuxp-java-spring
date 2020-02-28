@@ -4,7 +4,7 @@ import com.wuxp.basic.utils.IpAddressUtils;
 import com.wuxp.security.authenticate.AuthenticateType;
 import com.wuxp.security.authenticate.LoginEnvironmentContext;
 import com.wuxp.security.authenticate.LoginEnvironmentHolder;
-import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
+import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
@@ -81,7 +81,7 @@ public class PasswordLoginEnvironmentHolder implements LoginEnvironmentHolder, B
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        WuxpSecurityProperties properties = this.beanFactory.getBean(WuxpSecurityProperties.class);
+        WuxpAuthenticateProperties properties = this.beanFactory.getBean(WuxpAuthenticateProperties.class);
         this.continuousLoginTimes = properties.getContinuousLoginTimeRange().toMillis();
         this.showCaptchaByFailureCount = properties.getForm().getShowCaptchaByFailureCount();
     }

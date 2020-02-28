@@ -17,9 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Configuration
-@EnableConfigurationProperties(WuxpSecurityProperties.class)
-@ConditionalOnProperty(prefix = WuxpSecurityProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
-public class WuxpSecurityConfiguration {
+@EnableConfigurationProperties(WuxpAuthenticateProperties.class)
+@ConditionalOnProperty(prefix = WuxpAuthenticateProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+public class WuxpAuthenticateAutoConfiguration {
 
 
     @Bean

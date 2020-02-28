@@ -1,7 +1,7 @@
 package com.wuxp.security.authenticate.mobile;
 
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
-import com.wuxp.security.authenticate.configuration.WuxpSecurityProperties;
+import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import com.wuxp.security.captcha.mobile.MobileCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class MobileCaptchaAuthenticationSecurityConfig extends SecurityConfigure
     private MobileCaptchaAuthenticationFailureHandler mobileCaptchaAuthenticationFailureHandler;
 
     @Autowired
-    private WuxpSecurityProperties wuxpSecurityProperties;
+    private WuxpAuthenticateProperties wuxpSecurityProperties;
 
     @Autowired
     private CaptchaWebAuthenticationDetailsSource captchaWebAuthenticationDetailsSource;
