@@ -2,7 +2,7 @@ package com.fengwuxp.multiple.miniapp;
 
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
-import com.fengwuxp.multiple.wechat.HttpRequestWeChatServiceAppIdProvider;
+import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.context.annotation.SessionScope;
 

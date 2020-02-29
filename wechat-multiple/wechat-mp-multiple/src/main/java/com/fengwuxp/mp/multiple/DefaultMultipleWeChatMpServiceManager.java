@@ -1,6 +1,6 @@
-package com.fengwuxp.multiple.mp;
+package com.fengwuxp.mp.multiple;
 
-import com.fengwuxp.multiple.wechat.WeChatAppIdProvider;
+import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Setter;

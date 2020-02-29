@@ -1,10 +1,10 @@
-package com.fengwuxp.multiple.mp.configuration;
+package com.fengwuxp.mp.multiple.configuration;
 
-import com.fengwuxp.multiple.wechat.HttpRequestWeChatServiceAppIdProvider;
-import com.fengwuxp.multiple.mp.DefaultMultipleWeChatMpServiceManager;
-import com.fengwuxp.multiple.mp.WeChatMpServiceManager;
-import com.fengwuxp.multiple.wechat.WeChatAppIdProvider;
-import com.fengwuxp.multiple.wechat.WeChatMultipleProperties;
+import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
+import com.fengwuxp.mp.multiple.DefaultMultipleWeChatMpServiceManager;
+import com.fengwuxp.mp.multiple.WeChatMpServiceManager;
+import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
+import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

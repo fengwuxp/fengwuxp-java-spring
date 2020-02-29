@@ -1,6 +1,6 @@
-package com.fengwuxp.multiple.mp;
+package com.fengwuxp.mp.multiple;
 
-import com.fengwuxp.multiple.wechat.HttpRequestWeChatServiceAppIdProvider;
+import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.context.annotation.SessionScope;

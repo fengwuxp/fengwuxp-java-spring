@@ -1,4 +1,4 @@
-package com.fengwuxp.multiple.mp;
+package com.fengwuxp.mp.multiple;
 
 import me.chanjar.weixin.mp.config.WxMpConfigStorage;
 

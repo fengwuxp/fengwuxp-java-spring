@@ -2,7 +2,7 @@ package com.fengwuxp.multiple.miniapp;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
-import com.fengwuxp.multiple.wechat.WeChatAppIdProvider;
+import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Setter;
