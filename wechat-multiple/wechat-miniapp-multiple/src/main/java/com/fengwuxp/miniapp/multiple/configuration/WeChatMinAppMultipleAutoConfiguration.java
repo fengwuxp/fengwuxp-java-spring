@@ -1,8 +1,8 @@
-package com.fengwuxp.multiple.miniapp.configuration;
+package com.fengwuxp.miniapp.multiple.configuration;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
-import com.fengwuxp.multiple.miniapp.DefaultMultipleWeChatMiniAppServiceManager;
-import com.fengwuxp.multiple.miniapp.WeChatMiniAppServiceManager;
+import com.fengwuxp.miniapp.multiple.DefaultMultipleWeChatMiniAppServiceManager;
+import com.fengwuxp.miniapp.multiple.WeChatMiniAppServiceManager;
 import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;

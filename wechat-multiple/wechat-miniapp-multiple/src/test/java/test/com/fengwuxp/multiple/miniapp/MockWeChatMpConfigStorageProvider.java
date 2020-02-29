@@ -2,7 +2,7 @@ package test.com.fengwuxp.multiple.miniapp;
 
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
-import com.fengwuxp.multiple.miniapp.WeChatMaConfigProvider;
+import com.fengwuxp.miniapp.multiple.WeChatMaConfigProvider;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

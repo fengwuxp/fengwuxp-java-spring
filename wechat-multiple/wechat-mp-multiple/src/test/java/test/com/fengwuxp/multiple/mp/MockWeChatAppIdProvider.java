@@ -1,6 +1,6 @@
 package test.com.fengwuxp.multiple.mp;
 
-import com.fengwuxp.multiple.wechat.WeChatAppIdProvider;
+import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;

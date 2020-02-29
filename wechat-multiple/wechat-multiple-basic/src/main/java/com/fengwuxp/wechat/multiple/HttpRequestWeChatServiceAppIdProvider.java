@@ -1,4 +1,4 @@
-package com.fengwuxp.multiple.wechat;
+package com.fengwuxp.wechat.multiple;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestAttributes;

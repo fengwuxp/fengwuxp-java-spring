@@ -1,4 +1,4 @@
-package com.fengwuxp.multiple.wechat;
+package com.fengwuxp.wechat.multiple;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

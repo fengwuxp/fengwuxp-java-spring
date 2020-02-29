@@ -1,4 +1,4 @@
-package com.fengwuxp.multiple.wechat;
+package com.fengwuxp.wechat.multiple;
 
 /**
  * 调用服务时AppId提供的提供者

@@ -1,6 +1,6 @@
 package test.com.fengwuxp.multiple.miniapp;
 
-import com.fengwuxp.multiple.wechat.WeChatAppIdProvider;
+import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

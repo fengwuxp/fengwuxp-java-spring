@@ -1,6 +1,6 @@
 package test.com.fengwuxp.multiple.mp;
 
-import com.fengwuxp.multiple.mp.WeChatMpConfigStorageProvider;
+import com.fengwuxp.mp.multiple.WeChatMpConfigStorageProvider;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.config.WxMpConfigStorage;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;

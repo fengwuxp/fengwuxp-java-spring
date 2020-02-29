@@ -1,4 +1,4 @@
-package com.fengwuxp.multiple.miniapp;
+package com.fengwuxp.miniapp.multiple;
 
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
 
