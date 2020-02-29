@@ -1,18 +1,19 @@
 package com.wuxp.security.example.services.simple.req;
 
+import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
-import com.levin.commons.dao.annotation.*;
 import com.oak.api.model.ApiBaseReq;
+import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-
-import com.wuxp.security.example.enums.Week;
 
 
 /**

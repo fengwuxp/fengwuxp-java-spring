@@ -1,8 +1,6 @@
 package com.oak.api.services.infoprovide.req;
 
 import com.levin.commons.dao.annotation.update.UpdateColumn;
-import com.levin.commons.service.domain.Desc;
-
 import com.oak.api.enums.ClientType;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;

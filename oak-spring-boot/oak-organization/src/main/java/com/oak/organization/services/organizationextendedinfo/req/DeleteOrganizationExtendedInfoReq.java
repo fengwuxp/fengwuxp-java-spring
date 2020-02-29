@@ -1,12 +1,13 @@
 package com.oak.organization.services.organizationextendedinfo.req;
 
+import com.levin.commons.dao.annotation.In;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.In;
-import javax.validation.constraints.Size;
-import com.levin.commons.dao.annotation.*;
 
 /**
  *  删除组织扩展信息

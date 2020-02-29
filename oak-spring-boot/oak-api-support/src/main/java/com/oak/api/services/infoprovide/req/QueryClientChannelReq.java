@@ -1,6 +1,5 @@
 package com.oak.api.services.infoprovide.req;
 
-import com.levin.commons.service.domain.Desc;
 import com.oak.api.enums.ClientType;
 import com.oak.api.model.ApiBaseQueryReq;
 import io.swagger.v3.oas.annotations.media.Schema;

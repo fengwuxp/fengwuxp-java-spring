@@ -7,7 +7,6 @@ import com.oak.api.services.app.req.FindAuthReq;
 import com.oak.api.services.app.req.QueryAppAuthAccountReq;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.signature.AppInfoStore;
-import org.springframework.cache.annotation.Cacheable;
 
 import javax.validation.constraints.NotNull;
 

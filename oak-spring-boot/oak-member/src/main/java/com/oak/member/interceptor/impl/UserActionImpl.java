@@ -9,7 +9,6 @@ import com.oak.member.management.member.req.RegisterMemberFromWxReq;
 import com.oak.member.services.member.info.MemberInfo;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.exception.AssertThrow;
-import com.wuxp.security.jwt.JwtTokenPair;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import com.wuxp.wehcat.interceptor.AbstractWeChatInterceptor;
 import lombok.extern.slf4j.Slf4j;

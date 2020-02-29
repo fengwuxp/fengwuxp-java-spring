@@ -1,13 +1,12 @@
 package com.wuxp.security.example.services.simple.req;
 
+import com.levin.commons.dao.annotation.Eq;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
-import javax.validation.constraints.NotNull;
 
-import com.wuxp.security.example.enums.Week;
+import javax.validation.constraints.NotNull;
 
 
 /**

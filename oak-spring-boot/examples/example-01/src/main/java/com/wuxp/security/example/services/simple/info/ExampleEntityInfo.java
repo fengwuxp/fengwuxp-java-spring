@@ -1,11 +1,12 @@
 package com.wuxp.security.example.services.simple.info;
 
+import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.service.domain.Desc;
-        import com.wuxp.security.example.enums.Week;
-
 
 import java.io.Serializable;
 import java.util.Date;

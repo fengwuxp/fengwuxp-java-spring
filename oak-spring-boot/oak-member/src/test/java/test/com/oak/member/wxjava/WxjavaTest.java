@@ -5,7 +5,6 @@ import com.binarywang.spring.starter.wxjava.miniapp.config.WxMaAutoConfiguration
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpAutoConfiguration;
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpServiceAutoConfiguration;
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpStorageAutoConfiguration;
-import com.oak.api.services.app.AppAuthService;
 import com.oak.member.management.third.ThirdService;
 import com.oak.member.management.third.req.GetWxMaSessionReq;
 import lombok.extern.slf4j.Slf4j;

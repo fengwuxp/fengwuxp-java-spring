@@ -1,7 +1,10 @@
 package com.oak.rbac.configuration;
 
 import com.oak.rbac.authority.OakRequestUrlResourceProvider;
-import com.oak.rbac.security.*;
+import com.oak.rbac.security.OakAuthenticationSuccessHandler;
+import com.oak.rbac.security.OakLockedUserDetailsService;
+import com.oak.rbac.security.OakLogoutSuccessHandler;
+import com.oak.rbac.security.OakUserDetailsService;
 import com.wuxp.security.authenticate.LockedUserDetailsService;
 import com.wuxp.security.authority.AntRequestUrlResourceProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

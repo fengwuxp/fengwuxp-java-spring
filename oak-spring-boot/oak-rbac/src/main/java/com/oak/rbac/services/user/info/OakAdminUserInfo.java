@@ -1,7 +1,6 @@
 package com.oak.rbac.services.user.info;
 
 import com.levin.commons.service.domain.Desc;
-import com.oak.rbac.entities.OakRole;
 import com.oak.rbac.services.role.info.RoleInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

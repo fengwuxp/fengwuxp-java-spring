@@ -2,11 +2,10 @@ package com.oak.organization.services.organizationextendedinfo.req;
 
 import com.oak.api.model.ApiBaseQueryReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
-import com.levin.commons.dao.annotation.misc.Fetch;
-import java.util.Date;
 /**
  *  查询组织扩展信息
  *  2020-2-2 15:59:04

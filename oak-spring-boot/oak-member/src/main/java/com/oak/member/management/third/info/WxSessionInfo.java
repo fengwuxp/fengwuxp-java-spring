@@ -1,6 +1,5 @@
 package com.oak.member.management.third.info;
 
-import com.levin.commons.service.domain.Desc;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

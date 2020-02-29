@@ -1,13 +1,15 @@
 package com.oak.payment.services.payment.info;
 
+import com.levin.commons.service.domain.Desc;
+import com.oak.payment.enums.PaymentStatus;
+import com.oak.payment.enums.PaymentType;
 import com.oak.payment.services.paymentorder.info.PaymentOrderInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.service.domain.Desc;
-import com.oak.payment.enums.PaymentType;
-import com.oak.payment.enums.PaymentStatus;
-
 
 import javax.persistence.Transient;
 import java.io.Serializable;

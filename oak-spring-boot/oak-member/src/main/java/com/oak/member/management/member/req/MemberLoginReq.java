@@ -5,12 +5,7 @@ import com.oak.api.model.ApiBaseReq;
 import com.oak.member.enums.LoginModel;
 import com.oak.member.enums.OpenType;
 import com.wuxp.api.context.InjectField;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.experimental.Accessors;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import static com.oak.member.constant.MemberApiContextInjectExprConstant.INJECT_REQUEST_IP_EXPR;
 

@@ -1,13 +1,13 @@
 package com.oak.member.services.accountlog.req;
 
+import com.levin.commons.dao.annotation.In;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.In;
-import javax.validation.constraints.Size;
-import com.levin.commons.dao.annotation.*;
-import com.oak.member.enums.AccountStatus;
 
 /**
  *  删除会员账户信息日志

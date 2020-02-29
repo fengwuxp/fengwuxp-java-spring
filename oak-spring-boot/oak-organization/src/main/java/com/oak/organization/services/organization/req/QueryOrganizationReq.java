@@ -1,14 +1,13 @@
 package com.oak.organization.services.organization.req;
 
+import com.levin.commons.dao.annotation.Like;
 import com.oak.api.model.ApiBaseQueryReq;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
-import com.levin.commons.dao.annotation.misc.Fetch;
 import com.oak.organization.enums.ApprovalStatus;
-
-import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 查询组织

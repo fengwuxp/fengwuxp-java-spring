@@ -1,13 +1,17 @@
 package com.oak.payment.services.payment.req;
 
-import com.oak.api.model.ApiBaseQueryReq;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
+import com.levin.commons.dao.annotation.Gte;
+import com.levin.commons.dao.annotation.Lte;
 import com.levin.commons.dao.annotation.misc.Fetch;
-import com.oak.payment.enums.PaymentType;
+import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.payment.enums.PaymentStatus;
+import com.oak.payment.enums.PaymentType;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import java.util.Date;
 /**
  *  查询支付单对象

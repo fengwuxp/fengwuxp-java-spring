@@ -1,7 +1,6 @@
 package com.wuxp.api.signature;
 
 import lombok.Data;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;

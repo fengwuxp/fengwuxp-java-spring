@@ -9,7 +9,6 @@ import com.oak.api.entities.system.SettingGroup;
 import com.oak.api.helper.SimpleCommonDaoHelper;
 import com.oak.api.services.system.info.SettingGroupInfo;
 import com.oak.api.services.system.info.SettingInfo;
-import com.oak.api.services.system.info.SettingSimpleInfo;
 import com.oak.api.services.system.req.*;
 import com.oak.api.utils.RegexUtil;
 import com.wuxp.api.ApiResp;
@@ -26,9 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

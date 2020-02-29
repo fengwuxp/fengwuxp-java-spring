@@ -2,9 +2,11 @@ package com.wuxp.security.example.services.simple;
 
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
-import io.swagger.v3.oas.annotations.media.Schema;
-import com.wuxp.security.example.services.simple.req.*;
 import com.wuxp.security.example.services.simple.info.ExampleEntityInfo;
+import com.wuxp.security.example.services.simple.req.CreateExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.DeleteExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.EditExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.QueryExampleEntityReq;
 
 
 

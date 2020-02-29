@@ -1,14 +1,10 @@
 package com.oak.member.management.member.req;
 
-import com.levin.commons.service.domain.Desc;
-import com.oak.member.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author laiy

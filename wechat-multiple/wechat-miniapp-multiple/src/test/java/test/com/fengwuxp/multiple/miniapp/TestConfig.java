@@ -13,8 +13,8 @@ public class TestConfig {
     }
 
     @Bean
-    public MockWeChatMpConfigStorageProvider weChatMpConfigStorageProvider() {
+    public MockWeChatMiniAppConfigStorageProvider weChatMpConfigStorageProvider() {
 
-        return new MockWeChatMpConfigStorageProvider();
+        return new MockWeChatMiniAppConfigStorageProvider();
     }
 }

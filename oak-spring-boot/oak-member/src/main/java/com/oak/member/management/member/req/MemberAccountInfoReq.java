@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * @author laiy
  * create at 2020-02-11 16:05

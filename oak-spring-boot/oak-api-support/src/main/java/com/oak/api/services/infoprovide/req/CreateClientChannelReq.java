@@ -1,6 +1,5 @@
 package com.oak.api.services.infoprovide.req;
 
-import com.levin.commons.service.domain.Desc;
 import com.oak.api.enums.ClientType;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
 
 import javax.validation.constraints.NotNull;
 

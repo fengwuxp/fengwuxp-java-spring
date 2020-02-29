@@ -2,16 +2,11 @@ package com.oak.api.services.system;
 
 import com.oak.api.services.system.info.SettingGroupInfo;
 import com.oak.api.services.system.info.SettingInfo;
-import com.oak.api.services.system.info.SettingSimpleInfo;
 import com.oak.api.services.system.req.*;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * 系统服务

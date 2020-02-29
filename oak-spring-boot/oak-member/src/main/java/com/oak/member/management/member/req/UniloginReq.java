@@ -12,7 +12,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import static com.oak.member.constant.MemberApiContextInjectExprConstant.INJECT_REQUEST_IP_EXPR;
 

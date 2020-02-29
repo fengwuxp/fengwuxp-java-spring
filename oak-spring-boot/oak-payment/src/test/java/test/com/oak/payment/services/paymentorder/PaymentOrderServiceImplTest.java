@@ -25,8 +25,6 @@ import test.com.oak.payment.OakApplicationTest;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ActiveProfiles("dev")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {OakApplicationTest.class})

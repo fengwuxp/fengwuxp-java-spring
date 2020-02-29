@@ -5,9 +5,9 @@ import com.oak.rbac.services.permission.req.CreatePermissionReq;
 import com.oak.rbac.services.resource.ResourceService;
 import com.oak.rbac.services.resource.req.CreateResourceReq;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,9 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import test.com.oak.rbac.OakApplicationTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * ResourceServiceImpl Tester.

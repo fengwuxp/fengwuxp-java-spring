@@ -6,7 +6,6 @@ import com.wuxp.resouces.AntUrlResource;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Set;
 

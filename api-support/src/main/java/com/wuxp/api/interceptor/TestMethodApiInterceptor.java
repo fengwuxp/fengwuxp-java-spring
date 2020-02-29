@@ -7,22 +7,12 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.wuxp.api.ApiRequest.*;
-import static com.wuxp.api.signature.ApiSignatureRequest.APP_SIGNATURE_KEY;
-import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
-import static com.wuxp.api.signature.InternalApiSignatureRequest.TIME_STAMP_HEADER_KEY;
 
 /**
  * 用于测试方法拦截

@@ -7,7 +7,6 @@ import com.oak.payment.services.payment.req.EditPaymentReq;
 import com.oak.payment.services.payment.req.QueryPaymentReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 
 

@@ -1,16 +1,18 @@
 package com.oak.organization.services.organization.req;
 
+import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
-import com.levin.commons.dao.annotation.*;
 import com.oak.api.model.ApiBaseReq;
+import com.oak.organization.enums.ApprovalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import com.oak.organization.enums.ApprovalStatus;
 
 
 /**

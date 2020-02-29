@@ -1,13 +1,15 @@
 package com.oak.organization.services.staff.info;
 
-import com.oak.organization.services.department.info.DepartmentInfo;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
 import com.levin.commons.service.domain.Desc;
-import com.oak.organization.services.organization.info.OrganizationInfo;
 import com.oak.organization.enums.StaffAccountType;
-
+import com.oak.organization.services.department.info.DepartmentInfo;
+import com.oak.organization.services.organization.info.OrganizationInfo;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;

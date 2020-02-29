@@ -1,12 +1,16 @@
 package com.oak.member.services.accountlog.req;
 
-import com.oak.api.model.ApiBaseQueryReq;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
+import com.levin.commons.dao.annotation.Gte;
+import com.levin.commons.dao.annotation.Lte;
 import com.levin.commons.dao.annotation.misc.Fetch;
+import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.member.enums.AccountStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import java.util.Date;
 /**
  *  查询会员账户信息日志

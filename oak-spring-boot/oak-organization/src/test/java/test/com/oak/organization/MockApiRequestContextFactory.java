@@ -1,18 +1,14 @@
 package test.com.oak.organization;
 
-import com.oak.rbac.entities.OakAdminUser;
 import com.wuxp.api.context.ApiRequestContextFactory;
-import com.wuxp.api.context.InjectFieldExpressionConstant;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.wuxp.api.ApiRequest.*;
-import static com.wuxp.api.context.InjectFieldExpressionConstant.RBAC_ADMIN_VARIABLE_NAME;
 
 @Component
 public class MockApiRequestContextFactory implements ApiRequestContextFactory {

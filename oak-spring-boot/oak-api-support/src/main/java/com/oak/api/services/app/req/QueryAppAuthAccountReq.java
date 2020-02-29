@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
-import java.util.Date;
 
 
 @Data

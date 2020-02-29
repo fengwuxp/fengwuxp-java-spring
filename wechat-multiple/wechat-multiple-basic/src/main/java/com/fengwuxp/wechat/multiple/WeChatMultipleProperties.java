@@ -18,4 +18,10 @@ public class WeChatMultipleProperties {
      * service bean的 scope
      */
     private String beanScope = WebApplicationContext.SCOPE_SESSION;
+
+
+    /**
+     * 缓存 微信相关服务的最大个数，小程序服务和公众号服务是独立缓存的
+     */
+    private Integer maxCacheSize = 200;
 }

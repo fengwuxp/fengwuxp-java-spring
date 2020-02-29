@@ -1,6 +1,7 @@
 package com.fengwuxp.mp.multiple;
 
 import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
+import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Setter;
@@ -21,9 +22,7 @@ import org.springframework.beans.factory.InitializingBean;
 public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceManager, BeanFactoryAware, InitializingBean {
 
 
-    private Cache<String, WxMpService> WE_MAP_SERVICE_CACHE = Caffeine.newBuilder()
-            .maximumSize(200)
-            .build();
+    private Cache<String, WxMpService> weChatMpServiceCache;
 
     protected BeanFactory beanFactory;
 
@@ -40,7 +39,7 @@ public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceMan
     @Override
     public WxMpService getWxMpService(String appId) {
 
-        return WE_MAP_SERVICE_CACHE.get(appId, (key) -> {
+        return weChatMpServiceCache.get(appId, (key) -> {
             WxMpService service = new WxMpServiceImpl();
             WxMpConfigStorage wxMpConfigStorage = weChatMpConfigStorageProvider.getWxMpConfigStorage(key);
             service.setWxMpConfigStorage(wxMpConfigStorage);
@@ -50,13 +49,13 @@ public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceMan
 
     @Override
     public void removeWxMpService(String appId) {
-        WE_MAP_SERVICE_CACHE.invalidate(appId);
+        weChatMpServiceCache.invalidate(appId);
     }
 
 
     @Override
     public void clearAll() {
-        WE_MAP_SERVICE_CACHE.cleanUp();
+        weChatMpServiceCache.cleanUp();
     }
 
     @Override
@@ -68,5 +67,12 @@ public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceMan
         if (this.weChatMpConfigStorageProvider == null) {
             this.weChatMpConfigStorageProvider = beanFactory.getBean(WeChatMpConfigStorageProvider.class);
         }
+
+        WeChatMultipleProperties weChatMultipleProperties = beanFactory.getBean(WeChatMultipleProperties.class);
+
+        this.weChatMpServiceCache = Caffeine.newBuilder()
+                .maximumSize(weChatMultipleProperties.getMaxCacheSize())
+                .build();
+
     }
 }

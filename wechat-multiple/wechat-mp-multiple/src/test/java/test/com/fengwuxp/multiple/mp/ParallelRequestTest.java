@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 
 @Slf4j
 public class ParallelRequestTest {

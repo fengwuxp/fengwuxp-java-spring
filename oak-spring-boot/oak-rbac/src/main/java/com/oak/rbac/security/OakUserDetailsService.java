@@ -1,6 +1,5 @@
 package com.oak.rbac.security;
 
-import com.oak.rbac.services.role.RoleService;
 import com.oak.rbac.services.role.info.RoleInfo;
 import com.oak.rbac.services.user.OakAdminUserService;
 import com.oak.rbac.services.user.info.OakAdminUserInfo;

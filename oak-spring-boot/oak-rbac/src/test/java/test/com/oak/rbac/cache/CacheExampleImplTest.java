@@ -1,35 +1,25 @@
 package test.com.oak.rbac.cache;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.beans.TypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.format.datetime.DateFormatter;
-import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
 import test.com.oak.rbac.OakApplicationTest;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

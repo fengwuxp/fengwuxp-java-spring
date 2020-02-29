@@ -1,10 +1,12 @@
 package com.oak.organization.services.organizationextendedinfo;
 
+import com.oak.organization.services.organizationextendedinfo.info.OrganizationExtendedInfoInfo;
+import com.oak.organization.services.organizationextendedinfo.req.CreateOrganizationExtendedInfoReq;
+import com.oak.organization.services.organizationextendedinfo.req.DeleteOrganizationExtendedInfoReq;
+import com.oak.organization.services.organizationextendedinfo.req.EditOrganizationExtendedInfoReq;
+import com.oak.organization.services.organizationextendedinfo.req.QueryOrganizationExtendedInfoReq;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
-import io.swagger.v3.oas.annotations.media.Schema;
-import com.oak.organization.services.organizationextendedinfo.req.*;
-import com.oak.organization.services.organizationextendedinfo.info.OrganizationExtendedInfoInfo;
 
 
 

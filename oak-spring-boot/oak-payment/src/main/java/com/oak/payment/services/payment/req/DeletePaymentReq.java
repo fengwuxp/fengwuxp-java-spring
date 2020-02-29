@@ -1,14 +1,13 @@
 package com.oak.payment.services.payment.req;
 
+import com.levin.commons.dao.annotation.In;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.In;
-import javax.validation.constraints.Size;
-import com.levin.commons.dao.annotation.*;
-import com.oak.payment.enums.PaymentType;
-import com.oak.payment.enums.PaymentStatus;
 
 /**
  *  删除支付单对象

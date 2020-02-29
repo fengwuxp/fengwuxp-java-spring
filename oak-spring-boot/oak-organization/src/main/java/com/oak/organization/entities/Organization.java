@@ -1,10 +1,7 @@
 package com.oak.organization.entities;
 
 import com.levin.commons.dao.domain.support.AbstractNamedEntityObject;
-import com.levin.commons.dao.domain.support.AbstractTreeObject;
-import com.levin.commons.service.domain.Desc;
 import com.oak.organization.enums.ApprovalStatus;
-import com.oak.organization.enums.OrganizationType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

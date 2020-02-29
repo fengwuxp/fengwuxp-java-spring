@@ -7,7 +7,6 @@ import com.oak.organization.management.organization.req.RegisterOrganizationReq;
 import com.oak.organization.management.organization.req.UpdateOrganizationExtendedInfoReq;
 import com.oak.organization.management.organization.req.UpdateOrganizationReq;
 import com.oak.organization.services.organization.OrganizationService;
-import com.oak.organization.services.organization.info.OrganizationInfo;
 import com.oak.organization.services.organization.req.CreateOrganizationReq;
 import com.oak.organization.services.organization.req.EditOrganizationReq;
 import com.oak.organization.services.organizationextendedinfo.OrganizationExtendedInfoService;

@@ -1,0 +1,33 @@
+{
+  "groups": [
+    {
+      "name": "wechat.multiple",
+      "type": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties",
+      "sourceType": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "wechat.multiple.bean-scope",
+      "type": "java.lang.String",
+      "description": "service bean的 scope",
+      "sourceType": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties"
+    }
+  ],
+  "hints": [
+    {
+      "name": "wechat.multiple.bean-scope",
+      "values": [
+        {
+          "value": "singleton"
+        },
+        {
+          "value": "request"
+        },
+        {
+          "value": "session"
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import com.fengwuxp.miniapp.multiple.WeChatMaConfigProvider;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MockWeChatMpConfigStorageProvider implements WeChatMaConfigProvider {
+public class MockWeChatMiniAppConfigStorageProvider implements WeChatMaConfigProvider {
 
 
     @Override

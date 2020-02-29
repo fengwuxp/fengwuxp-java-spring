@@ -1,11 +1,13 @@
 package com.oak.organization.services.organization.info;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
 import com.levin.commons.service.domain.Desc;
 import com.oak.organization.enums.ApprovalStatus;
-
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;

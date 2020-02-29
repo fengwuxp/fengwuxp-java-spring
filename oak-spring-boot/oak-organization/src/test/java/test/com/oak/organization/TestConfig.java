@@ -1,13 +1,11 @@
 package test.com.oak.organization;
 
 import com.wuxp.api.helper.SpringContextHolder;
-import com.wuxp.api.interceptor.ApiInterceptor;
 import com.wuxp.api.interceptor.BeanFactoryApiOperationSourceAdvisor;
 import com.wuxp.api.interceptor.TestAnnotationApiOperationSource;
 import com.wuxp.api.interceptor.TestMethodApiInterceptor;
 import com.wuxp.basic.uuid.JdkUUIDGenerateStrategy;
 import com.wuxp.basic.uuid.UUIDGenerateStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;

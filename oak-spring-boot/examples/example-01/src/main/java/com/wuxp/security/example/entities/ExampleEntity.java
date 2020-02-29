@@ -2,7 +2,6 @@ package com.wuxp.security.example.entities;
 
 
 import com.levin.commons.dao.domain.support.AbstractBaseEntityObject;
-import com.levin.commons.service.domain.Desc;
 import com.wuxp.security.example.enums.Week;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +13,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Date;
 
 @Schema(name = "example例子", description = "example例子")

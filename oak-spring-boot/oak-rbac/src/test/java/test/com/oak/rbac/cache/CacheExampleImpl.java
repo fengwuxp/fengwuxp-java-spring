@@ -5,8 +5,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import static test.com.oak.rbac.cache.CacheExample.EXAMPLE_CACHE_NAME;
-
 @Service
 @Slf4j
 public class CacheExampleImpl implements CacheExample {

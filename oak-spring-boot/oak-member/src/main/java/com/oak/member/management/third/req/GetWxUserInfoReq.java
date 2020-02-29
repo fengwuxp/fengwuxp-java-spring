@@ -1,7 +1,5 @@
 package com.oak.member.management.third.req;
 
-import com.levin.commons.service.domain.Desc;
-import com.levin.commons.service.domain.Sign;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

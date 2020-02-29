@@ -2,13 +2,13 @@ package com.oak.organization.entities;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 
 @Schema(description = "组织扩展信息")
 @Entity

@@ -3,7 +3,6 @@ package com.oak.member.services.open.req;
 import com.levin.commons.dao.annotation.Gte;
 import com.levin.commons.dao.annotation.Lte;
 import com.levin.commons.dao.annotation.misc.Fetch;
-import com.oak.api.entities.system.ClientChannel;
 import com.oak.api.model.ApiBaseQueryReq;
 import com.oak.member.enums.OpenType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,9 +12,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.util.Date;
 
 /**

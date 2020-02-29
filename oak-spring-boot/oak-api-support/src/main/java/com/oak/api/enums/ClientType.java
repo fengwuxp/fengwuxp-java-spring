@@ -1,6 +1,5 @@
 package com.oak.api.enums;
 
-import com.levin.commons.service.domain.Desc;
 import com.wuxp.basic.enums.DescriptiveEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -1,13 +1,15 @@
 package com.oak.cms.services.advposition.info;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
 import com.levin.commons.service.domain.Desc;
-        import com.oak.cms.enums.AdvType;
-        import com.oak.cms.enums.AdvDisplayType;
-        import com.oak.api.services.infoprovide.info.AreaInfo;
-
+import com.oak.api.services.infoprovide.info.AreaInfo;
+import com.oak.cms.enums.AdvDisplayType;
+import com.oak.cms.enums.AdvType;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;

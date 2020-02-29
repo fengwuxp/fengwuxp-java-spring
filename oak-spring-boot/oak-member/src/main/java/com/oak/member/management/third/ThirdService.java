@@ -1,6 +1,5 @@
 package com.oak.member.management.third;
 
-import com.levin.commons.service.domain.ApiService;
 import com.levin.commons.service.domain.Desc;
 import com.oak.member.management.third.info.WxSessionInfo;
 import com.oak.member.management.third.info.WxUserInfo;

@@ -1,7 +1,6 @@
 package test.com.oak.rbac.cache;
 
 import java.util.List;
-import java.util.Map;
 
 public class ExampleValueType {
 

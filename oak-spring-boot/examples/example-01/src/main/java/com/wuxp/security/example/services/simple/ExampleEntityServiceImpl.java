@@ -3,16 +3,19 @@ package com.wuxp.security.example.services.simple;
 import com.levin.commons.dao.JpaDao;
 import com.levin.commons.dao.UpdateDao;
 import com.oak.api.helper.SimpleCommonDaoHelper;
-import org.springframework.beans.BeanUtils;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.example.entities.ExampleEntity;
-import com.wuxp.security.example.services.simple.req.*;
 import com.wuxp.security.example.services.simple.info.ExampleEntityInfo;
+import com.wuxp.security.example.services.simple.req.CreateExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.DeleteExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.EditExampleEntityReq;
+import com.wuxp.security.example.services.simple.req.QueryExampleEntityReq;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 

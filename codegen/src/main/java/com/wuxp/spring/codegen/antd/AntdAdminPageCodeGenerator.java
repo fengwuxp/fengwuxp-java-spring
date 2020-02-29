@@ -1,18 +1,12 @@
 package com.wuxp.spring.codegen.antd;
 
-import com.wuxp.codegen.core.CodeGenerator;
 import com.wuxp.codegen.core.parser.JavaClassParser;
 import com.wuxp.codegen.core.parser.LanguageParser;
 import com.wuxp.codegen.core.strategy.TemplateStrategy;
 import com.wuxp.codegen.dragon.AbstractCodeGenerator;
 import com.wuxp.codegen.model.CommonCodeGenClassMeta;
-import com.wuxp.codegen.model.CommonCodeGenMethodMeta;
 import com.wuxp.codegen.model.languages.java.JavaClassMeta;
-import com.wuxp.codegen.model.languages.java.codegen.JavaCodeGenClassMeta;
-import com.wuxp.codegen.swagger3.Swagger3CodeGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 

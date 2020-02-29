@@ -1,13 +1,13 @@
 package com.oak.organization.services.staff.req;
 
+import com.levin.commons.dao.annotation.In;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.In;
-import javax.validation.constraints.Size;
-import com.levin.commons.dao.annotation.*;
-import com.oak.organization.enums.StaffAccountType;
 
 /**
  *  删除员工

@@ -33,7 +33,7 @@ public class WeChatMinAppMultipleAutoConfiguration {
             havingValue = SCOPE_SINGLETON
     )
     @ConditionalOnMissingBean
-    public WxMaService wxMpSingletonScopeService() {
+    public WxMaService weChatMiniAppSingletonScopeService() {
         return this.weChatServiceManager().getWxMpService();
     }
 
@@ -44,7 +44,7 @@ public class WeChatMinAppMultipleAutoConfiguration {
             havingValue = WebApplicationContext.SCOPE_REQUEST
     )
     @RequestScope()
-    public WxMaService wxMpRequestScopeService() {
+    public WxMaService weChatMiniAppRequestScopeService() {
         return this.weChatServiceManager().getWxMpService();
     }
 
@@ -60,7 +60,7 @@ public class WeChatMinAppMultipleAutoConfiguration {
             havingValue = WebApplicationContext.SCOPE_SESSION,
             matchIfMissing = true)
     @SessionScope()
-    public WxMaService wxMpSessionScopeService() {
+    public WxMaService weChatMiniAppSessionScopeService() {
         return this.weChatServiceManager().getWxMpService();
     }
 

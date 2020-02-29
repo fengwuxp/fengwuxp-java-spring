@@ -1,8 +1,8 @@
 package com.fengwuxp.mp.multiple.configuration;
 
-import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import com.fengwuxp.mp.multiple.DefaultMultipleWeChatMpServiceManager;
 import com.fengwuxp.mp.multiple.WeChatMpServiceManager;
+import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -33,7 +33,7 @@ public class WeChatMpMultipleAutoConfiguration {
             havingValue = SCOPE_SINGLETON
     )
     @ConditionalOnMissingBean
-    public WxMpService wxMpSingletonScopeService() {
+    public WxMpService weChatMpSingletonScopeService() {
         return this.weChatMpServiceManager().getWxMpService();
     }
 
@@ -44,7 +44,7 @@ public class WeChatMpMultipleAutoConfiguration {
             havingValue = WebApplicationContext.SCOPE_REQUEST
     )
     @RequestScope()
-    public WxMpService wxMpRequestScopeService() {
+    public WxMpService weChatMpRequestScopeService() {
         return this.weChatMpServiceManager().getWxMpService();
     }
 
@@ -60,7 +60,7 @@ public class WeChatMpMultipleAutoConfiguration {
             havingValue = WebApplicationContext.SCOPE_SESSION,
             matchIfMissing = true)
     @SessionScope()
-    public WxMpService wxMpSessionScopeService() {
+    public WxMpService weChatMpSessionScopeService() {
         return this.weChatMpServiceManager().getWxMpService();
     }
 
