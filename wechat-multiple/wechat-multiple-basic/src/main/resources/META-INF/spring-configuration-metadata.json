@@ -8,10 +8,25 @@
   ],
   "properties": [
     {
+      "name": "wechat.multiple.app-id-header-name",
+      "type": "java.lang.String",
+      "description": "微信appId在请求头的名称标识",
+      "sourceType": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties",
+      "defaultValue": "We-Chat-AppId"
+    },
+    {
       "name": "wechat.multiple.bean-scope",
       "type": "java.lang.String",
       "description": "service bean的 scope",
-      "sourceType": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties"
+      "sourceType": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties",
+      "defaultValue": "session"
+    },
+    {
+      "name": "wechat.multiple.max-cache-size",
+      "type": "java.lang.Integer",
+      "description": "缓存 微信相关服务的最大个数，小程序服务和公众号服务是独立缓存的",
+      "sourceType": "com.fengwuxp.wechat.multiple.WeChatMultipleProperties",
+      "defaultValue": 200
     }
   ],
   "hints": [

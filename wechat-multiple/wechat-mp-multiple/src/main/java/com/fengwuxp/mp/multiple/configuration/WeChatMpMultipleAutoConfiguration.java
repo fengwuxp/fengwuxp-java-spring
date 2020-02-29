@@ -6,6 +6,7 @@ import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import me.chanjar.weixin.mp.api.WxMpService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,6 +23,9 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @ConditionalOnProperty(prefix = WeChatMultipleProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class WeChatMpMultipleAutoConfiguration {
 
+
+    @Autowired
+    private WeChatMultipleProperties weChatMultipleProperties;
 
     /**
      * only test
@@ -67,7 +71,7 @@ public class WeChatMpMultipleAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public WeChatAppIdProvider weChatAppIdProvider() {
-        return new HttpRequestWeChatServiceAppIdProvider();
+        return new HttpRequestWeChatServiceAppIdProvider(weChatMultipleProperties.getAppIdHeaderName());
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package test.com.fengwuxp.multiple.mp;
 
+import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.config.WxMpConfigStorage;
@@ -19,6 +20,8 @@ public class MultipleWxMpServiceTest {
     @Autowired
     private WxMpService wxMpService;
 
+    @Autowired
+    private WeChatMultipleProperties weChatMultipleProperties;
 
     @Test
     public void testWxMpService() {

@@ -7,18 +7,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.fengwuxp.wechat.multiple.WeChatMultipleProperties.WE_CHAT_APP_ID_HEADER_KEY;
+
 /**
  * 用于http请求时提供微信appId的提供者
  */
 @Slf4j
 public class HttpRequestWeChatServiceAppIdProvider implements WeChatAppIdProvider {
 
-    public static final String WE_CHAT_APP_ID_HEADER_KEY = "We-Chat-Mp-AppId";
 
-    protected String weChatAppIdName = WE_CHAT_APP_ID_HEADER_KEY;
+    protected String weChatAppIdName;
 
     public HttpRequestWeChatServiceAppIdProvider() {
+        this.weChatAppIdName = WE_CHAT_APP_ID_HEADER_KEY;
     }
+
 
     public HttpRequestWeChatServiceAppIdProvider(String weChatAppIdName) {
         this.weChatAppIdName = weChatAppIdName;
