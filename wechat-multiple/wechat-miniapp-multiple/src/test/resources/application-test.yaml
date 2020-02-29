@@ -1,0 +1,8 @@
+
+logging:
+  level:
+    test.com: debug
+
+wechat:
+  multiple:
+    bean-scope: singleton

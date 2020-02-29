@@ -7,6 +7,7 @@ import com.wuxp.security.captcha.configuration.MobileCaptchaProperties;
 import com.wuxp.security.captcha.constant.MessageKeyConstant;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.StringUtils;
 
@@ -103,7 +104,11 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
         super.afterPropertiesSet();
         BeanFactory beanFactory = this.beanFactory;
         if (this.mobileCaptchaSender == null) {
-            this.mobileCaptchaSender = beanFactory.getBean(MobileCaptchaSender.class);
+            try {
+                this.mobileCaptchaSender = beanFactory.getBean(MobileCaptchaSender.class);
+            } catch (BeansException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

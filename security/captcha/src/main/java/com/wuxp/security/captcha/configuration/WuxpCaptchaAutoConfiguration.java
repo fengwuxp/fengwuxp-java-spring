@@ -45,7 +45,7 @@ public class WuxpCaptchaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({SimpleMobileCaptcha.class})
-    @ConditionalOnBean(MobileCaptchaSender.class)
+//    @ConditionalOnBean(MobileCaptchaSender.class)
     public MobileCaptcha mobileCaptcha() {
         return new SimpleMobileCaptcha();
     }
