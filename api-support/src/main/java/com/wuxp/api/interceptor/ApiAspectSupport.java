@@ -346,6 +346,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
             context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
             context.put(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
+            context.put(CHANNEL_CODE, httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
             context.put(APP_SIGNATURE_KEY, httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
             String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
             if (StringUtils.hasText(timeStamp)) {
