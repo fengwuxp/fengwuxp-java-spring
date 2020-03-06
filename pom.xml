@@ -68,14 +68,11 @@
         <module>api-support</module>
         <module>basic</module>
         <module>codegen</module>
-        <module>oak-spring-boot</module>
         <module>security</module>
         <module>resource-abstraction</module>
         <module>third-party</module>
         <module>wechat-multiple</module>
         <module>miniprogram</module>
-
-
     </modules>
 
     <dependencies>
