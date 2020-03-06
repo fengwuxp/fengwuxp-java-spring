@@ -72,7 +72,7 @@
         <module>resource-abstraction</module>
         <module>third-party</module>
         <module>wechat-multiple</module>
-        <module>miniprogram</module>
+
     </modules>
 
     <dependencies>
