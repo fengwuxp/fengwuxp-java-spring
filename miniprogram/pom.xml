@@ -2,122 +2,75 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.2.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <artifactId>fengwuxp-java</artifactId>
+        <groupId>com.wuxp</groupId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
-
-    <groupId>com.wuxp</groupId>
-    <artifactId>fengwuxp-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fengwuxp-wechat-miniprogram</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>entity</module>
+        <module>api</module>
+        <module>services</module>
+    </modules>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
-        <spring-boot-admin.version>2.1.5</spring-boot-admin.version>
-        <spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
-        <spring-social.version>1.1.6.RELEASE</spring-social.version>
-        <google-zxing.version>3.4.0</google-zxing.version>
         <springdoc.version>1.2.26</springdoc.version>
-<!--        <hibernate.version>5.2.18.Final</hibernate.version>-->
-
-        <!--1.8编译参数 保留方法名称-->
-        <compilerArgument>-parameters</compilerArgument>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven-source-plugin.attach>false</maven-source-plugin.attach>
+        <wuxp-security.version>1.0.0-SNAPSHOT</wuxp-security.version>
+        <levin.dao.version>2.1.0-SNAPSHOT</levin.dao.version>
+        <wx-java.version>3.6.0</wx-java.version>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>编译时保留方法参数名称</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <!--1.8编译参数-保留方法名称-->
-                <compilerArgument>-parameters</compilerArgument>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>跳过测试</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>上传源代码到 Maven</id>
-            <properties>
-                <maven-source-plugin.attach>true</maven-source-plugin.attach>
-            </properties>
-        </profile>
-
-    </profiles>
-
-    <modules>
-        <module>api-support</module>
-        <module>basic</module>
-        <module>codegen</module>
-        <module>oak-spring-boot</module>
-        <module>security</module>
-        <module>resource-abstraction</module>
-        <module>third-party</module>
-        <module>wechat-multiple</module>
-        <module>miniprogram</module>
-
-
-    </modules>
 
     <dependencies>
 
+
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <groupId>com.levin.commons.maven</groupId>
+            <artifactId>simple-dao-jpa</artifactId>
+            <version>${levin.dao.version}</version>
         </dependency>
 
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <!--swagger ui -->
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <version>1.0.1</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.github.classgraph/classgraph -->
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.59</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.hibernate</groupId>-->
+        <!--            <artifactId>hibernate-core</artifactId>-->
+        <!--            <version>${hibernate.version}</version>-->
+        <!--        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.61</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-
 
     </dependencies>
-
 
     <distributionManagement>
 
@@ -133,7 +86,6 @@
         </snapshotRepository>
 
     </distributionManagement>
-
     <organization>
         <name>wupxp</name>
         <url>https://github.com/</url>
@@ -232,6 +184,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <inherited>true</inherited>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
