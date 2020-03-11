@@ -2,6 +2,7 @@ package com.wuxp.security.captcha.mobile;
 
 import lombok.Getter;
 
+
 /**
  * 手机验证码 发送者
  */
@@ -9,10 +10,11 @@ public interface MobileCaptchaSender {
 
     /**
      * send mobile captcha
+     * {@link MobileCaptchaType}
      *
      * @param useType     captcha scenes to be used
      * @param mobilePhone captcha key
-     * @param mobilePhone captcha value
+     * @param value       captcha value
      * @return
      */
     MobileCaptchaSenderResult send(String useType, String mobilePhone, String value);

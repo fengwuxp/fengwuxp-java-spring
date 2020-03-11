@@ -19,6 +19,7 @@ public class PictureCaptchaGenerateResult implements CaptchaGenerateResult {
 
     private final PictureCaptchaValue value;
 
+    // 验证吗内容
     private String captchaContent;
 
     private String errorMessage;

@@ -18,19 +18,20 @@ public class WuxpCaptchaProperties {
     public static final String PREFIX = "wuxp.captcha";
 
     /**
-     * 是否启用
-     */
-    private boolean enabled = false;
-
-    /**
      * 默认的图片验证码配置
      */
-    private PictureCaptchaProperties defaultPicture = new PictureCaptchaProperties(4, 160, 50);
+    private final static PictureCaptchaProperties DEFAULT_PICTURE = new PictureCaptchaProperties(4, 160, 50);
 
     /**
      * 默认的手机验证码配置
      */
-    private MobileCaptchaProperties defaultMobile = new MobileCaptchaProperties();
+    private  final static MobileCaptchaProperties DEFAULT_MOBILE = new MobileCaptchaProperties();
+
+    /**
+     * 是否启用
+     */
+    private boolean enabled = false;
+
 
     /**
      * 默认的二维码相关配置
@@ -60,7 +61,7 @@ public class WuxpCaptchaProperties {
     public PictureCaptchaProperties getPictureProperties(String type) {
         Object ignoreCaseProperties = this.getIgnoreCaseProperties(picture, type);
         if (ignoreCaseProperties == null) {
-            return defaultPicture;
+            return DEFAULT_PICTURE;
         }
         return (PictureCaptchaProperties) ignoreCaseProperties;
     }
@@ -72,7 +73,7 @@ public class WuxpCaptchaProperties {
     public MobileCaptchaProperties getMobileCaptchaProperties(String type) {
         Object ignoreCaseProperties = this.getIgnoreCaseProperties(mobile, type);
         if (ignoreCaseProperties == null) {
-            return defaultMobile;
+            return DEFAULT_MOBILE;
         }
         return (MobileCaptchaProperties) ignoreCaseProperties;
     }

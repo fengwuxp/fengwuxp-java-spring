@@ -22,6 +22,7 @@ public interface PictureCaptcha extends Captcha {
      * @param useType captcha key
      * @return
      */
+    @Override
     default PictureCaptchaGenerateResult generate(String type, String useType) {
 //        String[] types = useType.split("_");
         return generate(type, useType, null);

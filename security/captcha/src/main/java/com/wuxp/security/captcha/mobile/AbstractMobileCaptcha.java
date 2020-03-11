@@ -75,7 +75,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
             return CaptchaVerifyResult.error(
                     messageSource.getMessage(MessageKeyConstant.PICTURE_CAPTCHA_NOT_EXIST,
                             null,
-                            "该图片验证码不存在",
+                            "该验证码不存在",
                             null));
         }
 
