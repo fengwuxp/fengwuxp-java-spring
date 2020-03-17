@@ -2,18 +2,25 @@ package com.wuxp.miniprogram.services.wxopenconfig;
 
 import com.alibaba.fastjson.JSON;
 import com.oak.organization.miniprogram.services.organizationminiprogramconfig.info.OrganizationMiniProgramConfigInfo;
-import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
-import com.vma.wechatopen.gateway.dto.wechat.mini.code.CodeCommitDTO;
-import com.vma.wechatopen.gateway.dto.wechat.mini.code.OnekeyUploadCodeDTO;
-import com.vma.wechatopen.gateway.dto.wechat.mini.code.SubmitAuditMessageDTO;
-import com.vma.wechatopen.service.business.service.IWechatOpenService;
-import com.vma.wechatopen.service.utils.WxOpenUtils;
+//import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
+//import com.vma.wechatopen.gateway.dto.wechat.mini.code.CodeCommitDTO;
+//import com.vma.wechatopen.gateway.dto.wechat.mini.code.OnekeyUploadCodeDTO;
+//import com.vma.wechatopen.gateway.dto.wechat.mini.code.SubmitAuditMessageDTO;
+//import com.vma.wechatopen.service.business.service.IWechatOpenService;
+//import com.vma.wechatopen.service.utils.WxOpenUtils;
+//import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
+//import com.vma.wechatopen.service.utils.WxOpenUtils;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.context.InjectField;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.miniprogram.services.constant.WxOpenConfigConstant;
+import com.wuxp.miniprogram.services.dto.CodeCommitDTO;
+import com.wuxp.miniprogram.services.dto.OnekeyUploadCodeDTO;
+import com.wuxp.miniprogram.services.dto.SubmitAuditMessageDTO;
 import com.wuxp.miniprogram.services.organizationminiprogramconfig.OrganizationMiniProgramConfigService;
 import com.wuxp.miniprogram.services.organizationminiprogramconfig.req.QueryOrganizationMiniProgramConfigReq;
+import com.wuxp.miniprogram.services.service.IWechatOpenService;
+import com.wuxp.miniprogram.services.utils.WxOpenUtils;
 import com.wuxp.miniprogram.services.wxopenconfig.dto.MiniProgramQueryAuditResultDto;
 import com.wuxp.miniprogram.services.wxopenconfig.info.WxOpenConfigInfo;
 import com.wuxp.miniprogram.services.wxopenconfig.req.EditWxOpenConfigReq;
@@ -78,7 +85,7 @@ public class MiniprogramReleaseService {
         }
 
         //设置唯一值
-        WxOpenConfiguration.setDomain(organizationId);
+       // WxOpenConfiguration.setDomain(organizationId);
 
         String templateId = organizationMiniProgramConfigInfo.getMiniProgramTemplateId();
         String extJson = organizationMiniProgramConfigInfo.getMiniProgramExtJson();
