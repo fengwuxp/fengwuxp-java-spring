@@ -61,7 +61,9 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
 
-        log.error("认证失败", exception);
+        if (log.isDebugEnabled()) {
+            log.debug("认证失败", exception);
+        }
 
         LoginEnvironmentContext loginEnvironmentContext = loginEnvironmentHolder.getContextAndIncreaseFailureCount(request);
 

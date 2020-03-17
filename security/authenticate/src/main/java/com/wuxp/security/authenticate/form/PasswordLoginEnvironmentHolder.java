@@ -13,6 +13,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,6 +39,10 @@ public class PasswordLoginEnvironmentHolder implements LoginEnvironmentHolder, B
     @Override
     public LoginEnvironmentContext getContext(HttpServletRequest request) {
         String username = request.getParameter(SPRING_SECURITY_FORM_USERNAME_KEY);
+        if (!StringUtils.hasText(username)) {
+//            throw new AuthenticationException("用户名不能为空")
+            username = "";
+        }
         Cache cache = cacheManager.getCache(BROWSER_LOGIN_CONTEXT);
         assert cache != null;
         LoginEnvironmentContext loginEnvironmentContext = cache.get(username, LoginEnvironmentContext.class);
