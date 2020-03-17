@@ -40,7 +40,7 @@ public class DefaultMultipleWeChatMiniAppServiceManager implements WeChatMiniApp
 
         return weChatMaServiceCache.get(appId, (key) -> {
             WxMaService service = new WxMaServiceImpl();
-            service.setWxMaConfig(this.weChatMaConfigProvider.getWxMpConfigStorage(appId));
+            service.setWxMaConfig(this.weChatMaConfigProvider.getWxMpConfigStorage(key));
             return service;
         });
     }

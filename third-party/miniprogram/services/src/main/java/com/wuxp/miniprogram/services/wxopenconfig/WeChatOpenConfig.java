@@ -9,6 +9,7 @@ import com.wuxp.miniprogram.services.wxopenconfig.info.WxOpenConfigInfo;
 import com.wuxp.miniprogram.services.wxopenconfig.req.QueryWxOpenConfigReq;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.open.api.WxOpenConfigStorage;
+import me.chanjar.weixin.open.api.impl.WxOpenInMemoryConfigStorage;
 import me.chanjar.weixin.open.api.impl.WxOpenInRedisConfigStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,25 +28,22 @@ public class WeChatOpenConfig implements IComponentConfigProvider {
     @Autowired
     private WxOpenConfigService wxOpenConfigService;
 
-    @Autowired
-    private JedisPool jedisPool;
-
     @Override
     public WxOpenConfigStorage getConfigByDomain(@InjectField(value = WxOpenConfigConstant.WXCONFIG_ORGANIZATION_ID_KEY) String organizationId) {
 
-        WxOpenInRedisConfigStorage wxOpenInRedisConfigStorage = new WxOpenInRedisConfigStorage(jedisPool,organizationId+"_");
+        WxOpenInMemoryConfigStorage wxOpenInMemoryConfigStorage = new WxOpenInMemoryConfigStorage();
 
         WxOpenConfigInfo wxOpenConfigInfo = getWxOpenConfigInfoById(organizationId);
         if( wxOpenConfigInfo == null ){
-            return wxOpenInRedisConfigStorage;
+            return wxOpenInMemoryConfigStorage;
         }else {
 
-            wxOpenInRedisConfigStorage.setComponentAppId(wxOpenConfigInfo.getMiniProgramAppId());
-            wxOpenInRedisConfigStorage.setComponentAppSecret(wxOpenConfigInfo.getMiniProgramAppSecret());
-            wxOpenInRedisConfigStorage.setComponentToken(wxOpenConfigInfo.getMiniProgramToken());
-            wxOpenInRedisConfigStorage.setComponentAesKey(wxOpenConfigInfo.getMiniProgramMsgKey());
+            wxOpenInMemoryConfigStorage.setComponentAppId(wxOpenConfigInfo.getMiniProgramAppId());
+            wxOpenInMemoryConfigStorage.setComponentAppSecret(wxOpenConfigInfo.getMiniProgramAppSecret());
+            wxOpenInMemoryConfigStorage.setComponentToken(wxOpenConfigInfo.getMiniProgramToken());
+            wxOpenInMemoryConfigStorage.setComponentAesKey(wxOpenConfigInfo.getMiniProgramMsgKey());
 
-            return wxOpenInRedisConfigStorage;
+            return wxOpenInMemoryConfigStorage;
         }
     }
 
