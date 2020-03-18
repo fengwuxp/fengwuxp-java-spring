@@ -32,10 +32,13 @@ public class RestfulResponseBodyAdvice implements ResponseBodyAdvice {
                                   Class selectedConverterType,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
-        ApiResp resp = (ApiResp) body;
-        response.setStatusCode(resp.getHttpStatus());
-        if (resp.isSuccess()) {
-            return resp.getData();
+        if (body instanceof ApiResp) {
+            ApiResp resp = (ApiResp) body;
+            response.setStatusCode(resp.getHttpStatus());
+            if (resp.isSuccess()) {
+                return resp.getData();
+            }
+            return body;
         }
         return body;
     }
