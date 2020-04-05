@@ -18,7 +18,7 @@
         <module>wechat-mp-multiple</module>
         <module>wechat-miniapp-multiple</module>
         <module>wechat-multiple-basic</module>
-        <module>wechat-wxopenservice-multiple</module>
+        <module>wechat-open-platform-multiple</module>
     </modules>
 
     <dependencies>
