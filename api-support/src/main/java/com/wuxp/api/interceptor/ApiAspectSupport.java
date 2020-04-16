@@ -342,19 +342,23 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         //注入参数
         HttpServletRequest httpServletRequest = this.getHttpServletRequest();
         if (httpServletRequest != null) {
-            Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
-
-            context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
-            context.put(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
-            context.put(CHANNEL_CODE, httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
-            context.put(APP_SIGNATURE_KEY, httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
-            String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
-            if (StringUtils.hasText(timeStamp)) {
-                context.put(TIME_STAMP, Long.parseLong(timeStamp));
-            }
-            context.forEach(evaluationContext::setVariable);
+            fillRequestContext(evaluationContext, httpServletRequest);
         }
         return evaluationContext;
+    }
+
+    protected void fillRequestContext(EvaluationContext evaluationContext, HttpServletRequest httpServletRequest) {
+        Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
+
+        context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
+        context.put(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
+        context.put(CHANNEL_CODE, httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
+        context.put(APP_SIGNATURE_KEY, httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
+        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
+        if (StringUtils.hasText(timeStamp)) {
+            context.put(TIME_STAMP, Long.parseLong(timeStamp));
+        }
+        context.forEach(evaluationContext::setVariable);
     }
 
 

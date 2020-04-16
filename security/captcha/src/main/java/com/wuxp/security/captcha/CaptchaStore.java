@@ -18,7 +18,7 @@ public interface CaptchaStore {
      * Read captcha from store
      *
      * @param key
-     * @param captchaTyp captcha type
+     * @param captchaTyp captcha type {@link CaptchaType}
      * @return
      */
     <T extends CaptchaValue> T readCaptcha(String key, String captchaTyp);
