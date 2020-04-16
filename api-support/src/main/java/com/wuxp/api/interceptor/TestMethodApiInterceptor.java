@@ -45,6 +45,7 @@ public class TestMethodApiInterceptor extends ApiAspectSupport implements Method
         methodAccess.invoke(request, "setNonceStr", evaluationContext.lookupVariable(NONCE_STR_KEY));
         methodAccess.invoke(request, "setTimeStamp", evaluationContext.lookupVariable(TIME_STAMP));
         methodAccess.invoke(request, "setApiSignature", evaluationContext.lookupVariable("apiSignature"));
+        methodAccess.invoke(request, "setChannelCode", evaluationContext.lookupVariable(CHANNEL_CODE));
 
 
         // 尝试参数注入

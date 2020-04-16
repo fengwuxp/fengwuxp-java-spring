@@ -1,7 +1,14 @@
 package com.wuxp.security.captcha;
 
 
-public interface CaptchaValue {
+import java.io.Serializable;
+
+
+/**
+ * @author wxup
+ * 验证码值
+ */
+public interface CaptchaValue extends Serializable {
 
     String getCaptchaType();
 

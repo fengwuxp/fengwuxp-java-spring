@@ -2,11 +2,13 @@ package com.wuxp.security.authenticate;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 账号登录失败的信息
  */
 @Data
-public class LoginEnvironmentContext {
+public class LoginEnvironmentContext implements Serializable {
 
     /**
      * 登录账号
