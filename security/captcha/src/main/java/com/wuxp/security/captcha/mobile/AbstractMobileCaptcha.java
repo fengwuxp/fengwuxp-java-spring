@@ -36,7 +36,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
                 System.currentTimeMillis() + mobileCaptchaProperties.getExpired().toMillis());
         MobileCaptchaValue mobileCaptchaValue = captchaGenerateResult.getValue();
         String resultKey = captchaGenerateResult.getKey();
-        MobileCaptchaSender.MobileCaptchaSenderResult result = mobileCaptchaSender.send(useType, resultKey, mobileCaptchaValue.getValue());
+        MobileCaptchaSender.MobileCaptchaSenderResult result = mobileCaptchaSender.send(useType, mobilePhone, mobileCaptchaValue.getValue());
         captchaStore.storeCaptcha(resultKey, mobileCaptchaValue);
         captchaGenerateResult.setErrorMessage(result.getMessage());
         return captchaGenerateResult;
