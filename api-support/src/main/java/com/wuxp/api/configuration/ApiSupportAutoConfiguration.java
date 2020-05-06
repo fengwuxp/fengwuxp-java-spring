@@ -1,13 +1,14 @@
 package com.wuxp.api.configuration;
 
-import com.wuxp.api.interceptor.AnnotationApiOperationSource;
-import com.wuxp.api.interceptor.ApiInterceptor;
-import com.wuxp.api.interceptor.ApiOperationSource;
-import com.wuxp.api.interceptor.BeanFactoryApiOperationSourceAdvisor;
+import com.wuxp.api.interceptor.*;
 import com.wuxp.api.signature.ApiSignatureStrategy;
 import com.wuxp.api.signature.MD5ApiSignatureStrategy;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
@@ -16,10 +17,14 @@ import org.springframework.core.Ordered;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
+
 
 @Configuration
+@EnableConfigurationProperties(WuxpApiSupportProperties.class)
+@ConditionalOnProperty(prefix = WuxpApiSupportProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-public class ProxyApiConfiguration implements ImportAware {
+public class ApiSupportAutoConfiguration implements ImportAware {
 
 
     @Override
@@ -30,11 +35,11 @@ public class ProxyApiConfiguration implements ImportAware {
 
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     @Bean
-    @ConditionalOnMissingBean
-    public BeanFactoryApiOperationSourceAdvisor beanFactoryApiOperationSourceAdvisor() {
+    @ConditionalOnBean(ApiInterceptor.class)
+    public BeanFactoryApiOperationSourceAdvisor beanFactoryApiOperationSourceAdvisor(ApiInterceptor apiInterceptor) {
         BeanFactoryApiOperationSourceAdvisor advisor = new BeanFactoryApiOperationSourceAdvisor();
         advisor.setApiOperationSource(apiOperationSource());
-        advisor.setAdvice(apiInterceptor());
+        advisor.setAdvice(apiInterceptor);
 //        if (this.enableApiSupport != null) {
 //            advisor.setOrder(this.enableApiSupport.<Integer>getNumber("order"));
 //        }
@@ -66,7 +71,13 @@ public class ProxyApiConfiguration implements ImportAware {
     }
 
     @Bean
-    @ConditionalOnMissingBean(MD5ApiSignatureStrategy.class)
+    @ConditionalOnProperty(
+            prefix = WuxpApiSupportProperties.PREFIX,
+            name = "enabled-api-signature",
+            havingValue = "true",
+            matchIfMissing = true
+    )
+    @ConditionalOnMissingBean(ApiSignatureStrategy.class)
     public ApiSignatureStrategy mD5ApiSignatureStrategy() {
         return new MD5ApiSignatureStrategy();
     }

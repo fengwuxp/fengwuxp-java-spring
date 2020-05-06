@@ -48,6 +48,8 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 
 /**
  * api aspect support
+ *
+ * @author wxup
  */
 @Slf4j
 @Setter
@@ -100,13 +102,18 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
             ApiSignatureStrategy bean = null;
             try {
                 bean = this.beanFactory.getBean(ApiSignatureStrategy.class);
+                this.setApiSignatureStrategy(bean);
             } catch (BeansException e) {
-//                e.printStackTrace();
+                log.warn("not found ApiSignatureStrategy Bean", e);
             }
-            this.setApiSignatureStrategy(bean);
         }
         if (this.apiLogRecorder == null) {
-            this.setApiLogRecorder(this.beanFactory.getBean(ApiLogRecorder.class));
+            try {
+                ApiLogRecorder apiLogRecorder = this.beanFactory.getBean(ApiLogRecorder.class);
+                this.setApiLogRecorder(apiLogRecorder);
+            } catch (BeansException e) {
+                log.warn("not found ApiLogRecorder Bean", e);
+            }
         }
         if (this.threadPoolTaskScheduler == null) {
             this.setThreadPoolTaskScheduler(this.beanFactory.getBean(ThreadPoolTaskScheduler.class));
