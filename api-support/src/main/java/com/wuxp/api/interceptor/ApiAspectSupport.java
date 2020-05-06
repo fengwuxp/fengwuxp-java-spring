@@ -140,12 +140,16 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
      * @param method
      * @param args
      * @param targetClass
-     * @param evaluationContext
+     * @param target
      */
-    protected void tryInjectParamsValue(Method method,
-                                        Object[] args,
-                                        Class<?> targetClass,
-                                        EvaluationContext evaluationContext) {
+    protected EvaluationContext tryInjectParamsValue(Method method,
+                                                     Object[] args,
+                                                     Class<?> targetClass,
+                                                     Object target) {
+
+        // Spel 执行上下文
+        EvaluationContext evaluationContext = null;
+
         Map<Method, Boolean> injectFields = this.injectFields;
         Map<Method, Boolean> injectParams = this.injectParams;
         Boolean needField = injectFields.get(method);
@@ -174,10 +178,11 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         }
 
         if (!needField && !needParam) {
-            return;
+            return evaluationContext;
         }
         AnnotatedElementKey methodKey = null;
         if (needField) {
+            evaluationContext = this.createEvaluationContext(method, args, target, targetClass);
             ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
             methodKey = apiOperationMetadata.methodKey;
             this.tryInjectApiRequestFiledValue(args, evaluationContext, methodKey);
@@ -187,9 +192,13 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                 ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
                 methodKey = apiOperationMetadata.methodKey;
             }
+            if (evaluationContext == null) {
+                evaluationContext = this.createEvaluationContext(method, args, target, targetClass);
+            }
             this.tryInjectParameterValue(args, method.getParameters(), evaluationContext, methodKey);
         }
 
+        return evaluationContext;
     }
 
 

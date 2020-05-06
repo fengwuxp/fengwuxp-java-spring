@@ -28,6 +28,7 @@ public class TestMethodApiInterceptor extends ApiAspectSupport implements Method
         Class<?> targetClass = this.getTargetClass(target);
         Object[] arguments = invocation.getArguments();
         Method method = invocation.getMethod();
+
         // 构建spel 执行上下文
         EvaluationContext evaluationContext = this.createEvaluationContext(method, arguments, target, targetClass);
 
