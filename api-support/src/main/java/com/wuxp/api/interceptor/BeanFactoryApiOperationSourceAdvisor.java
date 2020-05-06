@@ -12,7 +12,7 @@ public class BeanFactoryApiOperationSourceAdvisor extends AbstractBeanFactoryPoi
     @Nullable
     private ApiOperationSource apiOperationSource;
 
-    private final ApiOperationSourcePointcut pointcut = new ApiOperationSourcePointcut() {
+    private final AbstractApiOperationSourcePointcut pointcut = new AbstractApiOperationSourcePointcut() {
 
         @Override
         protected ApiOperationSource getApiOperationSource() {

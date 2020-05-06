@@ -20,7 +20,7 @@ import static com.wuxp.api.ApiRequest.*;
  * @author wxup
  */
 @Slf4j
-public class TestMethodApiInterceptor extends ApiAspectSupport implements MethodInterceptor {
+public class TestMethodApiInterceptor extends AbstractApiAspectSupport implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -30,7 +30,7 @@ public class TestMethodApiInterceptor extends ApiAspectSupport implements Method
         Method method = invocation.getMethod();
 
         // 构建spel 执行上下文
-        EvaluationContext evaluationContext = this.createEvaluationContext(method, arguments, target, targetClass);
+        EvaluationContext evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
 
         //注入 appId等参数
         Class<?> injectSupperClazz = ApiRequest.class;
@@ -52,7 +52,7 @@ public class TestMethodApiInterceptor extends ApiAspectSupport implements Method
 
 
         // 尝试参数注入
-        this.tryInjectParamsValue(method, arguments, targetClass, evaluationContext);
+        this.tryInjectParamsValue(target, targetClass, method, arguments);
 
         // 参数验证
         this.tryValidationParams(target, targetClass, method, arguments);
@@ -60,12 +60,12 @@ public class TestMethodApiInterceptor extends ApiAspectSupport implements Method
         // 签名验证
 //        this.checkApiSignature(arguments, method.getParameters());
 
-        Object result = null;
+        Object result;
         try {
             result = invocation.proceed();
-            this.tryRecordLog(method, targetClass, evaluationContext, result, null);
+            this.tryRecordLog(targetClass, method, result, evaluationContext, null);
         } catch (Throwable throwable) {
-            this.tryRecordLog(method, targetClass, evaluationContext, null, throwable);
+            this.tryRecordLog(targetClass, method, null, evaluationContext, null);
             throw throwable;
         }
 

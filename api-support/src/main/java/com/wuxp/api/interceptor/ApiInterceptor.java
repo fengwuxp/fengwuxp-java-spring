@@ -12,9 +12,10 @@ import java.lang.reflect.Method;
 
 /**
  * 用于拦截方法
+ * @author wxup
  */
 @Slf4j
-public class ApiInterceptor extends ApiAspectSupport implements MethodInterceptor, Serializable {
+public class ApiInterceptor extends AbstractApiAspectSupport implements MethodInterceptor, Serializable {
 
 
     @Override
@@ -25,28 +26,29 @@ public class ApiInterceptor extends ApiAspectSupport implements MethodIntercepto
         Method method = invocation.getMethod();
 
         // 尝试参数注入
-        EvaluationContext evaluationContext = this.tryInjectParamsValue(method, arguments, targetClass, target);
+        EvaluationContext evaluationContext = this.tryInjectParamsValue(target, targetClass, method, arguments);
+
         // 参数验证
         this.tryValidationParams(target, targetClass, method, arguments);
 
         // 签名验证
         this.checkApiSignature(arguments, method.getParameters());
 
-        Object result = null;
+        Object result;
         try {
             result = invocation.proceed();
         } catch (Throwable throwable) {
             if (evaluationContext == null) {
-                evaluationContext = this.createEvaluationContext(method, arguments, target, targetClass);
+                evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
             }
-            this.tryRecordLog(method, targetClass, evaluationContext, null, throwable);
+            this.tryRecordLog(targetClass, method, null, evaluationContext, throwable);
             throw throwable;
         }
         if (method.isAnnotationPresent(ApiLog.class)) {
             if (evaluationContext == null) {
-                evaluationContext = this.createEvaluationContext(method, arguments, target, targetClass);
+                evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
             }
-            this.tryRecordLog(method, targetClass, evaluationContext, result, null);
+            this.tryRecordLog(targetClass, method, result, evaluationContext, null);
         }
 
         return result;

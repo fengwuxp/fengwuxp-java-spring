@@ -5,22 +5,28 @@ import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
-abstract class ApiOperationSourcePointcut extends StaticMethodMatcherPointcut implements Serializable {
+/**
+ * 抽象的 接口操作切点
+ */
+abstract class AbstractApiOperationSourcePointcut extends StaticMethodMatcherPointcut implements Serializable {
 
 
-    protected ApiOperationSourcePointcut() {
+    protected AbstractApiOperationSourcePointcut() {
     }
 
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
         ApiOperationSource apiOperationSource = getApiOperationSource();
-        return apiOperationSource.isCandidateClass(method, targetClass);
+        return Objects.requireNonNull(apiOperationSource).isCandidateClass(method, targetClass);
     }
 
     /**
      * Obtain the underlying {@link ApiOperationSource} (may be {@code null}).
      * To be implemented by subclasses.
+     *
+     * @return ApiOperationSource
      */
     @Nullable
     protected abstract ApiOperationSource getApiOperationSource();

@@ -53,10 +53,10 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
  */
 @Slf4j
 @Setter
-public abstract class ApiAspectSupport implements BeanFactoryAware, InitializingBean,/* SmartInitializingSingleton,*/ DisposableBean {
+public abstract class AbstractApiAspectSupport implements BeanFactoryAware, InitializingBean,/* SmartInitializingSingleton,*/ DisposableBean {
 
 
-    protected final Map<ApiAspectSupport.ApiOperationCacheKey, ApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentReferenceHashMap<>(1024);
+    protected final Map<AbstractApiAspectSupport.ApiOperationCacheKey, AbstractApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentReferenceHashMap<>(1024);
 
     // 标记方法是否需要注入
     protected final Map<Method, Boolean> injectFields = new ConcurrentReferenceHashMap<>(1024);
@@ -83,69 +83,19 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
     protected Validator validator;
 
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        lazyInit();
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        this.clearMetadataCache();
-    }
-
-//    @Override
-//    public void afterSingletonsInstantiated() {
-//        lazyInit();
-//    }
-
-    private void lazyInit() {
-        if (this.apiRequestContextFactory == null) {
-            this.setApiRequestContextFactory(this.beanFactory.getBean(ApiRequestContextFactory.class));
-        }
-        if (this.apiSignatureStrategy == null) {
-            ApiSignatureStrategy bean = null;
-            try {
-                bean = this.beanFactory.getBean(ApiSignatureStrategy.class);
-                this.setApiSignatureStrategy(bean);
-            } catch (BeansException e) {
-                log.warn("not found ApiSignatureStrategy Bean", e);
-            }
-        }
-        if (this.apiLogRecorder == null) {
-            try {
-                ApiLogRecorder apiLogRecorder = this.beanFactory.getBean(ApiLogRecorder.class);
-                this.setApiLogRecorder(apiLogRecorder);
-            } catch (BeansException e) {
-                log.warn("not found ApiLogRecorder Bean", e);
-            }
-        }
-        if (this.threadPoolTaskScheduler == null) {
-            this.setThreadPoolTaskScheduler(this.beanFactory.getBean(ThreadPoolTaskScheduler.class));
-        }
-
-        if (this.validator == null) {
-            this.validator = Validation.buildDefaultValidatorFactory().getValidator();
-        }
-    }
-
 
     /**
      * 尝试对参数注入
      *
-     * @param method
-     * @param args
-     * @param targetClass
-     * @param target
+     * @param target      被代理的目标对象
+     * @param targetClass 被代理的目标对象类类型
+     * @param method      被代理的方法
+     * @param arguments   被代理的方法参数
      */
-    protected EvaluationContext tryInjectParamsValue(Method method,
-                                                     Object[] args,
+    protected EvaluationContext tryInjectParamsValue(Object target,
                                                      Class<?> targetClass,
-                                                     Object target) {
+                                                     Method method,
+                                                     Object[] arguments) {
 
         // Spel 执行上下文
         EvaluationContext evaluationContext = null;
@@ -168,7 +118,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                 needField = false;
             }
             needParam = Arrays.stream(method.getParameterAnnotations())
-                    .map(annotations -> Arrays.asList(annotations))
+                    .map(Arrays::asList)
                     .flatMap(Collection::stream)
                     .filter(annotation -> InjectField.class == annotation.annotationType())
                     .findFirst()
@@ -182,10 +132,10 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         }
         AnnotatedElementKey methodKey = null;
         if (needField) {
-            evaluationContext = this.createEvaluationContext(method, args, target, targetClass);
+            evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
             ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
             methodKey = apiOperationMetadata.methodKey;
-            this.tryInjectApiRequestFiledValue(args, evaluationContext, methodKey);
+            this.tryInjectApiRequestFiledValue(arguments, evaluationContext, methodKey);
         }
         if (needParam) {
             if (methodKey == null) {
@@ -193,9 +143,9 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                 methodKey = apiOperationMetadata.methodKey;
             }
             if (evaluationContext == null) {
-                evaluationContext = this.createEvaluationContext(method, args, target, targetClass);
+                evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
             }
-            this.tryInjectParameterValue(args, method.getParameters(), evaluationContext, methodKey);
+            this.tryInjectParameterValue(arguments, method.getParameters(), evaluationContext, methodKey);
         }
 
         return evaluationContext;
@@ -205,11 +155,11 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 尝试签名验证
      *
-     * @param target
-     * @param targetClass
-     * @param method
-     * @param arguments
-     * @throws ConstraintViolationException
+     * @param target      被代理的目标对象
+     * @param targetClass 被代理的目标对象类类型
+     * @param method      被代理的方法
+     * @param arguments   被代理的方法参数
+     * @throws ConstraintViolationException 验证异常
      */
     protected void tryValidationParams(Object target,
                                        Class<?> targetClass,
@@ -274,9 +224,9 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 签名验证
      *
-     * @param args
-     * @param parameters
-     * @throws ApiSignatureException
+     * @param args       方法参数
+     * @param parameters 方法参数类型
+     * @throws ApiSignatureException 接口签名验证异常
      */
     protected void checkApiSignature(Object[] args,
                                      Parameter[] parameters) throws ApiSignatureException {
@@ -287,7 +237,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
         Object request = getClazzTypeObject(args, this.checkSignatureSupperClazz);
 
-        InternalApiSignatureRequest signatureRequest = null;
+        InternalApiSignatureRequest signatureRequest;
 
         if (request == null) {
             // 非签名对象的子类或聚合参数列表
@@ -331,16 +281,16 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 尝试记录日志
      *
-     * @param method
-     * @param targetClass
-     * @param evaluationContext
-     * @param result
-     * @param throwable
+     * @param targetClass       被代理的类类型
+     * @param method            目标方法
+     * @param result            方法执行结果  如果执行异常则为空
+     * @param evaluationContext 执行上下文
+     * @param throwable         方法执行异常
      */
-    protected void tryRecordLog(Method method,
-                                Class<?> targetClass,
-                                EvaluationContext evaluationContext,
+    protected void tryRecordLog(Class<?> targetClass,
+                                Method method,
                                 Object result,
+                                EvaluationContext evaluationContext,
                                 Throwable throwable) {
         ApiLogRecorder apiLogRecorder = this.apiLogRecorder;
         if (apiLogRecorder == null) {
@@ -364,22 +314,23 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
             if (simpleApiAction != null) {
                 apiLogModel.setAction(simpleApiAction.name());
             }
-            ApiAspectSupport.this.apiLogRecorder.log(apiLogModel, evaluationContext, throwable);
+            AbstractApiAspectSupport.this.apiLogRecorder.log(apiLogModel, evaluationContext, throwable);
         });
     }
 
     /**
-     * 创建 spel执行上下文
+     * 创建 Spel执行上下文
      *
-     * @param method
-     * @param args
-     * @param target
-     * @return
+     * @param target      被代理的目标对象
+     * @param targetClass 被代理的目标对象类类型
+     * @param method      被代理的方法
+     * @param arguments   被代理的方法参数
+     * @return Spel执行上下文
      */
-    protected EvaluationContext createEvaluationContext(Method method,
-                                                        Object[] args,
-                                                        Object target,
-                                                        Class<?> targetClass) {
+    protected EvaluationContext createEvaluationContext(Object target,
+                                                        Class<?> targetClass,
+                                                        Method method,
+                                                        Object[] arguments) {
 
         ApiOperationCacheKey cacheKey = new ApiOperationCacheKey(method, targetClass);
         Map<ApiOperationCacheKey, ApiOperationMetadata> metadataCache = this.metadataCache;
@@ -392,7 +343,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
         EvaluationContext evaluationContext = this.evaluator.createEvaluationContext(
                 method,
-                args,
+                arguments,
                 target,
                 targetClass,
                 apiOperationMetadata.targetMethod,
@@ -405,6 +356,12 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         return evaluationContext;
     }
 
+    /**
+     * 填充 request context
+     *
+     * @param evaluationContext  Spel 上下文
+     * @param httpServletRequest HttpServletRequest
+     */
     protected void fillRequestContext(EvaluationContext evaluationContext, HttpServletRequest httpServletRequest) {
         Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
 
@@ -423,8 +380,8 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 获取签名需要 map
      *
-     * @param request
-     * @return
+     * @param request 签名请求对象
+     * @return 用于签名的Map（经过字典排序）
      */
     private Map<String, Object> getSignatureMap(ApiSignatureRequest request) {
         Class<? extends ApiSignatureRequest> aClass = request.getClass();
@@ -448,9 +405,9 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 尝试注入继承了 {@code injectSupperClazz}的子类
      *
-     * @param args
-     * @param evaluationContext
-     * @param methodKey
+     * @param args              被拦截的方法参数
+     * @param evaluationContext 被拦截的执行上下文
+     * @param methodKey         方法元数据key
      */
     private void tryInjectApiRequestFiledValue(Object[] args,
                                                EvaluationContext evaluationContext,
@@ -470,9 +427,8 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                     evaluationContext.setVariable(CURRENT_VALUE_VARIABLE, ReflectionUtils.getField(field, request));
                     boolean condition = evaluator.condition(injectField.condition(), methodKey, evaluationContext);
                     if (condition) {
-                        Object value = null;
                         try {
-                            value = evaluator.value(injectField.value(), methodKey, evaluationContext);
+                            Object value = evaluator.value(injectField.value(), methodKey, evaluationContext);
                             ReflectionUtils.setField(field, request, value);
                         } catch (Exception e) {
                             if (log.isDebugEnabled()) {
@@ -486,6 +442,13 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
     }
 
+    /**
+     * 根据类类型获取参数对象
+     *
+     * @param args  被拦截发方法参数
+     * @param clazz 预期的类类型
+     * @return 和 {@param clazz} 类类型相同的对象
+     */
     private Object getClazzTypeObject(Object[] args, Class<?> clazz) {
         return Arrays.stream(args)
                 .filter(Objects::nonNull)
@@ -498,10 +461,10 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 尝试注入简单对象参数的值
      *
-     * @param args
-     * @param parameters
-     * @param evaluationContext
-     * @param methodKey
+     * @param args              被拦截的方法参数
+     * @param parameters        被拦截的方法参数定义
+     * @param evaluationContext 被拦截的执行上下文
+     * @param methodKey         方法元数据key
      */
     private void tryInjectParameterValue(Object[] args,
                                          Parameter[] parameters,
@@ -527,11 +490,11 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     /**
      * 获取 api log model
      *
-     * @param apiLog
-     * @param request
-     * @param apiOperationMetadata
-     * @param evaluationContext
-     * @return
+     * @param apiLog               日志注解的示例
+     * @param request              HttpServletRequest 示例
+     * @param apiOperationMetadata 接口方法元数据
+     * @param evaluationContext    被拦截方法执行上下文
+     * @return api log 数据模型，用于记录日志 {@link ApiLogRecorder}
      */
     private ApiLogModel genApiLogModel(ApiLog apiLog,
                                        HttpServletRequest request,
@@ -636,7 +599,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         // Call from interface-based proxy handle, allowing for an efficient check?
         if (clazz.isInterface()) {
             return ((clazz == FactoryBean.class || clazz == SmartFactoryBean.class) &&
-                    !method.getName().equals("getObject"));
+                    !"getObject".equals(method.getName()));
         }
 
         // Call from CGLIB proxy handle, potentially implementing a FactoryBean method?
@@ -646,8 +609,58 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         } else if (FactoryBean.class.isAssignableFrom(clazz)) {
             factoryBeanType = FactoryBean.class;
         }
-        return (factoryBeanType != null && !method.getName().equals("getObject") &&
+        return (factoryBeanType != null && !"getObject".equals(method.getName()) &&
                 ClassUtils.hasMethod(factoryBeanType, method.getName(), method.getParameterTypes()));
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws BeansException {
+        lazyInit();
+    }
+
+    @Override
+    public void destroy() {
+        this.clearMetadataCache();
+    }
+
+//    @Override
+//    public void afterSingletonsInstantiated() {
+//        lazyInit();
+//    }
+
+    private void lazyInit() throws BeansException {
+        if (this.apiRequestContextFactory == null) {
+            this.setApiRequestContextFactory(this.beanFactory.getBean(ApiRequestContextFactory.class));
+        }
+        if (this.apiSignatureStrategy == null) {
+            ApiSignatureStrategy bean;
+            try {
+                bean = this.beanFactory.getBean(ApiSignatureStrategy.class);
+                this.setApiSignatureStrategy(bean);
+            } catch (BeansException e) {
+                log.warn("not found ApiSignatureStrategy Bean", e);
+            }
+        }
+        if (this.apiLogRecorder == null) {
+            try {
+                ApiLogRecorder apiLogRecorder = this.beanFactory.getBean(ApiLogRecorder.class);
+                this.setApiLogRecorder(apiLogRecorder);
+            } catch (BeansException e) {
+                log.warn("not found ApiLogRecorder Bean", e);
+            }
+        }
+        if (this.threadPoolTaskScheduler == null) {
+            this.setThreadPoolTaskScheduler(this.beanFactory.getBean(ThreadPoolTaskScheduler.class));
+        }
+
+        if (this.validator == null) {
+            this.validator = Validation.buildDefaultValidatorFactory().getValidator();
+        }
     }
 
     /**
@@ -676,7 +689,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     }
 
 
-    protected static final class ApiOperationCacheKey implements Comparable<ApiAspectSupport.ApiOperationCacheKey> {
+    protected static final class ApiOperationCacheKey implements Comparable<AbstractApiAspectSupport.ApiOperationCacheKey> {
 
         private final AnnotatedElementKey methodCacheKey;
 
@@ -690,10 +703,10 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
             if (this == other) {
                 return true;
             }
-            if (!(other instanceof ApiAspectSupport.ApiOperationCacheKey)) {
+            if (!(other instanceof AbstractApiAspectSupport.ApiOperationCacheKey)) {
                 return false;
             }
-            ApiAspectSupport.ApiOperationCacheKey otherKey = (ApiAspectSupport.ApiOperationCacheKey) other;
+            AbstractApiAspectSupport.ApiOperationCacheKey otherKey = (AbstractApiAspectSupport.ApiOperationCacheKey) other;
             return this.methodCacheKey.equals(otherKey.methodCacheKey);
         }
 
@@ -708,7 +721,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         }
 
         @Override
-        public int compareTo(ApiAspectSupport.ApiOperationCacheKey other) {
+        public int compareTo(AbstractApiAspectSupport.ApiOperationCacheKey other) {
             return this.methodCacheKey.compareTo(other.methodCacheKey);
         }
     }
