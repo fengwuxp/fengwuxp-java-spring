@@ -20,6 +20,7 @@ import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
@@ -58,7 +59,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
 
     protected final Map<AbstractApiAspectSupport.ApiOperationCacheKey, AbstractApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentReferenceHashMap<>(1024);
 
-    // 标记方法是否需要注入
+    /**
+     * 标记方法是否需要注入
+     */
     protected final Map<Method, Boolean> injectFields = new ConcurrentReferenceHashMap<>(1024);
 
     protected final Map<Method, Boolean> injectParams = new ConcurrentReferenceHashMap<>(1024);
@@ -568,11 +571,17 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
     }
 
 
+    /**
+     * 获取一个类所有的 Field，优先从缓存中获取，包括私有的Field，并且会递归的获取超类的字段
+     *
+     * @param aClass 类类型
+     * @return fields
+     */
     private Field[] getFields(Class<?> aClass) {
         Map<Class<?>, Field[]> fieldCache = this.fieldCache;
         Field[] cacheFields = fieldCache.get(aClass);
         if (cacheFields == null) {
-            cacheFields = this.getALLFields(aClass)
+            cacheFields = this.getAllFields(aClass)
                     .stream()
                     .filter(field -> !Modifier.isStatic(field.getModifiers()))
                     .toArray(Field[]::new);
@@ -582,12 +591,18 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
         return cacheFields;
     }
 
-    private List<Field> getALLFields(Class<?> aClass) {
+    /**
+     * 获取一个类所有的 Field，包括私有的Field，并且会递归的获取超类的字段
+     *
+     * @param aClass 类类型
+     * @return fields
+     */
+    private List<Field> getAllFields(Class<?> aClass) {
         List<Field> fields = new ArrayList<>(16);
         fields.addAll(Arrays.asList(aClass.getDeclaredFields()));
         Class<?> superclass = aClass.getSuperclass();
         if (!Object.class.equals(superclass)) {
-            fields.addAll(this.getALLFields(superclass));
+            fields.addAll(this.getAllFields(superclass));
         }
         return fields;
     }
@@ -613,8 +628,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
                 ClassUtils.hasMethod(factoryBeanType, method.getName(), method.getParameterTypes()));
     }
 
+
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
 
