@@ -21,6 +21,7 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 
 /**
  * 用于测试方法拦截
+ * @author wxup
  */
 @Slf4j
 public class TestMethodApiInterceptor extends ApiAspectSupport implements MethodInterceptor {

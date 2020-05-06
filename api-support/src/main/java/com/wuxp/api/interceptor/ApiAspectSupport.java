@@ -53,7 +53,7 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
  */
 @Slf4j
 @Setter
-public abstract class ApiAspectSupport implements BeanFactoryAware, InitializingBean, SmartInitializingSingleton, DisposableBean {
+public abstract class ApiAspectSupport implements BeanFactoryAware, InitializingBean,/* SmartInitializingSingleton,*/ DisposableBean {
 
 
     protected final Map<ApiAspectSupport.ApiOperationCacheKey, ApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentHashMap<>(1024);
@@ -85,7 +85,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        lazyInit();
     }
 
     @Override
@@ -93,8 +93,12 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         this.clearMetadataCache();
     }
 
-    @Override
-    public void afterSingletonsInstantiated() {
+//    @Override
+//    public void afterSingletonsInstantiated() {
+//        lazyInit();
+//    }
+
+    private void lazyInit() {
         if (this.apiRequestContextFactory == null) {
             this.setApiRequestContextFactory(this.beanFactory.getBean(ApiRequestContextFactory.class));
         }
@@ -122,7 +126,6 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
         if (this.validator == null) {
             this.validator = Validation.buildDefaultValidatorFactory().getValidator();
         }
-
     }
 
 
