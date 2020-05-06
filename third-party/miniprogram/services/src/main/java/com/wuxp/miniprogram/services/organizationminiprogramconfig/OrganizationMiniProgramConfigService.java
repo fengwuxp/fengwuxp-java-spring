@@ -7,7 +7,6 @@ import com.wuxp.miniprogram.services.organizationminiprogramconfig.req.CreateOrg
 import com.wuxp.miniprogram.services.organizationminiprogramconfig.req.DeleteOrganizationMiniProgramConfigReq;
 import com.wuxp.miniprogram.services.organizationminiprogramconfig.req.EditOrganizationMiniProgramConfigReq;
 import com.wuxp.miniprogram.services.organizationminiprogramconfig.req.QueryOrganizationMiniProgramConfigReq;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 
 

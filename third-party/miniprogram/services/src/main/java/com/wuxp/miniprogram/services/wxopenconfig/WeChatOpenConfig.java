@@ -2,17 +2,16 @@ package com.wuxp.miniprogram.services.wxopenconfig;
 
 //import com.vma.wechatopen.gateway.config.IComponentConfigProvider;
 //import com.vma.wechatopen.gateway.config.WxOpenConfigEntity;
+
 import com.wuxp.api.context.InjectField;
 import com.wuxp.miniprogram.services.constant.WxOpenConfigConstant;
 import com.wuxp.miniprogram.services.dto.WxOpenConfigEntity;
 import com.wuxp.miniprogram.services.service.IComponentConfigProvider;
-import com.wuxp.miniprogram.services.wxopenconfig.WxOpenConfigService;
 import com.wuxp.miniprogram.services.wxopenconfig.info.WxOpenConfigInfo;
 import com.wuxp.miniprogram.services.wxopenconfig.req.QueryWxOpenConfigReq;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.open.api.WxOpenConfigStorage;
 import me.chanjar.weixin.open.api.impl.WxOpenInMemoryConfigStorage;
-import me.chanjar.weixin.open.api.impl.WxOpenInRedisConfigStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

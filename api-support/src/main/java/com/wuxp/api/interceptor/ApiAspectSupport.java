@@ -22,6 +22,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -38,7 +39,6 @@ import javax.validation.executable.ExecutableValidator;
 import javax.validation.groups.Default;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.wuxp.api.ApiRequest.APP_ID_KEY;
 import static com.wuxp.api.context.ApiRequestContextFactory.AUTHENTICATE;
@@ -56,9 +56,14 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 public abstract class ApiAspectSupport implements BeanFactoryAware, InitializingBean,/* SmartInitializingSingleton,*/ DisposableBean {
 
 
-    protected final Map<ApiAspectSupport.ApiOperationCacheKey, ApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentHashMap<>(1024);
+    protected final Map<ApiAspectSupport.ApiOperationCacheKey, ApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentReferenceHashMap<>(1024);
 
-    protected final Map<Class<?>, Field[]> fieldCache = new ConcurrentHashMap<>(1024);
+    // 标记方法是否需要注入
+    protected final Map<Method, Boolean> injectFields = new ConcurrentReferenceHashMap<>(1024);
+
+    protected final Map<Method, Boolean> injectParams = new ConcurrentReferenceHashMap<>(1024);
+
+    protected final Map<Class<?>, Field[]> fieldCache = new ConcurrentReferenceHashMap<>(1024);
 
     protected BeanFactory beanFactory;
 
@@ -141,11 +146,49 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                                         Object[] args,
                                         Class<?> targetClass,
                                         EvaluationContext evaluationContext) {
-        ApiOperationCacheKey cacheKey = new ApiOperationCacheKey(method, targetClass);
-        ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(cacheKey);
-        AnnotatedElementKey methodKey = apiOperationMetadata.methodKey;
-        this.tryInjectApiRequestFiledValue(args, evaluationContext, methodKey);
-        this.tryInjectParameterValue(args, method.getParameters(), evaluationContext, methodKey);
+        Map<Method, Boolean> injectFields = this.injectFields;
+        Map<Method, Boolean> injectParams = this.injectParams;
+        Boolean needField = injectFields.get(method);
+        Boolean needParam = injectParams.get(method);
+        if (needField == null || needParam == null) {
+            Class<?> aClass = Arrays.stream(method.getParameterTypes())
+                    .filter(parameterType -> parameterType == injectSupperClazz)
+                    .findFirst()
+                    .orElse(null);
+            if (aClass != null) {
+                needField = Arrays.stream(aClass.getDeclaredFields())
+                        .filter(field -> field.isAnnotationPresent(InjectField.class))
+                        .findFirst()
+                        .orElse(null) != null;
+            } else {
+                needField = false;
+            }
+            needParam = Arrays.stream(method.getParameterAnnotations())
+                    .map(annotations -> Arrays.asList(annotations))
+                    .flatMap(Collection::stream)
+                    .filter(annotation -> InjectField.class == annotation.annotationType())
+                    .findFirst()
+                    .orElse(null) != null;
+            injectFields.put(method, needField);
+            injectParams.put(method, needParam);
+        }
+
+        if (!needField && !needParam) {
+            return;
+        }
+        AnnotatedElementKey methodKey = null;
+        if (needField) {
+            ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
+            methodKey = apiOperationMetadata.methodKey;
+            this.tryInjectApiRequestFiledValue(args, evaluationContext, methodKey);
+        }
+        if (needParam) {
+            if (methodKey == null) {
+                ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
+                methodKey = apiOperationMetadata.methodKey;
+            }
+            this.tryInjectParameterValue(args, method.getParameters(), evaluationContext, methodKey);
+        }
 
     }
 
@@ -233,14 +276,10 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
             return;
         }
 
-        Class<?> checkSignatureSupperClazz = this.checkSignatureSupperClazz;
-        Object request = Arrays.stream(args)
-                .filter(Objects::nonNull)
-                .filter(o -> checkSignatureSupperClazz.isAssignableFrom(o.getClass()))
-                .findFirst()
-                .orElse(null);
+        Object request = getClazzTypeObject(args, this.checkSignatureSupperClazz);
 
         InternalApiSignatureRequest signatureRequest = null;
+
         if (request == null) {
             // 非签名对象的子类或聚合参数列表
             HttpServletRequest httpServletRequest = getHttpServletRequest();
@@ -407,12 +446,7 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
     private void tryInjectApiRequestFiledValue(Object[] args,
                                                EvaluationContext evaluationContext,
                                                AnnotatedElementKey methodKey) {
-        Class<?> injectSupperClazz = this.injectSupperClazz;
-        Object request = Arrays.stream(args)
-                .filter(Objects::nonNull)
-                .filter(o -> injectSupperClazz.isAssignableFrom(o.getClass()))
-                .findFirst()
-                .orElse(null);
+        Object request = getClazzTypeObject(args, this.injectSupperClazz);
         if (request == null) {
             return;
         }
@@ -441,6 +475,14 @@ public abstract class ApiAspectSupport implements BeanFactoryAware, Initializing
                 });
         evaluationContext.setVariable(REQUEST_OBJECT_VARIABLE, null);
 
+    }
+
+    private Object getClazzTypeObject(Object[] args, Class<?> clazz) {
+        return Arrays.stream(args)
+                .filter(Objects::nonNull)
+                .filter(o -> clazz.isAssignableFrom(o.getClass()))
+                .findFirst()
+                .orElse(null);
     }
 
 

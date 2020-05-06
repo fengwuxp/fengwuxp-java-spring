@@ -1,12 +1,12 @@
 package com.oak.organization.miniprogram.services.organizationminiprogramconfig.info;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.service.domain.Desc;
 
-
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 

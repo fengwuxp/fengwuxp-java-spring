@@ -2,11 +2,10 @@ package com.wuxp.miniprogram.services.wxopenconfig.req;
 
 import com.oak.api.model.ApiBaseQueryReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.levin.commons.dao.annotation.*;
-import com.levin.commons.dao.annotation.misc.Fetch;
-import java.util.Date;
 /**
  *  查询组织
  *  2020-3-2 14:28:21

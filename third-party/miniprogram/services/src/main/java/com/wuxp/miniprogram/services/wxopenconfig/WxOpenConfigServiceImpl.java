@@ -7,7 +7,6 @@ import com.wuxp.api.ApiResp;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.miniprogram.entitys.WxOpenConfig;
-import com.wuxp.miniprogram.services.wxopenconfig.WxOpenConfigService;
 import com.wuxp.miniprogram.services.wxopenconfig.info.WxOpenConfigInfo;
 import com.wuxp.miniprogram.services.wxopenconfig.req.CreateWxOpenConfigReq;
 import com.wuxp.miniprogram.services.wxopenconfig.req.DeleteWxOpenConfigReq;

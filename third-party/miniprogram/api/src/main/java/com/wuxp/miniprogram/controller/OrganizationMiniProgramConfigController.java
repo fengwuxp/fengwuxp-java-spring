@@ -2,7 +2,6 @@ package com.wuxp.miniprogram.controller;
 
 import com.oak.organization.miniprogram.services.organizationminiprogramconfig.info.OrganizationMiniProgramConfigInfo;
 import com.wuxp.api.ApiResp;
-import com.wuxp.api.log.ApiLog;
 import com.wuxp.api.model.Pagination;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.miniprogram.services.organizationminiprogramconfig.OrganizationMiniProgramConfigService;

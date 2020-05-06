@@ -1,13 +1,15 @@
 package com.wuxp.api.configuration;
 
-import com.wuxp.api.interceptor.*;
+import com.wuxp.api.interceptor.AnnotationApiOperationSource;
+import com.wuxp.api.interceptor.ApiInterceptor;
+import com.wuxp.api.interceptor.ApiOperationSource;
+import com.wuxp.api.interceptor.BeanFactoryApiOperationSourceAdvisor;
 import com.wuxp.api.signature.ApiSignatureStrategy;
 import com.wuxp.api.signature.MD5ApiSignatureStrategy;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,6 @@ import org.springframework.context.annotation.Role;
 import org.springframework.core.Ordered;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-
-import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
 
 
 @Configuration

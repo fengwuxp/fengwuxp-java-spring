@@ -1,10 +1,12 @@
 package com.wuxp.miniprogram.services.organizationminiprogramconfig.req;
 
+import com.levin.commons.dao.annotation.Eq;
 import com.levin.commons.dao.annotation.update.UpdateColumn;
-import com.levin.commons.dao.annotation.*;
 import com.oak.api.model.ApiBaseReq;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;

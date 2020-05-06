@@ -2,11 +2,11 @@ package com.wuxp.basic.enums;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.util.ConcurrentReferenceHashMap;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 可描述枚举的的帮助者，用于获取枚举注解上的值
@@ -16,9 +16,17 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public final class DescriptiveEnumHelper {
 
-    private static final Map<Class<? extends Enum>, String[]/* enum desc*/> ENUM_DESC_MAP = new ConcurrentHashMap<>();
+    /**
+     * @key enum value
+     * @value enum filed desc
+     */
+    private static final Map<Enum, String> ENUM_DESC_MAP = new ConcurrentReferenceHashMap<>(128);
 
-
+    /**
+     * @key enum filed desc
+     * @value enum value
+     */
+    private static final Map<String, Enum> DESC_ENUM_MAP = new ConcurrentReferenceHashMap<>(128);
 
 
     static {
@@ -37,15 +45,13 @@ public final class DescriptiveEnumHelper {
      * @return 枚举描述
      */
     public static String getEnumDesc(Enum<?> e) {
-        Class<? extends Enum> enumClass = e.getClass();
-        String[] descValues = ENUM_DESC_MAP.get(enumClass);
-        if (descValues == null) {
-            synchronized (enumClass) {
-                descValues = DescriptiveEnumHelper.putEnum(enumClass);
+        String descValue = ENUM_DESC_MAP.get(e);
+        if (descValue == null) {
+            synchronized (e) {
+                descValue = DescriptiveEnumHelper.putEnum(e);
             }
         }
-        int ordinal = e.ordinal();
-        return descValues[ordinal];
+        return descValue;
     }
 
     /**
@@ -57,53 +63,74 @@ public final class DescriptiveEnumHelper {
      * @return
      */
     public static <T extends Enum<T>> T getValueByDesc(String desc, Class<T> enumClass) {
-        String[] descValues = getDescValues(enumClass);
+
         T[] enumConstants = enumClass.getEnumConstants();
-        int length = descValues.length;
-        for (int i = 0; i < length; i++) {
-            if (descValues[i].equals(desc)) {
-                return enumConstants[i];
+        String key = MessageFormat.format("{0}_{1}", desc, enumClass.getName());
+        Enum result = DESC_ENUM_MAP.get(key);
+        if (result != null) {
+            return (T) result;
+        }
+        for (T en : enumConstants) {
+            if (getEnumDesc(en, enumClass).equals(desc)) {
+                DESC_ENUM_MAP.put(key, en);
+                return en;
             }
         }
         return null;
+
+
     }
 
-    private static <T extends Enum<T>> String[] getDescValues(Class<T> enumClass) {
-        String[] descValues = ENUM_DESC_MAP.get(enumClass);
-        if (descValues == null) {
-            synchronized (enumClass) {
-                descValues = DescriptiveEnumHelper.putEnum(enumClass);
-            }
-        }
-        return descValues;
-    }
 
     /**
      * put 一个枚举到map中
      *
-     * @param enumClass 枚举类类型
-     * @return String[]
+     * @param enumValue 枚举值
+     * @return String
      */
-    private static String[] putEnum(Class<? extends Enum> enumClass) {
-        Enum[] enumConstants = enumClass.getEnumConstants();
-        int length = enumConstants.length;
-        final String[] descValues = new String[length];
+    private static String putEnum(Enum enumValue) {
+        Class<? extends Enum> enumClass = enumValue.getClass();
 
-        for (int i = 0; i < length; i++) {
-            Enum en = enumConstants[i];
-            String name = en.name();
-            Field field;
-            try {
-                field = enumClass.getField(name);
-            } catch (NoSuchFieldException exception) {
-                throw new RuntimeException(MessageFormat.format("枚举{0}上未存在{1}属性", enumClass.getName(), name), exception);
-            }
-            Schema schema = field.getAnnotation(Schema.class);
-            assert schema != null;
-            descValues[en.ordinal()] = schema.description();
+        String description = getEnumDesc(enumValue, enumClass);
+        ENUM_DESC_MAP.put(enumValue, description);
+        return description;
+
+//        Enum[] enumConstants = enumClass.getEnumConstants();
+//        int length = enumConstants.length;
+//
+//        for (int i = 0; i < length; i++) {
+//            Enum en = enumConstants[i];
+//            String name = en.name();
+//            Field field;
+//            try {
+//                field = enumClass.getField(name);
+//            } catch (NoSuchFieldException exception) {
+//                throw new RuntimeException(MessageFormat.format("枚举{0}上未存在{1}属性", enumClass.getName(), name), exception);
+//            }
+//            Schema schema = field.getAnnotation(Schema.class);
+//            if (schema != null) {
+//                ENUM_DESC_MAP.put(en, schema.description());
+//            }
+//        }
+//
+//        return ENUM_DESC_MAP.get(enumValue);
+
+    }
+
+    private static String getEnumDesc(Enum enumValue, Class<? extends Enum> enumClass) {
+        Field field;
+        try {
+            field = enumClass.getField(enumValue.name());
+        } catch (NoSuchFieldException exception) {
+            throw new RuntimeException(MessageFormat.format("枚举{0}上未存在{1}属性", enumClass.getName(), enumValue.name()), exception);
         }
-        ENUM_DESC_MAP.put(enumClass, descValues);
-        return descValues;
-
+        Schema schema = field.getAnnotation(Schema.class);
+        String description;
+        if (schema != null) {
+            description = schema.description();
+        } else {
+            description = "";
+        }
+        return description;
     }
 }

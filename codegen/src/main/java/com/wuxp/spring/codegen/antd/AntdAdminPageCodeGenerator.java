@@ -1,5 +1,6 @@
 package com.wuxp.spring.codegen.antd;
 
+import com.wuxp.codegen.core.event.CodeGenPublisher;
 import com.wuxp.codegen.core.parser.JavaClassParser;
 import com.wuxp.codegen.core.parser.LanguageParser;
 import com.wuxp.codegen.core.strategy.TemplateStrategy;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author wxup
+ */
 @Slf4j
 public class AntdAdminPageCodeGenerator extends AbstractCodeGenerator {
 
@@ -26,7 +30,7 @@ public class AntdAdminPageCodeGenerator extends AbstractCodeGenerator {
     }
 
     public AntdAdminPageCodeGenerator(String[] packagePaths, Set<String> ignorePackages, Class<?>[] includeClasses, Class<?>[] ignoreClasses, LanguageParser<CommonCodeGenClassMeta> languageParser, TemplateStrategy<CommonCodeGenClassMeta> templateStrategy, boolean enableFieldUnderlineStyle) {
-        super(packagePaths, ignorePackages, includeClasses, ignoreClasses, languageParser, templateStrategy, enableFieldUnderlineStyle);
+        super(packagePaths, ignorePackages, includeClasses, ignoreClasses, languageParser, templateStrategy, enableFieldUnderlineStyle, CodeGenPublisher.NONE);
     }
 
     @Override

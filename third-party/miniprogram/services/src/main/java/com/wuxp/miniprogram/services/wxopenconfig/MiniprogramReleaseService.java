@@ -2,14 +2,6 @@ package com.wuxp.miniprogram.services.wxopenconfig;
 
 import com.alibaba.fastjson.JSON;
 import com.oak.organization.miniprogram.services.organizationminiprogramconfig.info.OrganizationMiniProgramConfigInfo;
-//import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
-//import com.vma.wechatopen.gateway.dto.wechat.mini.code.CodeCommitDTO;
-//import com.vma.wechatopen.gateway.dto.wechat.mini.code.OnekeyUploadCodeDTO;
-//import com.vma.wechatopen.gateway.dto.wechat.mini.code.SubmitAuditMessageDTO;
-//import com.vma.wechatopen.service.business.service.IWechatOpenService;
-//import com.vma.wechatopen.service.utils.WxOpenUtils;
-//import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
-//import com.vma.wechatopen.service.utils.WxOpenUtils;
 import com.wuxp.api.ApiResp;
 import com.wuxp.api.context.InjectField;
 import com.wuxp.api.restful.RestfulApiRespFactory;
@@ -40,6 +32,15 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+//import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
+//import com.vma.wechatopen.gateway.dto.wechat.mini.code.CodeCommitDTO;
+//import com.vma.wechatopen.gateway.dto.wechat.mini.code.OnekeyUploadCodeDTO;
+//import com.vma.wechatopen.gateway.dto.wechat.mini.code.SubmitAuditMessageDTO;
+//import com.vma.wechatopen.service.business.service.IWechatOpenService;
+//import com.vma.wechatopen.service.utils.WxOpenUtils;
+//import com.vma.wechatopen.gateway.config.WxOpenConfiguration;
+//import com.vma.wechatopen.service.utils.WxOpenUtils;
 
 /**
  * @Classname MiniprogramRelase

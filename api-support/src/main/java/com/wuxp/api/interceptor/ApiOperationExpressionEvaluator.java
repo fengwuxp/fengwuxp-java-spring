@@ -23,10 +23,10 @@ import org.springframework.context.expression.CachedExpressionEvaluator;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ConcurrentReferenceHashMap;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Utility class handling the SpEL expression parsing.
@@ -35,11 +35,11 @@ import java.util.concurrent.ConcurrentHashMap;
 class ApiOperationExpressionEvaluator extends CachedExpressionEvaluator {
 
 
-    private final Map<ExpressionKey, Expression> valueCache = new ConcurrentHashMap<>(64);
+    private final Map<ExpressionKey, Expression> valueCache = new ConcurrentReferenceHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> conditionCache = new ConcurrentHashMap<>(64);
+    private final Map<ExpressionKey, Expression> conditionCache = new ConcurrentReferenceHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> logCache = new ConcurrentHashMap<>(64);
+    private final Map<ExpressionKey, Expression> logCache = new ConcurrentReferenceHashMap<>(64);
 
 
     /**

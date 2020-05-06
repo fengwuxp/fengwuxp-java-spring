@@ -5,9 +5,7 @@ import com.wuxp.api.ApiRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -16,8 +14,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.wuxp.api.ApiRequest.*;
-import static com.wuxp.api.signature.ApiSignatureRequest.APP_SIGNATURE_KEY;
-import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 
 /**
  * 用于测试方法拦截

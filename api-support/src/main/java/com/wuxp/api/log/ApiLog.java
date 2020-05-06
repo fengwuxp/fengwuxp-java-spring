@@ -6,6 +6,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * @author wxup
+ */
 @Target({METHOD})
 @Retention(RUNTIME)
 public @interface ApiLog {
@@ -21,7 +24,7 @@ public @interface ApiLog {
      *  #ip
      *
      * </p>
-     *
+     *  {@code #result} 从方法结果获取
      * @return
      */
     String value() default "";
