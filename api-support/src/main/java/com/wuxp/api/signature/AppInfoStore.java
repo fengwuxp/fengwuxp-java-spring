@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * app info store
+ * @author wxup
  */
 public interface AppInfoStore {
 

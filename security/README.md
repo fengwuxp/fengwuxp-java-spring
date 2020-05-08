@@ -2,6 +2,9 @@
 #### spring security 集成
 
 - [Spring Security 实战干货](https://felord.cn/categories/spring-security/)
+- [tutorials](https://github.com/eugenp/tutorials)
+- [spring-security-registration](https://github.com/Baeldung/spring-security-registration)
+- [eladmin](https://github.com/elunez/eladmin)
 
 #####  验证
 ```

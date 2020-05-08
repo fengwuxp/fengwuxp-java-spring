@@ -5,6 +5,7 @@ import com.wuxp.api.interceptor.ApiInterceptor;
 import com.wuxp.api.interceptor.ApiOperationSource;
 import com.wuxp.api.interceptor.BeanFactoryApiOperationSourceAdvisor;
 import com.wuxp.api.signature.ApiSignatureStrategy;
+import com.wuxp.api.signature.AppInfoStore;
 import com.wuxp.api.signature.MD5ApiSignatureStrategy;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -78,7 +79,8 @@ public class ApiSupportAutoConfiguration implements ImportAware {
             matchIfMissing = true
     )
     @ConditionalOnMissingBean(ApiSignatureStrategy.class)
-    public ApiSignatureStrategy mD5ApiSignatureStrategy() {
+    @ConditionalOnBean(AppInfoStore.class)
+    public ApiSignatureStrategy apiSignatureStrategy() {
         return new MD5ApiSignatureStrategy();
     }
 

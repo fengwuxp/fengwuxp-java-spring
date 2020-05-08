@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * 生成 api context factory
  *
- * @param <T> context
+ * @author wxup
  */
 public interface ApiRequestContextFactory {
 

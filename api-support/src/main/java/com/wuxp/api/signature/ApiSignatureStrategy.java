@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * api 接口签名策略
+ * @author wxup
  */
 public interface ApiSignatureStrategy {
 

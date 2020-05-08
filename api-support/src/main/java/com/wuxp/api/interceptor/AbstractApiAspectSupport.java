@@ -366,6 +366,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
      * @param httpServletRequest HttpServletRequest
      */
     protected void fillRequestContext(EvaluationContext evaluationContext, HttpServletRequest httpServletRequest) {
+        if (apiRequestContextFactory == null) {
+            return;
+        }
         Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
 
         context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
@@ -651,7 +654,11 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
 
     private void lazyInit() throws BeansException {
         if (this.apiRequestContextFactory == null) {
-            this.setApiRequestContextFactory(this.beanFactory.getBean(ApiRequestContextFactory.class));
+            try {
+                this.setApiRequestContextFactory(this.beanFactory.getBean(ApiRequestContextFactory.class));
+            } catch (BeansException e) {
+                log.warn("not found ApiRequestContextFactory Bean");
+            }
         }
         if (this.apiSignatureStrategy == null) {
             ApiSignatureStrategy bean;
@@ -659,7 +666,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
                 bean = this.beanFactory.getBean(ApiSignatureStrategy.class);
                 this.setApiSignatureStrategy(bean);
             } catch (BeansException e) {
-                log.warn("not found ApiSignatureStrategy Bean", e);
+                log.warn("not found ApiSignatureStrategy Bean");
             }
         }
         if (this.apiLogRecorder == null) {
@@ -667,7 +674,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
                 ApiLogRecorder apiLogRecorder = this.beanFactory.getBean(ApiLogRecorder.class);
                 this.setApiLogRecorder(apiLogRecorder);
             } catch (BeansException e) {
-                log.warn("not found ApiLogRecorder Bean", e);
+                log.warn("not found ApiLogRecorder Bean");
             }
         }
         if (this.threadPoolTaskScheduler == null) {
