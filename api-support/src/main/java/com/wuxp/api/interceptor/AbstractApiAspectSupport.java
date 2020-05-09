@@ -239,7 +239,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
         }
 
         Object request = getClazzTypeObject(args, this.checkSignatureSupperClazz);
-
         InternalApiSignatureRequest signatureRequest;
 
         if (request == null) {

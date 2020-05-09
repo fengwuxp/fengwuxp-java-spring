@@ -10,4 +10,11 @@ public interface AppInfo {
 
     String getAppSecret();
 
+    /**
+     * 渠道号
+     *
+     * @return
+     */
+    String getChannelCode();
+
 }
