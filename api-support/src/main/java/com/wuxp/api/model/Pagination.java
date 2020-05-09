@@ -22,6 +22,7 @@ public interface Pagination<T> {
     @Transient
     T getFirst();
 
+    @Transient
     boolean isEmpty();
 
 }
