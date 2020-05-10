@@ -29,28 +29,36 @@ public interface ApiRequest {
     /**
      * 获取签名的AppId
      */
-    @Transient
-    String getAppId();
+//    @Transient
+//    String getAppId();
+
+//    void setAppId(String appId);
 
     /**
      * 一次性随机字符
      *
      * @return
      */
-    @Transient
-    String getNonceStr();
+//    @Transient
+//    String getNonceStr();
+
+//    void setNonceStr(String nonceStr);
 
     /**
      * 时间戳
      *
      * @return
      */
-    @Transient
-    Long getTimeStamp();
+//    @Transient
+//    Long getTimeStamp();
+
+//    void setTimeStamp(Long timeStamp);
 
     /**
      * 获取渠道号
      * @return
      */
-    String getChannelCode();
+//    String getChannelCode();
+
+//    void setChannelCode(String channelCode);
 }

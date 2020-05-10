@@ -9,11 +9,12 @@ import java.util.Objects;
 
 /**
  * 抽象的 接口操作切点
+ * @author wxup
  */
-abstract class AbstractApiOperationSourcePointcut extends StaticMethodMatcherPointcut implements Serializable {
+public abstract class AbstractApiOperationSourcePointcut extends StaticMethodMatcherPointcut implements Serializable {
 
 
-    protected AbstractApiOperationSourcePointcut() {
+    public AbstractApiOperationSourcePointcut() {
     }
 
     @Override

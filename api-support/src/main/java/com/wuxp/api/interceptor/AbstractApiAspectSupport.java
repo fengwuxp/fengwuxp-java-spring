@@ -54,17 +54,30 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
  */
 @Slf4j
 @Setter
-public abstract class AbstractApiAspectSupport implements BeanFactoryAware, InitializingBean,/* SmartInitializingSingleton,*/ DisposableBean {
+public abstract class AbstractApiAspectSupport implements BeanFactoryAware, /*InitializingBean,*/ SmartInitializingSingleton, DisposableBean {
 
+
+    enum InjectType {
+
+        //仅参数
+        PARAMS,
+
+        // 类对象
+        OBJECT,
+
+        // 类对象和参数
+        OBJECT_AND_PARAMS,
+
+        NONE
+    }
 
     protected final Map<AbstractApiAspectSupport.ApiOperationCacheKey, AbstractApiAspectSupport.ApiOperationMetadata> metadataCache = new ConcurrentReferenceHashMap<>(1024);
 
     /**
      * 标记方法是否需要注入
      */
-    protected final Map<Method, Boolean> injectFields = new ConcurrentReferenceHashMap<>(1024);
+    protected final Map<Method, InjectType> injectCache = new ConcurrentReferenceHashMap<>(1024);
 
-    protected final Map<Method, Boolean> injectParams = new ConcurrentReferenceHashMap<>(1024);
 
     protected final Map<Class<?>, Field[]> fieldCache = new ConcurrentReferenceHashMap<>(1024);
 
@@ -102,51 +115,58 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
 
         // Spel 执行上下文
         EvaluationContext evaluationContext = null;
-
-        Map<Method, Boolean> injectFields = this.injectFields;
-        Map<Method, Boolean> injectParams = this.injectParams;
-        Boolean needField = injectFields.get(method);
-        Boolean needParam = injectParams.get(method);
-        if (needField == null || needParam == null) {
+        Map<Method, InjectType> injectCache = this.injectCache;
+        InjectType injectType = injectCache.get(method);
+        if (injectType == null) {
             Class<?> aClass = Arrays.stream(method.getParameterTypes())
-                    .filter(parameterType -> parameterType == injectSupperClazz)
+                    .filter(parameterType -> injectSupperClazz.isAssignableFrom(parameterType))
                     .findFirst()
                     .orElse(null);
             if (aClass != null) {
-                needField = Arrays.stream(aClass.getDeclaredFields())
-                        .filter(field -> field.isAnnotationPresent(InjectField.class))
-                        .findFirst()
-                        .orElse(null) != null;
-            } else {
-                needField = false;
+//                injectType = Arrays.stream(aClass.getDeclaredFields())
+//                        .filter(field -> field.isAnnotationPresent(InjectField.class))
+//                        .findFirst()
+//                        .orElse(null) != null ? InjectType.OBJECT : InjectType.API_REQUEST;
+                injectType = InjectType.OBJECT;
             }
-            needParam = Arrays.stream(method.getParameterAnnotations())
+            boolean injectParams = Arrays.stream(method.getParameterAnnotations())
                     .map(Arrays::asList)
                     .flatMap(Collection::stream)
                     .filter(annotation -> InjectField.class == annotation.annotationType())
                     .findFirst()
                     .orElse(null) != null;
-            injectFields.put(method, needField);
-            injectParams.put(method, needParam);
+            if (injectParams) {
+                if (InjectType.OBJECT.equals(injectType)) {
+                    injectType = InjectType.OBJECT_AND_PARAMS;
+                } else {
+                    injectType = InjectType.PARAMS;
+                }
+            } else {
+                if (injectType == null) {
+                    injectType = InjectType.NONE;
+                }
+            }
+            injectCache.put(method, injectType);
         }
 
-        if (!needField && !needParam) {
+        if (InjectType.NONE.equals(injectType)) {
             return evaluationContext;
         }
+
         AnnotatedElementKey methodKey = null;
-        if (needField) {
+        if (InjectType.OBJECT.equals(injectType) || InjectType.OBJECT_AND_PARAMS.equals(injectType)) {
             evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
             ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
             methodKey = apiOperationMetadata.methodKey;
             this.tryInjectApiRequestFiledValue(arguments, evaluationContext, methodKey);
         }
-        if (needParam) {
+        if (InjectType.PARAMS.equals(injectType) || InjectType.OBJECT_AND_PARAMS.equals(injectType)) {
+            if (evaluationContext == null) {
+                evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
+            }
             if (methodKey == null) {
                 ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(new ApiOperationCacheKey(method, targetClass));
                 methodKey = apiOperationMetadata.methodKey;
-            }
-            if (evaluationContext == null) {
-                evaluationContext = this.createEvaluationContext(target, targetClass, method, arguments);
             }
             this.tryInjectParameterValue(arguments, method.getParameters(), evaluationContext, methodKey);
         }
@@ -238,43 +258,37 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
             return;
         }
 
-        Object request = getClazzTypeObject(args, this.checkSignatureSupperClazz);
-        InternalApiSignatureRequest signatureRequest;
-
-        if (request == null) {
-            // 非签名对象的子类或聚合参数列表
-            HttpServletRequest httpServletRequest = getHttpServletRequest();
-            if (httpServletRequest == null) {
-                return;
+//        Object request = getClazzTypeObject(args, this.checkSignatureSupperClazz);
+        // 非签名对象的子类或聚合参数列表
+        HttpServletRequest httpServletRequest = getHttpServletRequest();
+        if (httpServletRequest == null) {
+            return;
+        }
+        InternalApiSignatureRequest signatureRequest = new InternalApiSignatureRequest(httpServletRequest);
+        Map<String, Object> map = new HashMap<>();
+        int length = parameters.length;
+        for (int i = 0; i < length; i++) {
+            Parameter parameter = parameters[i];
+            ApiSignature apiSignature = parameter.getAnnotation(ApiSignature.class);
+            if (apiSignature == null) {
+                continue;
             }
-            signatureRequest = new InternalApiSignatureRequest(httpServletRequest);
-            Map<String, Object> map = new HashMap<>();
-            int length = parameters.length;
-            for (int i = 0; i < length; i++) {
-                Parameter parameter = parameters[i];
-                ApiSignature apiSignature = parameter.getAnnotation(ApiSignature.class);
-                if (apiSignature == null) {
-                    continue;
-                }
-                String name = apiSignature.name();
-                if (StringUtils.isEmpty(name)) {
-                    name = parameter.getName();
-                }
-                map.put(name, args[i]);
+            String name = apiSignature.name();
+            if (StringUtils.isEmpty(name)) {
+                name = parameter.getName();
             }
-            signatureRequest.setApiSignatureValues(map);
-        } else {
-            ApiSignatureRequest apiSignatureRequest = (ApiSignatureRequest) request;
-            Map<String, Object> signatureMap = this.getSignatureMap((ApiSignatureRequest) request);
-            signatureRequest = new InternalApiSignatureRequest();
-            signatureRequest.setAppId(apiSignatureRequest.getAppId());
-            signatureRequest.setNonceStr(apiSignatureRequest.getNonceStr());
-            signatureRequest.setApiSignature(apiSignatureRequest.getApiSignature());
-            signatureRequest.setTimeStamp(apiSignatureRequest.getTimeStamp());
-            signatureRequest.setChannelCode(apiSignatureRequest.getChannelCode());
-            signatureRequest.setApiSignatureValues(signatureMap);
+            map.put(name, args[i]);
         }
 
+        signatureRequest.setAppId(httpServletRequest.getHeader(APP_ID_HEADER_KEY));
+        signatureRequest.setNonceStr(httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
+        signatureRequest.setApiSignature(httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
+        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
+        if (StringUtils.hasText(timeStamp)) {
+            signatureRequest.setTimeStamp(Long.parseLong(timeStamp));
+        }
+        signatureRequest.setChannelCode(httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
+        signatureRequest.setApiSignatureValues(map);
         apiSignatureStrategy.check(signatureRequest);
 
     }
@@ -637,7 +651,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
     }
 
     @Override
-    public void afterPropertiesSet() throws BeansException {
+    public void afterSingletonsInstantiated() throws BeansException {
         lazyInit();
     }
 
@@ -645,11 +659,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
     public void destroy() {
         this.clearMetadataCache();
     }
-
-//    @Override
-//    public void afterSingletonsInstantiated() {
-//        lazyInit();
-//    }
 
     private void lazyInit() throws BeansException {
         if (this.apiRequestContextFactory == null) {
@@ -676,12 +685,18 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Init
                 log.warn("not found ApiLogRecorder Bean");
             }
         }
+
         if (this.threadPoolTaskScheduler == null) {
             this.setThreadPoolTaskScheduler(this.beanFactory.getBean(ThreadPoolTaskScheduler.class));
         }
 
         if (this.validator == null) {
-            this.validator = Validation.buildDefaultValidatorFactory().getValidator();
+            try {
+                this.validator = this.beanFactory.getBean(Validator.class);
+            } catch (BeansException e) {
+                log.warn("not found Validator Bean");
+                this.validator = Validation.buildDefaultValidatorFactory().getValidator();
+            }
         }
     }
 

@@ -2,10 +2,13 @@ package com.wuxp.api.interceptor;
 
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +26,7 @@ import java.util.Set;
  * <p>To limit the creation of objects, an ugly constructor is used
  * (rather then a dedicated 'closure'-like class for deferred execution).
  */
-public class ApiEvaluationContext extends MethodBasedEvaluationContext {
+public class ApiEvaluationContext extends StandardEvaluationContext {
 
     /**
      * Indicate that there is no result variable.
@@ -48,8 +51,20 @@ public class ApiEvaluationContext extends MethodBasedEvaluationContext {
 
     private final Set<String> unavailableVariables = new HashSet<>(1);
 
+    private final Method method;
+
+    private final Object[] arguments;
+
+    private final ParameterNameDiscoverer parameterNameDiscoverer;
+
+    private boolean argumentsLoaded = false;
+
     public ApiEvaluationContext(Object rootObject, Method method, Object[] arguments, ParameterNameDiscoverer parameterNameDiscoverer) {
-        super(rootObject, method, arguments, parameterNameDiscoverer);
+
+        super(rootObject);
+        this.method = method;
+        this.arguments = arguments;
+        this.parameterNameDiscoverer = parameterNameDiscoverer;
     }
 
     /**
@@ -73,18 +88,58 @@ public class ApiEvaluationContext extends MethodBasedEvaluationContext {
         if (this.unavailableVariables.contains(name)) {
             throw new RuntimeException(MessageFormat.format("variable not available{0}", name));
         }
-        return super.lookupVariable(name);
+        Object variable = super.lookupVariable(name);
+        if (variable != null || CURRENT_VALUE_VARIABLE.equals(name)) {
+            return variable;
+        }
+        if (!this.argumentsLoaded) {
+            lazyLoadArguments();
+            this.argumentsLoaded = true;
+            variable = super.lookupVariable(name);
+        }
+        return variable;
     }
 
     /**
      * @param result the return value (can be {@code null}) or
-     *               {@link #NO_RESULT} if there is no return at this time
+     * {@link #NO_RESULT} if there is no return at this time
      */
     public void setEvaluationContextMethodResult(Object result) {
         if (result == RESULT_UNAVAILABLE) {
             this.addUnavailableVariable(RESULT_VARIABLE);
         } else if (result != NO_RESULT) {
             this.setVariable(RESULT_VARIABLE, result);
+        }
+    }
+
+    /**
+     * Load the param information only when needed.
+     */
+    protected void lazyLoadArguments() {
+        // Shortcut if no args need to be loaded
+        if (ObjectUtils.isEmpty(this.arguments)) {
+            return;
+        }
+
+        // Expose indexed variables as well as parameter names (if discoverable)
+        String[] paramNames = this.parameterNameDiscoverer.getParameterNames(this.method);
+        int paramCount = (paramNames != null ? paramNames.length : this.method.getParameterCount());
+        int argsCount = this.arguments.length;
+
+        for (int i = 0; i < paramCount; i++) {
+            Object value = null;
+            if (argsCount > paramCount && i == paramCount - 1) {
+                // Expose remaining arguments as vararg array for last parameter
+                value = Arrays.copyOfRange(this.arguments, i, argsCount);
+            } else if (argsCount > i) {
+                // Actual argument found - otherwise left as null
+                value = this.arguments[i];
+            }
+//            setVariable("a" + i, value);
+//            setVariable("p" + i, value);
+            if (paramNames != null && paramNames[i] != null && value != null) {
+                setVariable(paramNames[i], value);
+            }
         }
     }
 }

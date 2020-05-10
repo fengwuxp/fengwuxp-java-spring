@@ -1,11 +1,13 @@
 package com.wuxp.api.interceptor;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 import org.springframework.lang.Nullable;
 
 @Slf4j
+@Setter
 public class BeanFactoryApiOperationSourceAdvisor extends AbstractBeanFactoryPointcutAdvisor {
 
 
@@ -21,12 +23,10 @@ public class BeanFactoryApiOperationSourceAdvisor extends AbstractBeanFactoryPoi
     };
 
 
-    public void setApiOperationSource(@Nullable ApiOperationSource apiOperationSource) {
-        this.apiOperationSource = apiOperationSource;
-    }
-
     @Override
     public Pointcut getPointcut() {
         return this.pointcut;
     }
+
+
 }

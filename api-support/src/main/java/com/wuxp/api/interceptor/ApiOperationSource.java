@@ -20,6 +20,6 @@ public interface ApiOperationSource {
      * @return
      */
     default boolean isCandidateClass(Method method, Class<?> targetClass) {
-        return true;
+        return false;
     }
 }

@@ -1,0 +1,16 @@
+wuxp:
+  picture:
+    -simple:
+      length: 6
+      width: 200
+      height: 80
+    -test:
+      length: 4
+      width: 140
+      height: 60
+spring:
+  profiles:
+    active: local
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true

@@ -1,6 +1,5 @@
 package com.wuxp.api.interceptor;
 
-import com.esotericsoftware.reflectasm.MethodAccess;
 import com.wuxp.api.ApiRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -13,14 +12,14 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.wuxp.api.ApiRequest.*;
 
 /**
  * 用于测试方法拦截
+ *
  * @author wxup
  */
 @Slf4j
-public class TestMethodApiInterceptor extends AbstractApiAspectSupport implements MethodInterceptor {
+public class TestMethodApiInterceptor extends ApiInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -43,22 +42,11 @@ public class TestMethodApiInterceptor extends AbstractApiAspectSupport implement
             return invocation.proceed();
         }
 
-        MethodAccess methodAccess = MethodAccess.get(request.getClass());
-        methodAccess.invoke(request, "setAppId", evaluationContext.lookupVariable(APP_ID_KEY));
-        methodAccess.invoke(request, "setNonceStr", evaluationContext.lookupVariable(NONCE_STR_KEY));
-        methodAccess.invoke(request, "setTimeStamp", evaluationContext.lookupVariable(TIME_STAMP));
-        methodAccess.invoke(request, "setApiSignature", evaluationContext.lookupVariable("apiSignature"));
-        methodAccess.invoke(request, "setChannelCode", evaluationContext.lookupVariable(CHANNEL_CODE));
-
-
         // 尝试参数注入
         this.tryInjectParamsValue(target, targetClass, method, arguments);
 
         // 参数验证
         this.tryValidationParams(target, targetClass, method, arguments);
-
-        // 签名验证
-//        this.checkApiSignature(arguments, method.getParameters());
 
         Object result;
         try {

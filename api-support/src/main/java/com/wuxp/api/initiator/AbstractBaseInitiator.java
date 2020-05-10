@@ -6,15 +6,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.util.ConcurrentReferenceHashMap;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 抽象的 initiator 用于初始化某一个表对象或者是持久化对象 {@link AbstractBaseInitiator#init}
@@ -61,12 +60,11 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
     protected abstract boolean initSingleItem(T data);
 
     @Override
-    public void onApplicationEvent(@NonNull ApplicationStartedEvent contextRefreshedEvent) {
-
+    public void onApplicationEvent(ApplicationStartedEvent event) {
         if (this.isInit) {
             return;
         }
-        this.isInit = true;
+
         if (this.isAsync && this.threadPoolTaskScheduler != null) {
             this.threadPoolTaskScheduler.execute(this::init);
         } else {

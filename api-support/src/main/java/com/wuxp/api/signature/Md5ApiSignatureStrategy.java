@@ -16,19 +16,20 @@ import static com.wuxp.api.ApiRequest.*;
 
 /**
  * md5 验证签名
+ * @author wxup
  */
 @Slf4j
 @Data
-public class MD5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactoryAware, InitializingBean {
+public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactoryAware, InitializingBean {
 
     private BeanFactory beanFactory;
 
     private AppInfoStore apiSignatureStore;
 
-    public MD5ApiSignatureStrategy() {
+    public Md5ApiSignatureStrategy() {
     }
 
-    public MD5ApiSignatureStrategy(AppInfoStore apiSignatureStore) {
+    public Md5ApiSignatureStrategy(AppInfoStore apiSignatureStore) {
         this.apiSignatureStore = apiSignatureStore;
     }
 
@@ -36,8 +37,10 @@ public class MD5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
     @Override
     public void check(@NotNull ApiSignatureRequest request) throws ApiSignatureException {
 
+        InternalApiSignatureRequest signatureRequest = (InternalApiSignatureRequest) request;
+
         Map<String, Object> apiSignatureValues = request.getApiSignatureValues();
-        String apiSignatureAppId = request.getAppId();
+        String apiSignatureAppId = signatureRequest.getAppId();
         AppInfo apiSignatureInfo = this.apiSignatureStore.getAppInfo(apiSignatureAppId);
         if (apiSignatureInfo == null) {
             throw new ApiSignatureException("无效的appId");
@@ -45,11 +48,11 @@ public class MD5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
         apiSignatureValues.put(APP_ID_KEY, apiSignatureAppId);
         apiSignatureValues.put(APP_SECRET_KEY, apiSignatureInfo.getAppSecret());
         apiSignatureValues.put(CHANNEL_CODE, apiSignatureInfo.getChannelCode());
-        apiSignatureValues.put(NONCE_STR_KEY, request.getNonceStr());
-        apiSignatureValues.put(TIME_STAMP, request.getTimeStamp());
+        apiSignatureValues.put(NONCE_STR_KEY, signatureRequest.getNonceStr());
+        apiSignatureValues.put(TIME_STAMP, signatureRequest.getTimeStamp());
 
         String sign = md5Utf8Text(genUrlStr(apiSignatureValues));
-        String apiSignatureString = request.getApiSignature();
+        String apiSignatureString = signatureRequest.getApiSignature();
         if (!sign.equals(apiSignatureString)) {
             throw new ApiSignatureException("签名验证失败");
         }

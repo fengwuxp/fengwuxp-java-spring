@@ -31,8 +31,9 @@ import java.util.Map;
 /**
  * Utility class handling the SpEL expression parsing.
  * Meant to be used as a reusable, thread-safe component.
+ * @author wxup
  */
-class ApiOperationExpressionEvaluator extends CachedExpressionEvaluator {
+public final class ApiOperationExpressionEvaluator extends CachedExpressionEvaluator {
 
 
     private final Map<ExpressionKey, Expression> valueCache = new ConcurrentReferenceHashMap<>(64);
@@ -73,8 +74,7 @@ class ApiOperationExpressionEvaluator extends CachedExpressionEvaluator {
     }
 
     public boolean condition(String conditionExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
-        return (Boolean.TRUE.equals(getExpression(this.conditionCache, methodKey, conditionExpression).getValue(
-                evalContext, Boolean.class)));
+        return (Boolean.TRUE.equals(getExpression(this.conditionCache, methodKey, conditionExpression).getValue(evalContext, Boolean.class)));
     }
 
     public String log(String logExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {

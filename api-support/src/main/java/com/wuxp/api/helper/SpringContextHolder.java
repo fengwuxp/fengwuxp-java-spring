@@ -5,6 +5,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+/**
+ * @author wxup
+ */
 @Slf4j
 public final class SpringContextHolder implements ApplicationContextAware {
 

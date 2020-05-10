@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 
 /**
  * 用于拦截方法
+ *
  * @author wxup
  */
 @Slf4j
@@ -53,4 +54,5 @@ public class ApiInterceptor extends AbstractApiAspectSupport implements MethodIn
 
         return result;
     }
+
 }
