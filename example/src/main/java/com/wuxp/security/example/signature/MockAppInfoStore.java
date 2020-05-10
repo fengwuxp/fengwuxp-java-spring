@@ -14,8 +14,10 @@ public class MockAppInfoStore implements AppInfoStore {
     private static final String appSecret = "com.wuxp.security.example";
 
     @Override
-    @Cacheable(key = "#appId", value = APP_STORE_CACHE_NAME)
-    public MockAppInfo getAppInfo(@NotNull String appId) {
-        return new MockAppInfo(appId, appSecret,"mock");
+    @Cacheable(key = "#appId",
+            value = APP_STORE_CACHE_NAME,
+            condition = "#appId!=null")
+    public MockAppInfo getAppInfo(String appId) {
+        return new MockAppInfo(appId, appSecret, "mock");
     }
 }

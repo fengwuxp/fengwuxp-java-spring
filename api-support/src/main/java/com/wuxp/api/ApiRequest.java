@@ -1,7 +1,5 @@
 package com.wuxp.api;
 
-import java.beans.Transient;
-
 /**
  * 接口请求对象
  */

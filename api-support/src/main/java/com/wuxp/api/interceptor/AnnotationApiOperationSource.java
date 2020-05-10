@@ -1,7 +1,5 @@
 package com.wuxp.api.interceptor;
 
-import com.wuxp.api.ApiRequest;
-import com.wuxp.api.signature.ApiSignatureRequest;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -57,11 +55,8 @@ public class AnnotationApiOperationSource implements ApiOperationSource {
         }
 
         // 控制器，并且为控制器方法
-        boolean match = CACHE_MAPPING_ANNOTATIONS.stream()
+        return CACHE_MAPPING_ANNOTATIONS.stream()
                 .anyMatch(method::isAnnotationPresent);
-        log.info("==>拦截方法 {} {}", method.getName(), match);
-        return match;
-
 
 
 //        if (method.isAnnotationPresent(ApiLog.class)) {

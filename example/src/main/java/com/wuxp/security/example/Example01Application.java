@@ -11,12 +11,11 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication(
         scanBasePackages = {
                 "com.levin.commons.dao",
-                "com.wuxp",
-                "com.oak"
+                "com.wuxp"
         }
 )
 @EntityScan(basePackages = {"com.wuxp", "com.oak", "com.oaknt"})
-//@EnableAspectJAutoProxy()
+@EnableAspectJAutoProxy()
 public class Example01Application {
 
     public static void main(String[] args) {

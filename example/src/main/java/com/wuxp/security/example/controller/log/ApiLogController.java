@@ -4,7 +4,6 @@ import com.wuxp.api.ApiResp;
 import com.wuxp.api.context.InjectField;
 import com.wuxp.api.log.ApiLog;
 import com.wuxp.api.restful.RestfulApiRespFactory;
-import com.wuxp.security.example.model.StudyUserDetails;
 import com.wuxp.security.example.request.TestRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,16 +29,16 @@ public class ApiLogController {
             responses = {
                     @ApiResponse(
                             description = "测试",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudyUserDetails.class))),
+                            content = @Content(mediaType = "application/json")),
             }
     )
     @GetMapping("/test")
     @ApiLog(value = "#testRequest.ip")
-    public ApiResp<StudyUserDetails> test(TestRequest testRequest) {
+    public ApiResp<String> test(TestRequest testRequest) {
 
         log.info("--{}-->", testRequest);
 
-        return RestfulApiRespFactory.ok(new StudyUserDetails(testRequest.getName(), null));
+        return RestfulApiRespFactory.ok(testRequest.getIp());
     }
 
     @Operation(
@@ -47,12 +46,12 @@ public class ApiLogController {
             responses = {
                     @ApiResponse(
                             description = "测试2",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudyUserDetails.class))),
+                            content = @Content(mediaType = "application/json")),
             }
     )
     @GetMapping("/test2")
     @ApiLog(value = "#name")
-    public ApiResp<StudyUserDetails> test2(@NotNull(message = "姓名不能为空") @InjectField(value = "#ip") String name) {
+    public ApiResp<String> test2(@NotNull(message = "姓名不能为空") @InjectField(value = "#ip") String name) {
 
         log.info("--{}-->", name);
 
@@ -69,6 +68,6 @@ public class ApiLogController {
 //        });
 
 
-        return RestfulApiRespFactory.ok(new StudyUserDetails(name, null));
+        return RestfulApiRespFactory.ok("");
     }
 }

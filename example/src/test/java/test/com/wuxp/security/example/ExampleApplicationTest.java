@@ -14,7 +14,7 @@ import java.io.File;
 @SpringBootApplication(
         scanBasePackages = {"com.wuxp", "test.com.wuxp", "com.levin.commons.dao"})
 @Import(TestConfig.class)
-@EntityScan(basePackages = {"com.wuxp", "com.oak","com.oaknt"})
+@EntityScan(basePackages = {"com.wuxp"})
 @Configuration
 public class ExampleApplicationTest {
 

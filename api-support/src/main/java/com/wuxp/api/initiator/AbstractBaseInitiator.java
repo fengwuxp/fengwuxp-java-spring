@@ -6,13 +6,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**

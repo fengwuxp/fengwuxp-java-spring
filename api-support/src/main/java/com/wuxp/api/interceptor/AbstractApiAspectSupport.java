@@ -54,7 +54,7 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
  */
 @Slf4j
 @Setter
-public abstract class AbstractApiAspectSupport implements BeanFactoryAware, /*InitializingBean,*/ SmartInitializingSingleton, DisposableBean {
+public abstract class AbstractApiAspectSupport implements BeanFactoryAware, SmartInitializingSingleton, DisposableBean {
 
 
     enum InjectType {

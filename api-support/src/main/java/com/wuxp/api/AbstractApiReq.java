@@ -1,12 +1,9 @@
 package com.wuxp.api;
 
 
-import com.wuxp.api.context.InjectField;
 import com.wuxp.api.signature.ApiSignatureRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 
 @Data
