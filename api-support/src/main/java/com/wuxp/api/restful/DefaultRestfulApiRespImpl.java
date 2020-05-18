@@ -6,18 +6,30 @@ import lombok.ToString;
 import org.springframework.http.HttpStatus;
 
 import java.beans.Transient;
+import java.io.Serializable;
 
 
 /**
+ * @author wxup
  * @param <T>
  */
 @Getter
 @ToString(exclude = "httpStatus")
-public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T> {
+public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializable {
 
+
+    /**
+     * 业务成功响应码
+     */
     public static final int BUSINESS_SUCCESS_CODE = 0;
 
+    /**
+     * 业务失败响应码
+     */
     public static final int BUSINESS_FAILURE_CODE = -1;
+
+
+    private static final long serialVersionUID = -7557721954943132992L;
 
     /**
      * 响应数据

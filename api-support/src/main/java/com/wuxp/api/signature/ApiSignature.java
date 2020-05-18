@@ -8,6 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 标记需要签名的字段
+ * @author wxup
  */
 @Target({FIELD, METHOD, PARAMETER})
 @Retention(RUNTIME)

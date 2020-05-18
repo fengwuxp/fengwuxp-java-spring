@@ -20,6 +20,7 @@ import java.util.Map;
  * <p>
  * 如果是匿名用户权限不足
  *
+ * @author wxup
  * @see ExceptionTranslationFilter#doFilter
  */
 @Slf4j

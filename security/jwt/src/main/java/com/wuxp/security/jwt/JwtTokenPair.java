@@ -7,17 +7,26 @@ import java.io.Serializable;
 import java.util.Date;
 
 
+/**
+ * jwt token，包含访问token和刷新token
+ *
+ * @author wxup
+ */
 @Data
 @Accessors(chain = true)
 public class JwtTokenPair implements Serializable {
 
     private static final long serialVersionUID = -8518897818107784049L;
 
-    // 访问token
+    /**
+     * 访问token
+     */
     private JwtTokenPayLoad accessToken;
 
 
-    // 刷新token
+    /**
+     * 刷新token
+     */
     private JwtTokenPayLoad refreshToken;
 
 
