@@ -1,6 +1,7 @@
 package com.wuxp.api.interceptor;
 
 import com.wuxp.api.ApiRequest;
+import com.wuxp.api.context.ApiRequestContextFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -63,7 +64,14 @@ public class TestMethodApiInterceptor extends ApiInterceptor implements MethodIn
 
     @Override
     protected void fillRequestContext(EvaluationContext evaluationContext, HttpServletRequest httpServletRequest) {
+        ApiRequestContextFactory apiRequestContextFactory = this.apiRequestContextFactory;
+        if (apiRequestContextFactory == null) {
+            return;
+        }
         Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
-        context.forEach(evaluationContext::setVariable);
+        if (context != null) {
+            context.forEach(evaluationContext::setVariable);
+        }
+
     }
 }

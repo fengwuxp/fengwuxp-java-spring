@@ -383,6 +383,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             return;
         }
         Map<String, Object> context = apiRequestContextFactory.factory(httpServletRequest);
+        if (context == null) {
+            return;
+        }
 
         context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
         context.put(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));

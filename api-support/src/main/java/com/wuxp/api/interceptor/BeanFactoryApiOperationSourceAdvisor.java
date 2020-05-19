@@ -6,6 +6,9 @@ import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 import org.springframework.lang.Nullable;
 
+/**
+ * @author wxup
+ */
 @Slf4j
 @Setter
 public class BeanFactoryApiOperationSourceAdvisor extends AbstractBeanFactoryPointcutAdvisor {
