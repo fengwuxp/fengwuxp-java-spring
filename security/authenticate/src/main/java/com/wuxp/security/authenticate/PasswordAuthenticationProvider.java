@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
 /**
  * 使用密码登录方式鉴权提供者
+ * @author wxup
  */
 @Slf4j
 public class PasswordAuthenticationProvider extends DaoAuthenticationProvider {
@@ -36,7 +37,9 @@ public class PasswordAuthenticationProvider extends DaoAuthenticationProvider {
             PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder(((PasswordUserDetails) userDetails).getCryptoSalt());
             Object presentedPassword = usernamePasswordAuthenticationToken.getCredentials();
             if (!passwordEncoder.matches(presentedPassword.toString(), userDetails.getPassword())) {
-                logger.debug("Authentication failed: password does not match stored value");
+                if (log.isDebugEnabled()) {
+                    logger.debug("Authentication failed: password does not match stored value");
+                }
                 throw new BadCredentialsException(messages.getMessage(
                         "AbstractUserDetailsAuthenticationProvider.badCredentials",
                         "Bad credentials"));

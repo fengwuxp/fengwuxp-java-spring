@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用来构造验证码验证信息
+ * @author wxup
  */
 @Slf4j
 @Setter

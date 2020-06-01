@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 保存额外的认证信息，例如图片验证码、手机验证码等
+ * @author wxup
  */
 public class CaptchaAuthenticationDetails extends WebAuthenticationDetails {
 
@@ -14,7 +15,7 @@ public class CaptchaAuthenticationDetails extends WebAuthenticationDetails {
     /**
      * 验证是否通过
      */
-    private Captcha.CaptchaVerifyResult captchaVerifyResult;
+    private final Captcha.CaptchaVerifyResult captchaVerifyResult;
 
 
     public CaptchaAuthenticationDetails(HttpServletRequest request, Captcha.CaptchaVerifyResult captchaVerifyResult) {
