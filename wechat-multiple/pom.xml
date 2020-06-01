@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wechat-open-multiple-spring-boot-starter</artifactId>
+    <artifactId>fengwuxp-wechat-multiple</artifactId>
     <packaging>pom</packaging>
     <properties>
         <weixin-java-mp.version>3.6.0</weixin-java-mp.version>
