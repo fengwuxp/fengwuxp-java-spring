@@ -529,6 +529,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
 
         ApiLogModel apiLogModel = new ApiLogModel();
         apiLogModel.setContent(evaluator.log(apiLog.value(), methodKey, evaluationContext));
+        if (StringUtils.hasText(apiLog.targetResourceId())) {
+            apiLogModel.setTargetResourceId(evaluator.log(apiLog.targetResourceId(), methodKey, evaluationContext));
+        }
         Object ip = evaluationContext.lookupVariable(REQUEST_IP_VARIABLE);
         if (ip == null) {
             ip = IpAddressUtils.try2GetUserRealIPAddr(request);
@@ -550,6 +553,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         apiLogModel.setUri(uri);
         apiLogModel.setAction(action);
         apiLogModel.setType(type);
+
         if (operationIsNotNull) {
             apiLogModel.setMethodDesc(operation.summary());
         } else {

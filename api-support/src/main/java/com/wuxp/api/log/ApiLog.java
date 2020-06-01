@@ -17,14 +17,15 @@ public @interface ApiLog {
      * support spel
      *
      * <p>
-     *
-     *  #result
-     *  #authorization
-     *  #url
-     *  #ip
+     * <p>
+     * #result
+     * #authorization
+     * #url
+     * #ip
      *
      * </p>
-     *  {@code #result} 从方法结果获取
+     * {@code #result} 从方法结果获取
+     *
      * @return
      */
     String value() default "";
@@ -42,6 +43,15 @@ public @interface ApiLog {
      * @return
      */
     String action() default "";
+
+
+    /**
+     * support spel
+     * 操作的目标资源id
+     *
+     * @return
+     */
+    String targetResourceId() default "";
 
 
 }

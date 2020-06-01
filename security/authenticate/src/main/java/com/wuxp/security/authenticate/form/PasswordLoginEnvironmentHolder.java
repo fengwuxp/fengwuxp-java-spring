@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
 
+/**
+ * @author wxup
+ */
 @Slf4j
 @Setter
 public class PasswordLoginEnvironmentHolder implements LoginEnvironmentHolder, BeanFactoryAware, InitializingBean {

@@ -1,8 +1,8 @@
 package com.wuxp.security.authenticate.form;
 
-import com.alibaba.fastjson.JSON;
 import com.wuxp.security.authenticate.LockedUserDetailsService;
 import com.wuxp.security.authenticate.LoginEnvironmentContext;
+import com.wuxp.security.authenticate.HttpMessageResponseWriter;
 import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -23,9 +22,14 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 基于表单鉴权的处理器
+ *
+ * @author wxup
+ */
 @Slf4j
 @Data
-public class FormAuthenticationFailureHandler implements AuthenticationFailureHandler, BeanFactoryAware, InitializingBean {
+public class FormAuthenticationFailureHandler implements AuthenticationFailureHandler, BeanFactoryAware, InitializingBean, HttpMessageResponseWriter {
 
 
     private BeanFactory beanFactory;
@@ -34,6 +38,9 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
 
     private LockedUserDetailsService lockedUserDetailsService;
 
+    /**
+     * 连续登录失败的阈值
+     */
     private int loginFailureThreshold;
 
 
@@ -83,9 +90,8 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
         //是否需要图片验证码验证
         map.put("needPictureCaptcha", loginEnvironmentContext.isNeedPictureCaptcha());
         //返回Json数据
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.getWriter().write(JSON.toJSONString(map));
+        this.writeJson(response, map);
 
     }
 

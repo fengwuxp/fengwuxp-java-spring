@@ -15,7 +15,6 @@
 
     <modules>
         <module>wechat-auth-interceptor</module>
-        <module>miniprogram</module>
     </modules>
 
 </project>

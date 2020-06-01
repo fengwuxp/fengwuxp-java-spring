@@ -9,6 +9,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,6 +17,7 @@ import static com.wuxp.api.ApiRequest.*;
 
 /**
  * md5 验证签名
+ *
  * @author wxup
  */
 @Slf4j
@@ -94,7 +96,7 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
     }
 
     private static String md5Utf8Text(String data) {
-        return md5(data, "UTF-8");
+        return md5(data, StandardCharsets.UTF_8.name());
     }
 
 

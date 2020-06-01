@@ -2,6 +2,9 @@ package com.wuxp.api.log;
 
 import java.lang.reflect.Method;
 
+/**
+ * @author wxup
+ */
 public enum SimpleApiAction {
 
     CREATE,

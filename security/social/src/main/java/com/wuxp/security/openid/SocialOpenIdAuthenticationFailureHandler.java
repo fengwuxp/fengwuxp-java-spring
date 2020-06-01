@@ -11,6 +11,8 @@ import java.io.IOException;
 
 /**
  * openid 登录失败错误处理
+ *
+ * @author wxup
  */
 @Slf4j
 public class SocialOpenIdAuthenticationFailureHandler implements AuthenticationFailureHandler {

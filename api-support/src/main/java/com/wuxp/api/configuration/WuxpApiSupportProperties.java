@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "wuxp.api")
+@ConfigurationProperties(prefix = WuxpApiSupportProperties.PREFIX)
 public class WuxpApiSupportProperties {
 
     public static final String PREFIX = "wuxp.api";

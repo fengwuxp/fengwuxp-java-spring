@@ -11,6 +11,7 @@ import java.time.Duration;
 
 /**
  * 配置 spring security
+ * @author wxup
  */
 @Data
 @ConfigurationProperties(prefix = WuxpAuthenticateProperties.PREFIX)

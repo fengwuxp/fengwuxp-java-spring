@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 /**
  * 操作日志描述对象
+ * @author wxup
  */
 @Data
 @Accessors(chain = true)
@@ -60,6 +61,11 @@ public class ApiLogModel implements java.io.Serializable {
      * 操作人
      */
     private Object authentication;
+
+    /**
+     * 操作的目标资源
+     */
+    private String targetResourceId;
 
 
 }

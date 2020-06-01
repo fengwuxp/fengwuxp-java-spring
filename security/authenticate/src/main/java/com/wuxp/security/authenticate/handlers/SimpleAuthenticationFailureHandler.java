@@ -1,9 +1,8 @@
 package com.wuxp.security.authenticate.handlers;
 
-import com.alibaba.fastjson.JSON;
+import com.wuxp.security.authenticate.HttpMessageResponseWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -15,18 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 简单的鉴权失败响应，将错误消息返回给前端
+ * 简单的鉴权失败响应处理，将错误消息返回给前端
+ *
+ * @author wxup
  */
 @Slf4j
-public class SimpleAuthenticationFailureHandler implements AuthenticationFailureHandler {
+public class SimpleAuthenticationFailureHandler implements AuthenticationFailureHandler, HttpMessageResponseWriter {
 
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         Map<String, Object> map = new HashMap<>();
         map.put("message", exception.getMessage());
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.getWriter().write(JSON.toJSONString(map));
+        this.writeJson(response, map);
     }
 }
