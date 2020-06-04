@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * 短信验证码登录
+ * @author wxup
  */
 @Data
 public class MobileCaptchaLoginProperties {

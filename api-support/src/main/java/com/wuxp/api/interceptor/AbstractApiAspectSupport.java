@@ -265,7 +265,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             return;
         }
         InternalApiSignatureRequest signatureRequest = new InternalApiSignatureRequest(httpServletRequest);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> apiSignatureValues = new HashMap<>();
         int length = parameters.length;
         for (int i = 0; i < length; i++) {
             Parameter parameter = parameters[i];
@@ -277,18 +277,18 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             if (StringUtils.isEmpty(name)) {
                 name = parameter.getName();
             }
-            map.put(name, args[i]);
+            apiSignatureValues.put(name, args[i]);
         }
 
-        signatureRequest.setAppId(httpServletRequest.getHeader(APP_ID_HEADER_KEY));
-        signatureRequest.setNonceStr(httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
-        signatureRequest.setApiSignature(httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
-        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
-        if (StringUtils.hasText(timeStamp)) {
-            signatureRequest.setTimeStamp(Long.parseLong(timeStamp));
-        }
-        signatureRequest.setChannelCode(httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
-        signatureRequest.setApiSignatureValues(map);
+//        signatureRequest.setAppId(httpServletRequest.getHeader(APP_ID_HEADER_KEY));
+//        signatureRequest.setNonceStr(httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
+//        signatureRequest.setApiSignature(httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
+//        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
+//        if (StringUtils.hasText(timeStamp)) {
+//            signatureRequest.setTimeStamp(Long.parseLong(timeStamp));
+//        }
+//        signatureRequest.setChannelCode(httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
+        signatureRequest.setApiSignatureValues(apiSignatureValues);
         apiSignatureStrategy.check(signatureRequest);
 
     }
@@ -676,10 +676,8 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             }
         }
         if (this.apiSignatureStrategy == null) {
-            ApiSignatureStrategy bean;
             try {
-                bean = this.beanFactory.getBean(ApiSignatureStrategy.class);
-                this.setApiSignatureStrategy(bean);
+                this.setApiSignatureStrategy(this.beanFactory.getBean(ApiSignatureStrategy.class));
             } catch (BeansException e) {
                 log.warn("not found ApiSignatureStrategy Bean");
             }

@@ -1,13 +1,23 @@
 package com.wuxp.security.openid;
 
+import com.wuxp.security.SocialProviderType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * @author wxup
+ */
 public class OpenIdAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;
+
+    /**
+     * 第三方服务提供者
+     * 例如 we_chat、qq、ali_pay 等
+     * {@link SocialProviderType}
+     */
     private String providerId;
 
     public OpenIdAuthenticationToken(String openId, String providerId) {
@@ -20,7 +30,8 @@ public class OpenIdAuthenticationToken extends AbstractAuthenticationToken {
     public OpenIdAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
-        super.setAuthenticated(true); // must use super, as we override
+        // must use super, as we override
+        super.setAuthenticated(true);
     }
 
     @Override

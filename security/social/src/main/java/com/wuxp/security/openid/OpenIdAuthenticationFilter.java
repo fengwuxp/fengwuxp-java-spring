@@ -12,6 +12,9 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author wxup
+ */
 @Slf4j
 public class OpenIdAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

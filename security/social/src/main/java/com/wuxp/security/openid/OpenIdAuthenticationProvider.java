@@ -13,6 +13,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 第三方开放平台登录的支持
+ *
+ * @author wxup
+ */
 @Slf4j
 public class OpenIdAuthenticationProvider implements AuthenticationProvider {
 
@@ -20,11 +25,12 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
 
     private UsersConnectionRepository usersConnectionRepository;
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@see org.springframework.security.authentication.AuthenticationProvider#authenticate(org.springframework.security.core.Authentication)}
      *
-     * @see org.springframework.security.authentication.AuthenticationProvider#
-     * authenticate(org.springframework.security.core.Authentication)
+     * @param authentication
+     * @return
+     * @throws AuthenticationException
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -33,16 +39,15 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
 
         Set<String> providerUserIds = new HashSet<String>();
         providerUserIds.add((String) authenticationToken.getPrincipal());
+        // 根据第三方开放平台获取用的id
         Set<String> userIds = usersConnectionRepository.findUserIdsConnectedTo(authenticationToken.getProviderId(), providerUserIds);
 
-        if(CollectionUtils.isEmpty(userIds) || userIds.size() != 1) {
+        if (CollectionUtils.isEmpty(userIds) || userIds.size() != 1) {
             throw new InternalAuthenticationServiceException("无法获取用户信息");
         }
 
         String userId = userIds.iterator().next();
-
         UserDetails user = userDetailsService.loadUserByUserId(userId);
-
         if (user == null) {
             throw new InternalAuthenticationServiceException("无法获取用户信息");
         }
@@ -54,12 +59,7 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
         return authenticationResult;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.springframework.security.authentication.AuthenticationProvider#
-     * supports(java.lang.Class)
-     */
+
     @Override
     public boolean supports(Class<?> authentication) {
         return OpenIdAuthenticationToken.class.isAssignableFrom(authentication);

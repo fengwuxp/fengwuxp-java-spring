@@ -2,6 +2,7 @@ package com.wuxp.security.captcha.mobile;
 
 /**
  * mobile captcha type
+ * @author wxup
  */
 public enum MobileCaptchaType {
 
