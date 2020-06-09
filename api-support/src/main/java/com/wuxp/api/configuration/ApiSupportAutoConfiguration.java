@@ -106,15 +106,6 @@ public class ApiSupportAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnMissingBean(Executor.class)
-    @Order()
-    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
-        return threadPoolTaskScheduler;
-    }
-
-    @Bean
     @ConditionalOnMissingBean(Validator.class)
     public Validator validator() {
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)

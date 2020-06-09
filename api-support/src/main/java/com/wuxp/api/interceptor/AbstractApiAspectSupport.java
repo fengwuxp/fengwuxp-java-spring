@@ -21,6 +21,7 @@ import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.lang.NonNull;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
@@ -40,6 +41,7 @@ import javax.validation.executable.ExecutableValidator;
 import javax.validation.groups.Default;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import static com.wuxp.api.ApiRequest.APP_ID_KEY;
 import static com.wuxp.api.context.ApiRequestContextFactory.AUTHENTICATE;
@@ -56,6 +58,10 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 @Setter
 public abstract class AbstractApiAspectSupport implements BeanFactoryAware, SmartInitializingSingleton, DisposableBean {
 
+    /**
+     * 操作日志线程前缀
+     */
+    private static final String OPERATING_LOG_THREAD_PREFIX = "OPERATING_LOG_THREAD";
 
     enum InjectType {
 
@@ -83,7 +89,8 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
 
     protected BeanFactory beanFactory;
 
-    protected ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    // 用于写入操作日志的线程池
+    protected Executor logExecutor;
 
     protected ApiRequestContextFactory apiRequestContextFactory;
 
@@ -324,7 +331,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
 
         HttpServletRequest httpServletRequest = getHttpServletRequest();
         //使用异步队列记录日志
-        this.threadPoolTaskScheduler.execute(() -> {
+        this.logExecutor.execute(() -> {
             ApiLogModel apiLogModel = genApiLogModel(apiLog, httpServletRequest, apiOperationMetadata, evaluationContext);
             SimpleApiAction simpleApiAction = SimpleApiAction.valueOfByMethod(method);
             if (simpleApiAction != null) {
@@ -691,8 +698,15 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             }
         }
 
-        if (this.threadPoolTaskScheduler == null) {
-            this.setThreadPoolTaskScheduler(this.beanFactory.getBean(ThreadPoolTaskScheduler.class));
+        if (this.logExecutor == null) {
+            //初始化日志的线程池
+
+            this.logExecutor = new ThreadPoolExecutor(
+                    1,
+                    2,
+                    30,
+                    TimeUnit.SECONDS,
+                    new ArrayBlockingQueue<>(1024), new CustomizableThreadFactory(OPERATING_LOG_THREAD_PREFIX));
         }
 
         if (this.validator == null) {
