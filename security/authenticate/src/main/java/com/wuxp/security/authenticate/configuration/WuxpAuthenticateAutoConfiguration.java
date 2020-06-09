@@ -2,6 +2,7 @@ package com.wuxp.security.authenticate.configuration;
 
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.JwtAuthenticationFilter;
+import com.wuxp.security.authenticate.PasswordAuthenticationProvider;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaAuthenticationFailureHandler;
 import com.wuxp.security.authenticate.restful.RestfulAuthenticationEntryPoint;
@@ -23,13 +24,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 @EnableConfigurationProperties(WuxpAuthenticateProperties.class)
 @ConditionalOnProperty(prefix = WuxpAuthenticateProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class WuxpAuthenticateAutoConfiguration {
-
-
-    @Bean
-    @ConditionalOnMissingBean(PasswordEncoder.class)
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
 
     @Bean
@@ -75,5 +69,6 @@ public class WuxpAuthenticateAutoConfiguration {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new RestfulAuthenticationEntryPoint("请先登陆");
     }
+
 
 }

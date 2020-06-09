@@ -4,6 +4,8 @@ import lombok.Data;
 
 /**
  * form login 配置
+ *
+ * @author wxup
  */
 @Data
 public class FormLoginProperties {

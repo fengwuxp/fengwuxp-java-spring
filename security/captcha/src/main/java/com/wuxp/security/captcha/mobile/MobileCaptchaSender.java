@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 手机验证码 发送者
+ * @author wxup
  */
 public interface MobileCaptchaSender {
 

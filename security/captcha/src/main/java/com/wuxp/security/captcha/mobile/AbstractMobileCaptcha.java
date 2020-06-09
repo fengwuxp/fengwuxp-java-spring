@@ -38,7 +38,9 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
         String resultKey = captchaGenerateResult.getKey();
         MobileCaptchaSender.MobileCaptchaSenderResult result = mobileCaptchaSender.send(useType, mobilePhone, mobileCaptchaValue.getValue());
         captchaStore.storeCaptcha(resultKey, mobileCaptchaValue);
-        captchaGenerateResult.setErrorMessage(result.getMessage());
+        if (!result.isSuccess()) {
+            captchaGenerateResult.setErrorMessage(result.getMessage());
+        }
         return captchaGenerateResult;
     }
 

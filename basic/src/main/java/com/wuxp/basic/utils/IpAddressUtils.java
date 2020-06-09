@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 获取ip 地址
+ *
+ * @author wxup
+ */
 public final class IpAddressUtils {
 
     private static final List<String> IP_HEAD_NAME_LIST = new ArrayList<>();
@@ -179,7 +184,7 @@ public final class IpAddressUtils {
 
             String ip = request.getHeader(headName);
 
-            if (ip == null || ip.trim().length() == 0){
+            if (ip == null || ip.trim().length() == 0) {
                 continue;
             }
 
