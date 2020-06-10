@@ -11,7 +11,9 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StringUtils;
 
@@ -83,9 +85,14 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
         response.setStatus(HttpStatus.FORBIDDEN.value());
         Map<String, Object> map = new HashMap<>();
         String message = exception.getMessage();
-        if (exception instanceof BadCredentialsException) {
+        if (exception instanceof UsernameNotFoundException || exception instanceof InternalAuthenticationServiceException) {
+            message = "用户不存在";
+        } else if (exception instanceof BadCredentialsException) {
             message = "用户名或密码错误";
+        } else {
+
         }
+
         map.put("message", StringUtils.hasText(message) ? message : "发生非预期的异常");
         //是否需要图片验证码验证
         map.put("needPictureCaptcha", loginEnvironmentContext.isNeedPictureCaptcha());

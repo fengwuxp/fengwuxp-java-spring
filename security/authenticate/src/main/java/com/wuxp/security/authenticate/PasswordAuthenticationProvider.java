@@ -50,7 +50,7 @@ public class PasswordAuthenticationProvider extends DaoAuthenticationProvider im
                     logger.debug("Authentication failed: password does not match stored value");
                 }
                 throw new BadCredentialsException(messages.getMessage(
-                        "AbstractUserDetailsAuthenticationProvider.badCredentials",
+                        "PasswordAuthenticationProvider.badCredentials",
                         "Bad credentials"));
             }
             return;
