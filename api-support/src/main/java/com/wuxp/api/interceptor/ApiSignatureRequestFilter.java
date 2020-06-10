@@ -45,8 +45,14 @@ public class ApiSignatureRequestFilter extends OncePerRequestFilter implements B
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (!requiresCheckSignRequestMatcher.matches(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         ApiSignatureStrategy apiSignatureStrategy = this.apiSignatureStrategy;
         if (apiSignatureStrategy == null) {
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -63,6 +69,7 @@ public class ApiSignatureRequestFilter extends OncePerRequestFilter implements B
             apiSignatureStrategy.check(signatureRequest);
         } catch (ApiSignatureException e) {
             e.printStackTrace();
+            // 签名失败
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().write(e.getMessage());

@@ -10,8 +10,10 @@ import org.springframework.util.DigestUtils;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.TreeMap;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.wuxp.api.ApiRequest.*;
 
@@ -41,19 +43,28 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
 
         InternalApiSignatureRequest signatureRequest = (InternalApiSignatureRequest) request;
 
-        Map<String, Object> apiSignatureValues = request.getApiSignatureValues();
+
         String apiSignatureAppId = signatureRequest.getAppId();
         AppInfo apiSignatureInfo = this.apiSignatureStore.getAppInfo(apiSignatureAppId);
         if (apiSignatureInfo == null) {
             throw new ApiSignatureException("无效的appId");
         }
-        apiSignatureValues.put(APP_ID_KEY, apiSignatureAppId);
-        apiSignatureValues.put(APP_SECRET_KEY, apiSignatureInfo.getAppSecret());
-        apiSignatureValues.put(CHANNEL_CODE, apiSignatureInfo.getChannelCode());
-        apiSignatureValues.put(NONCE_STR_KEY, signatureRequest.getNonceStr());
-        apiSignatureValues.put(TIME_STAMP, signatureRequest.getTimeStamp());
 
-        String sign = md5Utf8Text(genUrlStr(apiSignatureValues));
+        Map<String, Object> apiSignatureValues = request.getApiSignatureValues();
+        final List<Object[]> signature = new ArrayList<>(apiSignatureValues.size() + 5);
+        apiSignatureValues.forEach((key, value) -> signature.add(new Object[]{key, value}));
+        signature.sort(Comparator.comparing(o -> (o[0]).toString()));
+        signature.add(new Object[]{APP_ID_KEY, apiSignatureAppId});
+        signature.add(new Object[]{APP_SECRET_KEY, apiSignatureInfo.getAppSecret()});
+        signature.add(new Object[]{CHANNEL_CODE, signatureRequest.getChannelCode()});
+        signature.add(new Object[]{NONCE_STR_KEY, signatureRequest.getNonceStr()});
+        signature.add(new Object[]{TIME_STAMP, signatureRequest.getTimeStamp()});
+
+        String signText = signature.stream().map((items) -> items[0] + "=" + items[1]).collect(Collectors.joining("&"));
+        if (log.isDebugEnabled()) {
+            log.debug("签名字符串：{}", signText);
+        }
+        String sign = md5Utf8Text(signText);
         String apiSignatureString = signatureRequest.getApiSignature();
         if (!sign.equals(apiSignatureString)) {
             throw new ApiSignatureException("签名验证失败");
@@ -67,44 +78,15 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
         }
     }
 
-    private static String genUrlStr(Map<String, Object> data) {
-        return genTextStr(data, true, "=", "&");
-    }
-
-    private static String genTextStr(Map<String, Object> data, boolean needKey, String keyValueDelim, String itemDelim) {
-        StringBuilder sb = new StringBuilder();
-        boolean isFirst = true;
-        Map<String, Object> treeMap = new TreeMap<>(data);
-        for (Map.Entry<String, Object> entry : treeMap.entrySet()) {
-            Object entryValue = entry.getValue();
-            if (entryValue == null) {
-                continue;
-            }
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sb.append(itemDelim);
-            }
-            if (needKey) {
-                sb.append(entry.getKey()).append(keyValueDelim);
-            }
-            sb.append(entryValue.toString());
-        }
-
-
-        return sb.toString();
-    }
-
     private static String md5Utf8Text(String data) {
         return md5(data, StandardCharsets.UTF_8.name());
     }
 
-
     private static String md5(String data, String encoding) {
         try {
             return DigestUtils.md5DigestAsHex(data.getBytes(encoding));
-        } catch (UnsupportedEncodingException var3) {
-            throw new RuntimeException(var3);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 }

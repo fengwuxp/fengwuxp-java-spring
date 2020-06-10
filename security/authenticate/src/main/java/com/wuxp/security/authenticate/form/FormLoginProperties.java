@@ -14,12 +14,12 @@ public class FormLoginProperties {
     /**
      * 登录页面
      */
-    private String loginPage = "/login";
+    private String loginPage = "/form/login";
 
     /**
      * 登录处理url
      */
-    private String loginProcessingUrl = "/login";
+    private String loginProcessingUrl = "/form/login";
 
     /**
      * 在登录失败多少次后需要验证码验证
