@@ -1,9 +1,14 @@
 package com.wuxp.api.model;
 
+import com.wuxp.basic.enums.DescriptiveEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * @author wxup
+ */
+
 @Schema(description = "查询类型")
-public enum QueryType {
+public enum QueryType implements DescriptiveEnum {
 
     @Schema(description = "查询总数")
     QUERY_NUM,

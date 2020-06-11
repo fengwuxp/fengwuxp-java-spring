@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
-public class InternalApiSignatureRequest extends AbstractApiReq {
+public class InternalApiSignatureRequest implements ApiSignatureRequest {
 
     public static final String APP_ID_HEADER_KEY = "Api-App-Id";
     public static final String NONCE_STR_HEADER_KEY = "Api-Nonce-Str";

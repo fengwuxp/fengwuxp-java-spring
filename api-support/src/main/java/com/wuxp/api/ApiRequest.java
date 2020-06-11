@@ -2,6 +2,8 @@ package com.wuxp.api;
 
 /**
  * 接口请求对象
+ *
+ * @author wxup
  */
 public interface ApiRequest {
 

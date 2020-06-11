@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * 需要签名的接口的入参可以实现该接口
+ *
+ * @author wxup
  */
 public interface ApiSignatureRequest extends ApiRequest {
 
@@ -26,12 +28,5 @@ public interface ApiSignatureRequest extends ApiRequest {
         return Collections.emptyMap();
     }
 
-//    /**
-//     * 获取签名内容
-//     *
-//     * @return
-//     */
-//    @Transient
-//    String getApiSignature();
 
 }

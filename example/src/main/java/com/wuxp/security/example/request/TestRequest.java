@@ -3,16 +3,19 @@ package com.wuxp.security.example.request;
 
 import com.wuxp.api.AbstractApiReq;
 import com.wuxp.api.context.InjectField;
+import com.wuxp.api.signature.ApiSignatureRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * @author wxup
+ */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class TestRequest extends AbstractApiReq {
+public class TestRequest implements ApiSignatureRequest {
 
     @InjectField(value = "#name")
     @NotNull(message = "名称不能为空")
