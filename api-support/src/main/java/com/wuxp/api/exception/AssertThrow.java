@@ -7,6 +7,7 @@ import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CO
 
 /**
  * 用于断言抛出异常
+ *
  * @author wxup
  */
 @Slf4j
@@ -20,6 +21,11 @@ public final class AssertThrow {
     public static void assertResp(ApiResp resp) {
 
         assertTrue(resp.getMessage(), resp.isSuccess());
+    }
+
+    public static void assertResp(String message, ApiResp resp) {
+
+        assertTrue(message, resp.isSuccess());
     }
 
 

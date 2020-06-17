@@ -1,6 +1,5 @@
 package com.wuxp.wehcat.interceptor;
 
-import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.util.StringUtils;
@@ -17,16 +16,12 @@ import javax.servlet.http.HttpSession;
 public class MockWeChatInterceptor extends HandlerInterceptorAdapter implements WeChatAuthInterceptor {
 
 
-    private Faker faker = new Faker();
-
     /**
      * 是否为模拟环境
      */
-//    @Value("${}")
-    private boolean isMock;
+    private boolean isMock = true;
 
     public MockWeChatInterceptor() {
-        this.isMock = "1".equals(System.getProperty("mock_weixin"));
     }
 
     @Override
@@ -36,7 +31,7 @@ public class MockWeChatInterceptor extends HandlerInterceptorAdapter implements 
             return true;
         }
 
-        String openId = request.getParameter("openid");
+        String openId = request.getParameter("openId");
 
         if (!StringUtils.hasText(openId)) {
             //从缓存中来
@@ -46,7 +41,7 @@ public class MockWeChatInterceptor extends HandlerInterceptorAdapter implements 
         if (!StringUtils.hasText(openId)) {
             //自动模拟openId
             // openId = "Mock_wx_openid_" + System.currentTimeMillis() + "_" + request.hashCode();
-            openId = System.getProperty("openid");
+            openId = System.getProperty("openId");
         }
         log.info("enable mock  open id {}", openId);
 
@@ -61,9 +56,9 @@ public class MockWeChatInterceptor extends HandlerInterceptorAdapter implements 
 
             user = new WxMpUser();
             user.setOpenId(openId);
-            user.setNickname(faker.name().name());
+            user.setNickname("mock");
             //user.setHeadImgUrl(request.getContextPath() + "/res/images/head.jpg");
-            user.setCity(faker.address().cityName());
+            user.setCity("测试城市");
 
             session.setAttribute(AbstractWeChatInterceptor.WX_USER_INFO, user);
         }
@@ -75,5 +70,9 @@ public class MockWeChatInterceptor extends HandlerInterceptorAdapter implements 
     @Override
     public boolean isMock() {
         return this.isMock;
+    }
+
+    public void setMock(boolean mock) {
+        isMock = mock;
     }
 }

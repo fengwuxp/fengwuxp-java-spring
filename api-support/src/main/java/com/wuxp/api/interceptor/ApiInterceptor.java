@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -32,8 +34,10 @@ public class ApiInterceptor extends AbstractApiAspectSupport implements MethodIn
         // 参数验证
         this.tryValidationParams(target, targetClass, method, arguments);
 
-        // 签名验证
-        this.checkApiSignature(arguments, method.getParameters());
+        if (targetClass.isAnnotationPresent(RestController.class) || method.isAnnotationPresent(ResponseBody.class)) {
+            //ResponseBody 需要验证签名验证
+            this.checkApiSignature(arguments, method.getParameters());
+        }
 
         Object result;
         try {
@@ -53,6 +57,10 @@ public class ApiInterceptor extends AbstractApiAspectSupport implements MethodIn
         }
 
         return result;
+    }
+
+    private boolean isResponseBody() {
+        return false;
     }
 
 }

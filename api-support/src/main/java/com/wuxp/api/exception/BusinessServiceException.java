@@ -8,6 +8,8 @@ import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CO
 
 /**
  * 业务服务异常
+ *
+ * @author wxup
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

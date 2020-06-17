@@ -18,11 +18,15 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.text.MessageFormat;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
  * 基于restful的统一异常处理
+ *
+ * @author wxup
  */
 @Slf4j
 public class RestfulExceptionHandler {
@@ -37,11 +41,12 @@ public class RestfulExceptionHandler {
     public ApiResp<Void> handleValidationException(ConstraintViolationException exception) {
 
         Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+        return RestfulApiRespFactory.badRequest(constraintViolations.stream().map(constraintViolation -> {
             String message = constraintViolation.getMessage();
-            return RestfulApiRespFactory.badRequest(message);
-        }
-        return RestfulApiRespFactory.badRequest(exception.getMessage());
+            String propertyPath = constraintViolation.getPropertyPath().toString();
+            return MessageFormat.format("{0}：{1}", propertyPath, message);
+        }).collect(Collectors.joining("、")));
+
     }
 
     /**
@@ -100,7 +105,6 @@ public class RestfulExceptionHandler {
     public ApiResp<Integer> handleBusinessServiceException(BusinessServiceException exception) {
         return RestfulApiRespFactory.error(exception.getMessage(), exception.getErrorCode());
     }
-
 
 
     /**
