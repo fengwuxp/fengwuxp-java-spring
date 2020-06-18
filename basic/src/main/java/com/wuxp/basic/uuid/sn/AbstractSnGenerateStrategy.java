@@ -5,8 +5,8 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import java.util.Date;
 
 /**
- * 抽象的号生成策略
- * 按照 yyyyMMddHHmm+5位的自增长订单号
+ * 抽象的sn生成策略
+ * 按照 yyyyMMddHHmm+业务编码（2-5位）+5位的自增长的sn
  * <p>
  * 每一分钟最多支持生成10w个sn
  * {@link AbstractSnGenerateStrategy#MAX_SN_LENGTH}
@@ -33,18 +33,19 @@ public abstract class AbstractSnGenerateStrategy implements SnGenerateStrategy {
     }
 
     @Override
-    public String uuid() {
+    public String nextSn(SnType type) {
         String orderPrefix = this.getOrderPrefix();
-        return orderPrefix + this.getNextSn(orderPrefix);
+        return orderPrefix + type.getCode() + this.getNextSn(orderPrefix, type);
     }
 
     /**
      * 生成下一个 id
      *
      * @param orderPrefix
+     * @param type
      * @return
      */
-    protected abstract String nextId(String orderPrefix);
+    protected abstract String nextId(String orderPrefix, SnType type);
 
     /**
      * 生成 sn前缀
@@ -55,15 +56,15 @@ public abstract class AbstractSnGenerateStrategy implements SnGenerateStrategy {
         return DateFormatUtils.format(new Date(), ORDER_PREFIX_FORMATTER);
     }
 
-    protected String getNextSn(String orderPrefix) {
+    protected String getNextSn(String orderPrefix, SnType type) {
 
-        String nextId = nextId(orderPrefix);
+        String nextId = nextId(orderPrefix, type);
         int len = this.maxSnLength - nextId.length();
         if (len == 0) {
             return nextId;
         }
         if (len < 0) {
-            throw new RuntimeException("订单号的 nextId超过的了10w ,nextId= " + nextId);
+            throw new RuntimeException("sn的 nextId超过的了10w ,nextId= " + nextId);
         }
         StringBuilder builder = new StringBuilder();
 

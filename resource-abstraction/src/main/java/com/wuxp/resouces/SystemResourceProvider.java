@@ -4,6 +4,8 @@ import java.util.Collection;
 
 /**
  * resource provider
+ *
+ * @author wxup
  */
 public interface SystemResourceProvider<ID> {
 

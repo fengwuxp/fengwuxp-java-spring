@@ -1,23 +1,32 @@
 package com.wuxp.basic.uuid.sn;
 
-import com.wuxp.basic.uuid.UUIDGenerateStrategy;
-
 /**
- * sn生成策略，生成固定长度的订单号
- * {@link #uuid(int)}
- * {@link #uuid(int, String)} 都使用{@link #uuid}
+ * sn生成策略
+ *
  * @author wxup
  */
-public interface SnGenerateStrategy extends UUIDGenerateStrategy {
+public interface SnGenerateStrategy {
 
 
-    @Override
-    default String uuid(int len) {
-        return uuid();
-    }
+    /**
+     * 获取下一个sn
+     *
+     * @param type
+     * @return
+     */
+    String nextSn(SnType type);
 
-    @Override
-    default String uuid(int len, String payload) {
-        return uuid();
+
+    /**
+     * 用于识别sn的类型
+     */
+    interface SnType {
+
+        /**
+         * 返回sn的类型编码
+         *
+         * @return
+         */
+        String getCode();
     }
 }

@@ -8,6 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 注入字段值
+ *
  * @author wxup
  */
 @Target({FIELD, METHOD, PARAMETER})
@@ -16,12 +17,16 @@ public @interface InjectField {
 
 
     /**
+     * 强制注入条件
+     */
+    String FORCE_INJECT = "true";
+
+    /**
      * 注入字段的spel表达式
      *
      * @return
      */
     String value() default "";
-
 
 
     /**
