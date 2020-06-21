@@ -44,6 +44,7 @@ import java.util.concurrent.*;
 
 import static com.wuxp.api.ApiRequest.APP_ID_KEY;
 import static com.wuxp.api.context.ApiRequestContextFactory.AUTHENTICATE;
+import static com.wuxp.api.context.InjectFieldExpressionConstant.HTTP_SERVLET_REQUEST_VARIABLE_NAME;
 import static com.wuxp.api.interceptor.ApiEvaluationContext.*;
 import static com.wuxp.api.log.ApiLogModel.USER_AGENT_HEADER;
 import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
@@ -401,6 +402,8 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         if (StringUtils.hasText(timeStamp)) {
             context.put(TIME_STAMP, Long.parseLong(timeStamp));
         }
+        // 将HttpServletRequest注入到上下文中
+        evaluationContext.setVariable(HTTP_SERVLET_REQUEST_VARIABLE_NAME, httpServletRequest);
         context.forEach(evaluationContext::setVariable);
     }
 

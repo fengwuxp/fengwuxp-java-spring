@@ -59,8 +59,4 @@ public class ApiInterceptor extends AbstractApiAspectSupport implements MethodIn
         return result;
     }
 
-    private boolean isResponseBody() {
-        return false;
-    }
-
 }

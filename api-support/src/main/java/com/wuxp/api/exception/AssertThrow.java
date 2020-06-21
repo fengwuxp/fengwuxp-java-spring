@@ -28,6 +28,18 @@ public final class AssertThrow {
         assertTrue(message, resp.isSuccess());
     }
 
+    public static void assertNotNull(String message, Object condition) {
+        if (condition == null) {
+            fail(message);
+        }
+    }
+
+    public static void assertNull(String message, Object condition) {
+        if (condition != null) {
+            fail(message);
+        }
+    }
+
 
     public static void assertTrue(String message, boolean condition) {
         if (!condition) {
