@@ -24,5 +24,5 @@ public class FormLoginProperties {
     /**
      * 在登录失败多少次后需要验证码验证
      */
-    private Integer showCaptchaByFailureCount = 2;
+    private Integer showCaptchaByFailureCount = 3;
 }

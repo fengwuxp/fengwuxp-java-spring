@@ -58,10 +58,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         String headerPrefix = jwtProperties.getHeaderPrefix();
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(headerPrefix)) {
             if (StringUtils.hasText(authorizationHeader)) {
-//                Jws<Claims> claimsJws = jwtTokenProvider.parse(jwtToken);
                 UserDetails userDetails = null;
                 try {
-                    userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader);
+                    userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader,request);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -77,7 +76,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                 }
 
             } else {
-                // 带安全头 没有带token
+                /**
+                 * 带安全头 没有带token
+                 */
                 authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));
             }
 
