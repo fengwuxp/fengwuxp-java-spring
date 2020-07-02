@@ -7,6 +7,9 @@ import org.springframework.http.HttpHeaders;
 import java.time.Duration;
 
 
+/**
+ * @author wuxp
+ */
 @Data
 @ConfigurationProperties(prefix = JwtProperties.PREFIX)
 public class JwtProperties {
@@ -51,7 +54,13 @@ public class JwtProperties {
     private Duration refreshExpireTimeout = Duration.ofDays(7);
 
 
+    /**
+     * token 请求头名称
+     */
     private String headerName = HttpHeaders.AUTHORIZATION;
 
+    /**
+     * 请求token的前缀
+     */
     private String headerPrefix = AUTHENTICATION_PREFIX;
 }
