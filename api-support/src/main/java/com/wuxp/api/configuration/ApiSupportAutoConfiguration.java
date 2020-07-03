@@ -1,5 +1,6 @@
 package com.wuxp.api.configuration;
 
+import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.api.interceptor.*;
 import com.wuxp.api.signature.ApiSignatureStrategy;
 import com.wuxp.api.signature.AppInfoStore;
@@ -115,5 +116,11 @@ public class ApiSupportAutoConfiguration {
                 .buildValidatorFactory();
 
         return validatorFactory.getValidator();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SpringContextHolder.class)
+    public SpringContextHolder springContextHolder() {
+        return new SpringContextHolder();
     }
 }
