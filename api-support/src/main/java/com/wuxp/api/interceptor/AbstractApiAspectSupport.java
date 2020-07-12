@@ -130,10 +130,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
                     .findFirst()
                     .orElse(null);
             if (aClass != null) {
-//                injectType = Arrays.stream(aClass.getDeclaredFields())
-//                        .filter(field -> field.isAnnotationPresent(InjectField.class))
-//                        .findFirst()
-//                        .orElse(null) != null ? InjectType.OBJECT : InjectType.API_REQUEST;
                 injectType = InjectType.OBJECT;
             }
             boolean injectParams = Arrays.stream(method.getParameterAnnotations())
@@ -386,6 +382,17 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
      * @param httpServletRequest HttpServletRequest
      */
     protected void fillRequestContext(EvaluationContext evaluationContext, HttpServletRequest httpServletRequest) {
+
+        evaluationContext.setVariable(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
+        evaluationContext.setVariable(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
+        evaluationContext.setVariable(CHANNEL_CODE, httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
+        evaluationContext.setVariable(APP_SIGNATURE_KEY, httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
+        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
+        if (StringUtils.hasText(timeStamp)) {
+            evaluationContext.setVariable(TIME_STAMP, Long.parseLong(timeStamp));
+        }
+        // 将HttpServletRequest注入到上下文中
+        evaluationContext.setVariable(HTTP_SERVLET_REQUEST_VARIABLE_NAME, httpServletRequest);
         if (apiRequestContextFactory == null) {
             return;
         }
@@ -393,17 +400,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         if (context == null) {
             return;
         }
-
-        context.put(APP_ID_KEY, httpServletRequest.getHeader(APP_ID_HEADER_KEY));
-        context.put(NONCE_STR_KEY, httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
-        context.put(CHANNEL_CODE, httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
-        context.put(APP_SIGNATURE_KEY, httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
-        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
-        if (StringUtils.hasText(timeStamp)) {
-            context.put(TIME_STAMP, Long.parseLong(timeStamp));
-        }
-        // 将HttpServletRequest注入到上下文中
-        evaluationContext.setVariable(HTTP_SERVLET_REQUEST_VARIABLE_NAME, httpServletRequest);
         context.forEach(evaluationContext::setVariable);
     }
 

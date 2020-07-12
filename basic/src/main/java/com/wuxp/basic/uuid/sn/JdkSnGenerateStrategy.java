@@ -18,7 +18,12 @@ public class JdkSnGenerateStrategy extends AbstractSnGenerateStrategy {
     @Override
     protected String nextId(String orderPrefix, SnType type) {
         String key = orderPrefix + type.getCode();
-        AtomicLong atomicLong = atomicLongMap.putIfAbsent(key, new AtomicLong(0));
+        AtomicLong atomicLong = atomicLongMap.getOrDefault(key, new AtomicLong(0));
+        if (atomicLong.longValue() == 0) {
+            synchronized (orderPrefix.intern()) {
+                atomicLongMap.putIfAbsent(key, atomicLong);
+            }
+        }
         return String.valueOf(atomicLong.incrementAndGet());
     }
 }

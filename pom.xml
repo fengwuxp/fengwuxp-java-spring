@@ -25,6 +25,7 @@
         <google-zxing.version>3.4.0</google-zxing.version>
         <springdoc.version>1.2.26</springdoc.version>
 <!--        <hibernate.version>5.2.18.Final</hibernate.version>-->
+        <fastjson.version>1.2.61</fastjson.version>
 
         <!--1.8编译参数 保留方法名称-->
         <compilerArgument>-parameters</compilerArgument>
@@ -107,7 +108,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.61</version>
+            <version>${fastjson.version}</version>
             <scope>provided</scope>
         </dependency>
 
