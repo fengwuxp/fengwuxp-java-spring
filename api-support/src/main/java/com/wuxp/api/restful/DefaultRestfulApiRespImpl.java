@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 
 /**
- * @author wxup
  * @param <T>
+ * @author wxup
  */
 @Getter
 @ToString(exclude = "httpStatus")
