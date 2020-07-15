@@ -21,7 +21,7 @@ public final class AssertThrow extends Assert {
 
     public static void assertResp(ApiResp resp) {
 
-        assertTrue(resp.getMessage(), resp.isSuccess());
+        assertTrue(resp.getErrorMessage(), resp.isSuccess());
     }
 
     public static void assertResp(String message, ApiResp resp) {
