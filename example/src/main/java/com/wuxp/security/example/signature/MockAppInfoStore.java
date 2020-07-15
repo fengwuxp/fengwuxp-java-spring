@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import javax.validation.constraints.NotNull;
 
 @Slf4j
-public class MockAppInfoStore implements AppInfoStore {
+public class MockAppInfoStore implements AppInfoStore<MockAppInfo> {
 
 
     private static final String appSecret = "com.wuxp.security.example";

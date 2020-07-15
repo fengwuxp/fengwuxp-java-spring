@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * api 接口签名策略
+ *
  * @author wxup
  */
 public interface ApiSignatureStrategy {
@@ -16,8 +17,8 @@ public interface ApiSignatureStrategy {
     /**
      * 签名检查
      *
-     * @param request
-     * @throws ApiSignatureException
+     * @param request 签名请求
+     * @throws ApiSignatureException 签名验证失败抛出
      */
     void check(@NotNull ApiSignatureRequest request) throws ApiSignatureException;
 

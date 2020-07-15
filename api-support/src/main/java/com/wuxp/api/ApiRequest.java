@@ -5,7 +5,7 @@ package com.wuxp.api;
  *
  * @author wxup
  */
-public interface ApiRequest {
+public interface ApiRequest extends java.io.Serializable{
 
     String APP_ID_KEY = "appId";
 

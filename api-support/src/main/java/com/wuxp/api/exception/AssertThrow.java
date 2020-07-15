@@ -2,6 +2,7 @@ package com.wuxp.api.exception;
 
 import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
 
 import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CODE;
 
@@ -11,7 +12,7 @@ import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CO
  * @author wxup
  */
 @Slf4j
-public final class AssertThrow {
+public final class AssertThrow extends Assert {
 
 
     private AssertThrow() {
