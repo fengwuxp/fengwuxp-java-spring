@@ -77,7 +77,7 @@ public final class RestfulApiRespFactory {
 
     public static <T> ApiResp<T> error(String errorMessage, int code, T data) {
 
-        return newInstance(HttpStatus.OK, errorMessage, code, data);
+        return newInstance(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, code, data);
     }
 
     public static <T> ApiResp<T> error(String errorMessage, T data) {

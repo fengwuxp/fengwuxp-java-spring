@@ -42,20 +42,20 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
     private transient final HttpStatus httpStatus;
 
     /**
-     * 响应的消息
+     * 业务失败时的响应消息
      */
-    private final String message;
+    private final String errorMessage;
 
     /**
-     * 响应的页面编码
+     * 业务失败时的错误响应码
      */
-    private final int code;
+    private final int errorCode;
 
-    protected DefaultRestfulApiRespImpl(T data, HttpStatus httpStatus, String message, int code) {
+    protected DefaultRestfulApiRespImpl(T data, HttpStatus httpStatus, String errorMessage, int errorCode) {
         this.data = data;
         this.httpStatus = httpStatus;
-        this.message = message;
-        this.code = code;
+        this.errorMessage = errorMessage;
+        this.errorCode = errorCode;
     }
 
     @Override
@@ -71,6 +71,6 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
 
     @Override
     public boolean isSuccess() {
-        return BUSINESS_SUCCESS_CODE == code;
+        return BUSINESS_SUCCESS_CODE == errorCode;
     }
 }
