@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.wuxp.api.ApiRequest.*;
-import static org.junit.Assert.*;
 
 public class Md5ApiSignatureStrategyTest {
 

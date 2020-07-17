@@ -1,8 +1,9 @@
 package com.wuxp.security.authenticate.form;
 
+import com.wuxp.api.restful.RestfulApiRespFactory;
+import com.wuxp.security.authenticate.HttpMessageResponseWriter;
 import com.wuxp.security.authenticate.LockedUserDetailsService;
 import com.wuxp.security.authenticate.LoginEnvironmentContext;
-import com.wuxp.security.authenticate.HttpMessageResponseWriter;
 import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,22 +83,20 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
         }
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        Map<String, Object> map = new HashMap<>();
         String message = exception.getMessage();
         if (exception instanceof UsernameNotFoundException || exception instanceof InternalAuthenticationServiceException) {
             message = "用户不存在";
         } else if (exception instanceof BadCredentialsException) {
             message = "用户名或密码错误";
         } else {
-
+            message = message == null ? "发生非预期的异常" : message;
         }
-
-        map.put("message", StringUtils.hasText(message) ? message : "发生非预期的异常");
+        Map<String, Object> map = new HashMap<>();
         //是否需要图片验证码验证
         map.put("needPictureCaptcha", loginEnvironmentContext.isNeedPictureCaptcha());
         //返回Json数据
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        this.writeJson(response, map);
+        this.writeJson(response, RestfulApiRespFactory.error(message, map));
 
     }
 

@@ -9,6 +9,8 @@ import java.io.IOException;
 
 /**
  * 会话信息失效策略
+ *
+ * @author wuxp
  */
 @Slf4j
 public class WuxpSessionInformationExpiredStrategy implements SessionInformationExpiredStrategy {

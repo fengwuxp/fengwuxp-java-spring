@@ -1,11 +1,9 @@
 package com.wuxp.security.example.request;
 
 
-import com.wuxp.api.AbstractApiReq;
 import com.wuxp.api.context.InjectField;
 import com.wuxp.api.signature.ApiSignatureRequest;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;

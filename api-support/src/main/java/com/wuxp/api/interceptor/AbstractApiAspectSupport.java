@@ -40,7 +40,10 @@ import javax.validation.executable.ExecutableValidator;
 import javax.validation.groups.Default;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static com.wuxp.api.ApiRequest.APP_ID_KEY;
 import static com.wuxp.api.context.ApiRequestContextFactory.AUTHENTICATE;
@@ -51,6 +54,13 @@ import static com.wuxp.api.signature.InternalApiSignatureRequest.*;
 
 /**
  * api aspect support
+ * 用于拦截所有的控制器
+ * <>
+ * 1：尝试做参数注入
+ * 2；参数校验
+ * 3：接口签名验证
+ * 4：日志记录
+ * </>
  *
  * @author wxup
  */
@@ -63,6 +73,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
      */
     private static final String OPERATING_LOG_THREAD_PREFIX = "OPERATING_LOG_THREAD";
 
+    /**
+     * 参数注入类型
+     */
     enum InjectType {
 
         //仅参数

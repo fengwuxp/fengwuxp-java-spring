@@ -1,5 +1,6 @@
 package com.wuxp.security.authenticate.handlers;
 
+import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.authenticate.HttpMessageResponseWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 简单的鉴权失败响应处理，将错误消息返回给前端
@@ -24,9 +23,7 @@ public class SimpleAuthenticationFailureHandler implements AuthenticationFailure
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        Map<String, Object> map = new HashMap<>();
-        map.put("message", exception.getMessage());
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        this.writeJson(response, map);
+        this.writeJson(response, RestfulApiRespFactory.error(exception.getMessage()));
     }
 }

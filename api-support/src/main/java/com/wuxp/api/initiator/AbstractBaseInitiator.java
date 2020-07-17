@@ -1,5 +1,6 @@
 package com.wuxp.api.initiator;
 
+import com.wuxp.api.configuration.WuxpApiSupportProperties;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -36,6 +37,8 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
 
     protected volatile boolean isInit = false;
 
+    protected WuxpApiSupportProperties wuxpApiSupportProperties;
+
     /**
      * 用于初始化某一个表对象或者是持久化对象
      */
@@ -58,6 +61,10 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
+        if (!Boolean.TRUE.equals(wuxpApiSupportProperties.getEnabledInitiator())) {
+            log.info("initiator not enabld");
+            return;
+        }
         if (this.isInit) {
             return;
         }
@@ -72,14 +79,19 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
 
     @Override
     public void afterPropertiesSet() {
+        BeanFactory beanFactory = this.beanFactory;
         if (this.threadPoolTaskScheduler == null) {
             try {
-                this.threadPoolTaskScheduler = this.beanFactory.getBean(ThreadPoolTaskScheduler.class);
+                this.threadPoolTaskScheduler = beanFactory.getBean(ThreadPoolTaskScheduler.class);
             } catch (BeansException e) {
                 e.printStackTrace();
                 this.isAsync = false;
             }
         }
+        if (this.wuxpApiSupportProperties == null) {
+            this.wuxpApiSupportProperties = beanFactory.getBean(WuxpApiSupportProperties.class);
+        }
+
     }
 
     public void setInitData(List<T> initData) {

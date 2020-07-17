@@ -37,9 +37,9 @@ public class RestfulResponseBodyAdvice implements ResponseBodyAdvice {
         if (body instanceof ApiResp) {
             ApiResp resp = (ApiResp) body;
             response.setStatusCode(resp.getHttpStatus());
-            if (resp.isSuccess()) {
-                return resp.getData();
-            }
+//            if (resp.isSuccess()) {
+//                return resp.getData();
+//            }
             return body;
         }
         return body;

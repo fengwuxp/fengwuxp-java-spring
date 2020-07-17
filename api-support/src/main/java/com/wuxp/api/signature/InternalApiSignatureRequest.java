@@ -1,7 +1,6 @@
 package com.wuxp.api.signature;
 
 
-import com.wuxp.api.AbstractApiReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;

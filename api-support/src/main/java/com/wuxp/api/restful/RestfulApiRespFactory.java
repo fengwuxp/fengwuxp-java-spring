@@ -73,11 +73,11 @@ public final class RestfulApiRespFactory {
         return newInstance(HttpStatus.FORBIDDEN, errorMessage, BUSINESS_FAILURE_CODE, null);
     }
 
-    /*-------------------- 5xx -------------------*/
+    /*-------------------- business handle error -------------------*/
 
     public static <T> ApiResp<T> error(String errorMessage, int code, T data) {
 
-        return newInstance(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, code, data);
+        return newInstance(HttpStatus.OK, errorMessage, code, data);
     }
 
     public static <T> ApiResp<T> error(String errorMessage, T data) {

@@ -2,7 +2,6 @@ package com.wuxp.security.authenticate.configuration;
 
 import com.wuxp.security.authenticate.CaptchaWebAuthenticationDetailsSource;
 import com.wuxp.security.authenticate.JwtAuthenticationFilter;
-import com.wuxp.security.authenticate.PasswordAuthenticationProvider;
 import com.wuxp.security.authenticate.form.PasswordLoginEnvironmentHolder;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaAuthenticationFailureHandler;
 import com.wuxp.security.authenticate.restful.RestfulAuthenticationEntryPoint;
@@ -13,8 +12,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 /**

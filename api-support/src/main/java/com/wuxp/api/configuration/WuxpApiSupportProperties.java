@@ -3,6 +3,9 @@ package com.wuxp.api.configuration;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * @author wuxp
+ */
 @Data
 @ConfigurationProperties(prefix = WuxpApiSupportProperties.PREFIX)
 public class WuxpApiSupportProperties {
@@ -18,4 +21,10 @@ public class WuxpApiSupportProperties {
      * 是否启用api签名策略
      */
     private Boolean enabledApiSignature = true;
+
+    /**
+     * 是否启用数据初始化器
+     * 一般应用在生产正常部署后可以考虑关闭该配置
+     */
+    private Boolean enabledInitiator = true;
 }

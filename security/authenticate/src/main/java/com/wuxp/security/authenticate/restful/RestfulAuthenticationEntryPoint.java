@@ -1,6 +1,7 @@
 package com.wuxp.security.authenticate.restful;
 
 import com.alibaba.fastjson.JSON;
+import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.authenticate.HttpMessageResponseWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 在认证失败的时候返回401
@@ -26,7 +25,6 @@ import java.util.Map;
 @Slf4j
 public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint, HttpMessageResponseWriter {
 
-    private final static String DEFAULT_MESSAGE_KEY = "message";
     private final static String ANONYMOUS_ERROR_MESSAGE = "登录状态已失效或未登录";
 
     /**
@@ -39,18 +37,9 @@ public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint
      */
     private String anonymousResp;
 
-    public RestfulAuthenticationEntryPoint(Map<String, Object> unAuthorizedResp) {
-        this.unAuthorizedResp = JSON.toJSONString(unAuthorizedResp);
-        this.anonymousResp = JSON.toJSONString(unAuthorizedResp);
-    }
-
     public RestfulAuthenticationEntryPoint(String errorMessage) {
-
-        HashMap<String, Object> unAuthorizedResp = new HashMap<>();
-        unAuthorizedResp.put(DEFAULT_MESSAGE_KEY, errorMessage);
-        this.unAuthorizedResp = JSON.toJSONString(unAuthorizedResp);
-        unAuthorizedResp.put(DEFAULT_MESSAGE_KEY, ANONYMOUS_ERROR_MESSAGE);
-        this.anonymousResp = JSON.toJSONString(unAuthorizedResp);
+        this.unAuthorizedResp = JSON.toJSONString(RestfulApiRespFactory.error(errorMessage));
+        this.anonymousResp = JSON.toJSONString(RestfulApiRespFactory.error(ANONYMOUS_ERROR_MESSAGE));
     }
 
     public RestfulAuthenticationEntryPoint() {
