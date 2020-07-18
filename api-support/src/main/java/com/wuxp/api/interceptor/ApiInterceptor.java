@@ -1,6 +1,7 @@
 package com.wuxp.api.interceptor;
 
 import com.wuxp.api.log.ApiLog;
+import com.wuxp.api.signature.ApiIgnoreSignature;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -27,6 +28,12 @@ public class ApiInterceptor extends AbstractApiAspectSupport implements MethodIn
         Class<?> targetClass = this.getTargetClass(target);
         Object[] arguments = invocation.getArguments();
         Method method = invocation.getMethod();
+        boolean ignoreInterceptor = targetClass.getAnnotation(ApiIgnoreSignature.class) != null
+                || method.getAnnotation(ApiIgnoreSignature.class) != null;
+        if (ignoreInterceptor) {
+            // 不进行拦截处理
+            return invocation.proceed();
+        }
 
         // 尝试参数注入
         EvaluationContext evaluationContext = this.tryInjectParamsValue(target, targetClass, method, arguments);
