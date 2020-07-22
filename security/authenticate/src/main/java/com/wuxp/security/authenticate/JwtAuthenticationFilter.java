@@ -3,6 +3,7 @@ package com.wuxp.security.authenticate;
 
 import com.wuxp.security.jwt.JwtProperties;
 import com.wuxp.security.jwt.JwtTokenProvider;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
@@ -22,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -45,6 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
 
     private JwtProperties jwtProperties;
 
+    /**
+     * 尝试获取鉴权信息的路由
+     */
+    private List<String> tryAuthenticationPaths;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -60,25 +67,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
             if (StringUtils.hasText(authorizationHeader)) {
                 UserDetails userDetails = null;
                 try {
-                    userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader,request);
+                    userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader, request);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } catch (UsernameNotFoundException exception) {
                     exception.printStackTrace();
-//                    Map<String, Object> map = new HashMap<>();
-//                    map.put("message", exception.getMessage());
-//                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-//                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//                    response.getWriter().write(JSON.toJSONString(map));
-//                    return;
+                    if (this.isTryAuthenticationPath(request.getRequestURI())) {
+                        chain.doFilter(request, response);
+                        return;
+                    }
+                    // 通过获取用户信息异常
+                    authenticationEntryPoint.commence(request, response, exception);
+                } catch (ExpiredJwtException exception) {
+                    exception.printStackTrace();
+                    if (this.isTryAuthenticationPath(request.getRequestURI())) {
+                        chain.doFilter(request, response);
+                        return;
+                    }
+                    // token过期
+                    authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is expired"));
                 }
 
             } else {
-                /**
-                 * 带安全头 没有带token
-                 */
+                if (this.isTryAuthenticationPath(request.getRequestURI())) {
+                    chain.doFilter(request, response);
+                    return;
+                }
+                // 带安全头 没有带token
                 authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));
             }
 
@@ -104,5 +121,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         if (this.jwtProperties == null) {
             this.jwtProperties = beanFactory.getBean(JwtProperties.class);
         }
+    }
+
+    protected boolean isTryAuthenticationPath(String uri) {
+        if (this.tryAuthenticationPaths == null) {
+            return false;
+        }
+        return this.tryAuthenticationPaths.stream()
+                .map((item) -> item.equals(uri)
+                ).filter(r -> r)
+                .findFirst()
+                .orElse(false);
     }
 }
