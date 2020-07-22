@@ -45,7 +45,7 @@ public class JwtProperties {
      * Generate token to set expire time
      * user?
      */
-    private Duration expireTimeout = Duration.ofSeconds(7200);
+    private Duration expireTimeout = Duration.ofHours(8);
 
 
     /**
