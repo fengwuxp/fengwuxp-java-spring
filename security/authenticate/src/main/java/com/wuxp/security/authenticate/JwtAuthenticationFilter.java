@@ -55,6 +55,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
     private List<String> tryAuthenticationPaths;
 
 
+    /**
+     * 使用鉴权token交换用户信息
+     * 存在如下几种情况
+     * <>
+     *   1：{@link SecurityContextHolder} 中已经存在用户信息，跳过
+     *   2：请求头中没有token，跳过
+     *   3：请求头中存在token，校验token的合法性
+     *   4：交换用户信息，可能会抛出token过期异常或用户不存在的异常（token是伪造的）
+     *   5：携带token的路径不是必须鉴权的，只是做尝试性的获取，则进行跳过
+     * </>
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 如果已经通过认证
@@ -82,6 +98,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                     }
                     // 通过获取用户信息异常
                     authenticationEntryPoint.commence(request, response, exception);
+                    return;
                 } catch (ExpiredJwtException exception) {
                     exception.printStackTrace();
                     if (this.isTryAuthenticationPath(request)) {
@@ -90,6 +107,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                     }
                     // token过期
                     authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is expired"));
+                    return;
                 }
 
             } else {
@@ -99,11 +117,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                 }
                 // 带安全头 没有带token
                 authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));
+                return;
             }
-
-        } else {
-            chain.doFilter(request, response);
         }
+        chain.doFilter(request, response);
 
     }
 
