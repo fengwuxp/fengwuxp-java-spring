@@ -48,7 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
     private JwtProperties jwtProperties;
 
     /**
-     * 尝试获取鉴权信息的路由
+     * 尝试获取鉴权信息的路径
+     * 必须是完整的路径（不包含contentPath）,
+     * 暂时不支持有存在路径参数
      */
     private List<String> tryAuthenticationPaths;
 
@@ -65,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         String headerPrefix = jwtProperties.getHeaderPrefix();
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(headerPrefix)) {
             if (StringUtils.hasText(authorizationHeader)) {
-                UserDetails userDetails = null;
+                UserDetails userDetails;
                 try {
                     userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader, request);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -74,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } catch (UsernameNotFoundException exception) {
                     exception.printStackTrace();
-                    if (this.isTryAuthenticationPath(request.getRequestURI())) {
+                    if (this.isTryAuthenticationPath(request)) {
                         chain.doFilter(request, response);
                         return;
                     }
@@ -82,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                     authenticationEntryPoint.commence(request, response, exception);
                 } catch (ExpiredJwtException exception) {
                     exception.printStackTrace();
-                    if (this.isTryAuthenticationPath(request.getRequestURI())) {
+                    if (this.isTryAuthenticationPath(request)) {
                         chain.doFilter(request, response);
                         return;
                     }
@@ -91,7 +93,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                 }
 
             } else {
-                if (this.isTryAuthenticationPath(request.getRequestURI())) {
+                if (this.isTryAuthenticationPath(request)) {
                     chain.doFilter(request, response);
                     return;
                 }
@@ -99,10 +101,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                 authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));
             }
 
+        } else {
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
+
     }
 
+
+    /**
+     * 是否仅仅只是尝试做鉴权
+     *
+     * @param request
+     * @return
+     */
+    protected boolean isTryAuthenticationPath(HttpServletRequest request) {
+        if (this.tryAuthenticationPaths == null) {
+            return false;
+        }
+        String uri = request.getRequestURI()
+                .replace(request.getContextPath(), "");
+        return this.tryAuthenticationPaths.stream()
+                .map((item) -> item.equals(uri)
+                ).filter(r -> r)
+                .findFirst()
+                .orElse(false);
+    }
 
     @Override
     protected void initFilterBean() throws ServletException {
@@ -121,16 +144,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         if (this.jwtProperties == null) {
             this.jwtProperties = beanFactory.getBean(JwtProperties.class);
         }
-    }
-
-    protected boolean isTryAuthenticationPath(String uri) {
-        if (this.tryAuthenticationPaths == null) {
-            return false;
-        }
-        return this.tryAuthenticationPaths.stream()
-                .map((item) -> item.equals(uri)
-                ).filter(r -> r)
-                .findFirst()
-                .orElse(false);
     }
 }
