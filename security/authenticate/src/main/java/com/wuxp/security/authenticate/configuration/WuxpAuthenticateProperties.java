@@ -3,14 +3,19 @@ package com.wuxp.security.authenticate.configuration;
 import com.wuxp.security.authenticate.form.FormLoginProperties;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaLoginProperties;
 import com.wuxp.security.authenticate.scancode.ScanCodeLoginProperties;
+import com.wuxp.security.authenticate.session.SessionLimitStrategy;
+import com.wuxp.security.authenticate.session.SessionSecurityStrategy;
 import com.wuxp.security.openid.OpenIdLoginProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.Duration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 配置 spring security
+ *
  * @author wxup
  */
 @Data
@@ -63,6 +68,26 @@ public class WuxpAuthenticateProperties {
 
     /**
      * 同一账号同时登录最大用户数
+     *
+     * @see SessionLimitStrategy
      */
     private int maximumSessions = 1;
+
+    /**
+     * 不同客户端同一个账号最大可以登录的次数，
+     * 默认 ：{@link #maximumSessions}
+     */
+    private Map<String, Integer> maximumClientSessions = new LinkedHashMap<>();
+
+
+    public int getMaximumSessions() {
+        return this.getMaximumSessions(null);
+    }
+
+    public int getMaximumSessions(String clientCode) {
+        if (clientCode == null) {
+            return maximumSessions;
+        }
+        return this.maximumClientSessions.getOrDefault(clientCode, maximumSessions);
+    }
 }

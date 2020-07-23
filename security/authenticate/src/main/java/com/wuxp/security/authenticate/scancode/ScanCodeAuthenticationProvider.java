@@ -1,6 +1,6 @@
 package com.wuxp.security.authenticate.scancode;
 
-import com.wuxp.security.authenticate.RequestHeaderAuthorizationDetailsService;
+import com.wuxp.security.authenticate.session.AuthenticateSessionManager;
 import com.wuxp.security.captcha.Captcha;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptcha;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptchaType;
@@ -15,12 +15,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 扫码鉴权
+ * @author wuxp
  */
 @Slf4j
 public class ScanCodeAuthenticationProvider implements AuthenticationProvider {
 
 
-    private RequestHeaderAuthorizationDetailsService requestHeaderAuthorizationDetailsService;
+    private AuthenticateSessionManager authenticateSessionManager;
 
     private QrCodeCaptcha qrCodeCaptcha;
 
@@ -42,7 +43,7 @@ public class ScanCodeAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 通过access_token 交换用户信息
-        UserDetails userDetails = requestHeaderAuthorizationDetailsService.loadUserByAuthorizationToken(accessToken);
+        UserDetails userDetails = authenticateSessionManager.get(accessToken);
         if (userDetails == null) {
             throw new InternalAuthenticationServiceException("无法获取用户信息");
         }
@@ -57,12 +58,12 @@ public class ScanCodeAuthenticationProvider implements AuthenticationProvider {
     }
 
 
-    public RequestHeaderAuthorizationDetailsService getRequestHeaderAuthorizationDetailsService() {
-        return requestHeaderAuthorizationDetailsService;
+    public AuthenticateSessionManager getAuthenticateSessionManager() {
+        return authenticateSessionManager;
     }
 
-    public void setRequestHeaderAuthorizationDetailsService(RequestHeaderAuthorizationDetailsService requestHeaderAuthorizationDetailsService) {
-        this.requestHeaderAuthorizationDetailsService = requestHeaderAuthorizationDetailsService;
+    public void setAuthenticateSessionManager(AuthenticateSessionManager authenticateSessionManager) {
+        this.authenticateSessionManager = authenticateSessionManager;
     }
 
     public QrCodeCaptcha getQrCodeCaptcha() {

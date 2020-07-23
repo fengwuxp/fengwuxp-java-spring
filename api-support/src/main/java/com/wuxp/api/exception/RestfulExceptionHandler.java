@@ -103,7 +103,7 @@ public class RestfulExceptionHandler {
     @ExceptionHandler({BusinessServiceException.class})
     @ResponseBody
     public ApiResp<Integer> handleBusinessServiceException(BusinessServiceException exception) {
-        return RestfulApiRespFactory.error(exception.getMessage(), exception.getErrorCode());
+        return RestfulApiRespFactory.error(exception.getMessage(), exception.getErrorCode(), null);
     }
 
 

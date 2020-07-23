@@ -1,7 +1,7 @@
 package com.wuxp.security.authenticate.scancode;
 
-import com.wuxp.security.authenticate.RequestHeaderAuthorizationDetailsService;
 import com.wuxp.security.authenticate.configuration.WuxpAuthenticateProperties;
+import com.wuxp.security.authenticate.session.AuthenticateSessionManager;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class ScanCodeAuthenticationSecurityConfig extends SecurityConfigurerAdap
     private WuxpAuthenticateProperties wuxpSecurityProperties;
 
     @Autowired(required = false)
-    private RequestHeaderAuthorizationDetailsService requestHeaderAuthorizationDetailsService;
+    private AuthenticateSessionManager authenticateSessionManager;
 
     @Autowired
     private QrCodeCaptcha qrCodeCaptcha;
@@ -39,7 +39,7 @@ public class ScanCodeAuthenticationSecurityConfig extends SecurityConfigurerAdap
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
-        if (requestHeaderAuthorizationDetailsService == null) {
+        if (authenticateSessionManager == null) {
             //未配置表示不启用
             return;
         }
@@ -52,7 +52,7 @@ public class ScanCodeAuthenticationSecurityConfig extends SecurityConfigurerAdap
         scanCodeAuthenticationFilter.setQrCodeCaptcha(qrCodeCaptcha);
 
         ScanCodeAuthenticationProvider scanCodeAuthenticationProvider = new ScanCodeAuthenticationProvider();
-        scanCodeAuthenticationProvider.setRequestHeaderAuthorizationDetailsService(requestHeaderAuthorizationDetailsService);
+        scanCodeAuthenticationProvider.setAuthenticateSessionManager(authenticateSessionManager);
         scanCodeAuthenticationProvider.setQrCodeCaptcha(qrCodeCaptcha);
         http.authenticationProvider(scanCodeAuthenticationProvider)
                 .addFilterAfter(scanCodeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

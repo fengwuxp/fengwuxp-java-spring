@@ -2,6 +2,7 @@ package com.wuxp.security.authenticate;
 
 /**
  * 认证类型
+ * @author wuxp
  */
 public enum AuthenticateType {
 

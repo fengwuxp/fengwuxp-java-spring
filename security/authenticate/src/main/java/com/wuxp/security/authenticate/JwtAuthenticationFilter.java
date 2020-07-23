@@ -1,6 +1,8 @@
 package com.wuxp.security.authenticate;
 
 
+import com.wuxp.api.ApiResp;
+import com.wuxp.security.authenticate.session.AuthenticateSessionManager;
 import com.wuxp.security.jwt.JwtProperties;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,15 +30,15 @@ import java.util.List;
 
 /**
  * jwt 认证拦截器 用于拦截 请求 提取jwt 认证
+ *
+ * @author wuxp
  */
 @Slf4j
 @Setter
-public class JwtAuthenticationFilter extends OncePerRequestFilter implements BeanFactoryAware {
+public class JwtAuthenticationFilter extends OncePerRequestFilter implements BeanFactoryAware, HttpMessageResponseWriter {
 
 
     private BeanFactory beanFactory;
-
-    private RequestHeaderAuthorizationDetailsService authorizationDetailsService;
 
     /**
      * 认证如果失败由该端点进行响应
@@ -46,6 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
     private JwtTokenProvider jwtTokenProvider;
 
     private JwtProperties jwtProperties;
+
+    private AuthenticateSessionManager authenticateSessionManager;
 
     /**
      * 尝试获取鉴权信息的路径
@@ -59,12 +63,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
      * 使用鉴权token交换用户信息
      * 存在如下几种情况
      * <>
-     *   1：{@link SecurityContextHolder} 中已经存在用户信息，跳过
-     *   2：请求头中没有token，跳过
-     *   3：请求头中存在token，校验token的合法性
-     *   4：交换用户信息，可能会抛出token过期异常或用户不存在的异常（token是伪造的）
-     *   5：携带token的路径不是必须鉴权的，只是做尝试性的获取，则进行跳过
+     * 1：{@link SecurityContextHolder} 中已经存在用户信息，跳过
+     * 2：请求头中没有token，跳过
+     * 3：请求头中存在token，校验token的合法性
+     * 4：交换用户信息，可能会抛出token过期异常或用户不存在的异常（token是伪造的）
+     * 5：携带token的路径不是必须鉴权的，只是做尝试性的获取，则进行跳过
      * </>
+     *
      * @param request
      * @param response
      * @param chain
@@ -81,47 +86,68 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         // 获取 header 解析出 jwt 并进行认证 无token 直接进入下一个过滤器  因为  SecurityContext 的缘故 如果无权限并不会放行
         String authorizationHeader = request.getHeader(jwtProperties.getHeaderName());
         String headerPrefix = jwtProperties.getHeaderPrefix();
-        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(headerPrefix)) {
-            if (StringUtils.hasText(authorizationHeader)) {
-                UserDetails userDetails;
-                try {
-                    userDetails = this.authorizationDetailsService.loadUserByAuthorizationToken(authorizationHeader, request);
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } catch (UsernameNotFoundException exception) {
-                    exception.printStackTrace();
-                    if (this.isTryAuthenticationPath(request)) {
-                        chain.doFilter(request, response);
-                        return;
-                    }
-                    // 通过获取用户信息异常
-                    authenticationEntryPoint.commence(request, response, exception);
-                    return;
-                } catch (ExpiredJwtException exception) {
-                    exception.printStackTrace();
-                    if (this.isTryAuthenticationPath(request)) {
-                        chain.doFilter(request, response);
-                        return;
-                    }
-                    // token过期
-                    authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is expired"));
-                    return;
-                }
+        if (!StringUtils.hasText(authorizationHeader) || !authorizationHeader.startsWith(headerPrefix)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        authorizationHeader = authorizationHeader.trim();
+        if (authorizationHeader.equals(headerPrefix)) {
+            if (this.isTryAuthenticationPath(request)) {
+                chain.doFilter(request, response);
+                return;
+            }
+            // 带安全头 没有带token
+            authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));
+            return;
+        }
 
-            } else {
+        UserDetails userDetails;
+        try {
+            userDetails = this.authenticateSessionManager.get(authorizationHeader);
+            if (userDetails == null) {
                 if (this.isTryAuthenticationPath(request)) {
                     chain.doFilter(request, response);
                     return;
                 }
-                // 带安全头 没有带token
-                authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is empty"));
+                // 用户被踢出的信息存在
+                ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(authorizationHeader);
+                if (kickOutResp != null) {
+                    this.writeJson(response, kickOutResp);
+                    return;
+                }
+                authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("user not get"));
+            } else {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                chain.doFilter(request, response);
+            }
+
+        } catch (UsernameNotFoundException exception) {
+            exception.printStackTrace();
+            if (this.isTryAuthenticationPath(request)) {
+                chain.doFilter(request, response);
                 return;
             }
-        }
-        chain.doFilter(request, response);
+            // 用户被踢出的信息存在
+            ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(authorizationHeader);
+            if (kickOutResp != null) {
+                this.writeJson(response, kickOutResp);
+                return;
+            }
 
+            // 通过获取用户信息异常
+            authenticationEntryPoint.commence(request, response, exception);
+        } catch (ExpiredJwtException exception) {
+            exception.printStackTrace();
+            if (this.isTryAuthenticationPath(request)) {
+                chain.doFilter(request, response);
+                return;
+            }
+            // token过期
+            authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is expired"));
+        }
     }
 
 
@@ -147,9 +173,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
     @Override
     protected void initFilterBean() throws ServletException {
         super.initFilterBean();
-        if (this.authorizationDetailsService == null) {
-            this.authorizationDetailsService = beanFactory.getBean(RequestHeaderAuthorizationDetailsService.class);
-        }
 
         if (this.authenticationEntryPoint == null) {
             this.authenticationEntryPoint = beanFactory.getBean(AuthenticationEntryPoint.class);
@@ -160,6 +183,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
 
         if (this.jwtProperties == null) {
             this.jwtProperties = beanFactory.getBean(JwtProperties.class);
+        }
+        if (this.authenticateSessionManager == null) {
+            this.authenticateSessionManager = beanFactory.getBean(AuthenticateSessionManager.class);
         }
     }
 }
