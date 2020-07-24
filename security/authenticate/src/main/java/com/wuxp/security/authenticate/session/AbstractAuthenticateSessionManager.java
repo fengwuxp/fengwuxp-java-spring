@@ -5,6 +5,7 @@ import com.wuxp.api.ApiResp;
 import com.wuxp.api.exception.AssertThrow;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.authenticate.PasswordUserDetails;
+import com.wuxp.security.jwt.JwtTokenPair;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -13,15 +14,11 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,8 +59,10 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     }
 
     @Override
-    public T join(String token, T userDetails) {
+    public T join(T userDetails) {
 
+        String token = userDetails.getToken();
+        assert token != null;
         // 把用户登录信息加入缓存
         Cache userCache = this.cacheManager.getCache(this.getUserCacheName());
         userCache.put(token, userDetails);
@@ -79,31 +78,38 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         return userDetails;
     }
 
+
+    @Override
+    public T refreshToken(String refreshToken, String clientCode) {
+        String username = this.getUsername(refreshToken);
+        if (username == null) {
+            return null;
+        }
+        // 判断refresh token是否存在
+        Collection<T> userDetailsList = this.getUserDetailsList(username, clientCode);
+        T refreshUser = userDetailsList.stream()
+                .filter(user -> refreshToken.equals(user.getRefreshToken()))
+                .findFirst()
+                .orElse(null);
+        if (refreshUser == null) {
+            // refresh token 不存在
+            return null;
+        }
+
+        this.tryRemoveDbToken(refreshUser);
+        String token = refreshUser.getToken();
+        // 加入新的token
+        T newUserDetails = join(refreshUser);
+        // 移除旧的token
+        removeByUserName(username, token);
+        return newUserDetails;
+    }
+
     @Override
     public void remove(String token) {
         // 更新数据库的token记录
         String username = this.getUsername(token);
-        if (username == null) {
-            return;
-        }
-
-        T user = this.get(token);
-        if (user == null) {
-            return;
-        }
-        this.removeDbToken(user);
-        Cache userCache = this.cacheManager.getCache(this.getUserCacheName());
-        // 移除掉缓存中的用户
-        userCache.evict(token);
-        // 移除缓存中的token
-        Cache cache = this.getTokenCache(user.getClientCode());
-        List<String> tokens = cache.get(username, List.class);
-        if (tokens == null) {
-            return;
-        }
-        tokens.remove(token);
-        cache.put(username, tokens);
-
+        removeByUserName(username, token);
     }
 
     @Override
@@ -167,11 +173,12 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     protected abstract T findUserByToken(String token);
 
     /**
-     * 移除掉数据库中的token
+     * 移除当前用户的token,并尝试移除掉数据库中该用户已过期的token
      *
      * @param user 需要移除登录的用户
      */
-    protected abstract void removeDbToken(T user);
+    protected abstract void tryRemoveDbToken(T user);
+
 
     /**
      * 获取数据库中的token
@@ -204,6 +211,29 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
      */
     protected abstract String getKickOutReasonCacheName();
 
+
+    /**
+     * 用于生成用户的token信息
+     *
+     * @param userDetails
+     * @return
+     */
+    protected T genAuthenticateToken(T userDetails) {
+        JwtTokenPair.JwtTokenPayLoad jwtTokenPayLoad = jwtTokenProvider.generateAccessToken(userDetails.getUsername());
+        Date tokenExpireTimes = jwtTokenPayLoad.getTokenExpireTimes();
+        String token = jwtTokenPayLoad.getToken();
+
+        userDetails.setToken(token);
+        userDetails.setTokenExpired(tokenExpireTimes);
+        long currentTimeMillis = System.currentTimeMillis();
+        userDetails.setEffectiveMilliseconds(tokenExpireTimes.getTime() - currentTimeMillis);
+
+        JwtTokenPair.JwtTokenPayLoad refreshToken = jwtTokenProvider.generateRefreshToken(userDetails.getUsername());
+        userDetails.setRefreshToken(refreshToken.getToken());
+        userDetails.setRefreshTokenExpired(refreshToken.getTokenExpireTimes());
+        userDetails.setRefreshEffectiveMilliseconds(refreshToken.getTokenExpireTimes().getTime() - currentTimeMillis);
+        return userDetails;
+    }
 
     /**
      * 解析token 获取用户名
@@ -246,6 +276,30 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         if (this.userDetailsService == null) {
             this.userDetailsService = beanFactory.getBean(UserDetailsService.class);
         }
+    }
+
+
+    private void removeByUserName(String username, String token) {
+        if (username == null) {
+            return;
+        }
+
+        T user = this.get(token);
+        if (user == null) {
+            return;
+        }
+        this.tryRemoveDbToken(user);
+        Cache userCache = this.cacheManager.getCache(this.getUserCacheName());
+        // 移除掉缓存中的用户
+        userCache.evict(token);
+        // 移除缓存中的token
+        Cache cache = this.getTokenCache(user.getClientCode());
+        List<String> tokens = cache.get(username, List.class);
+        if (tokens == null) {
+            return;
+        }
+        tokens.remove(token);
+        cache.put(username, tokens);
     }
 
 

@@ -9,7 +9,7 @@ import java.beans.Transient;
  *
  * @author wxup
  */
-public interface PasswordUserDetails extends UserDetails {
+public interface PasswordUserDetails extends UserDetails, AuthenticateTokenDetails {
 
 
     /**
@@ -21,8 +21,10 @@ public interface PasswordUserDetails extends UserDetails {
     @Transient
     String getCryptoSalt();
 
+
     /**
      * 不同的的客户端(渠道)允许同时登录
+     *
      * @return
      */
     default String getClientCode() {

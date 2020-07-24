@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 扫码二维码登录
+ *
+ * @author wuxp
  */
 @Component
 @Slf4j

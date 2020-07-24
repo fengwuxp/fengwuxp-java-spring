@@ -34,12 +34,30 @@ public interface AuthenticateSessionManager<T extends UserDetails> {
 
     /**
      * 把用户加入会话管理器
+     * <>
+     * 1：生成token
+     * 2: 生成refresh token
+     * </>
      *
-     * @param token       用户的登录token
      * @param userDetails 用户登录信息
      * @return <T>
      */
-    T join(String token, T userDetails);
+    T join(T userDetails);
+
+    /**
+     * 刷新token
+     * <>
+     * 1：判断refreshToken 是否过期
+     * 2：通过refreshToken 交换用户信息
+     * 3：生成新的用户token，并加入处理
+     * </>
+     * 如果refreshToken过期，则不处理
+     *
+     * @param refreshToken 用户的refreshToken
+     * @param clientCode   客户端代码
+     * @return <code>null</code> 刷新失败，else 刷新后的用户信息
+     */
+    T refreshToken(String refreshToken, String clientCode);
 
     /**
      * 正常移除在线用户，一般是退出登录使用
