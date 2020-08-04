@@ -2,7 +2,6 @@ package com.wuxp.security.authenticate.session;
 
 
 import com.wuxp.api.ApiResp;
-import com.wuxp.api.exception.AssertThrow;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.authenticate.PasswordUserDetails;
 import com.wuxp.security.jwt.JwtTokenPair;
@@ -101,15 +100,20 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         // 加入新的token
         T newUserDetails = join(refreshUser);
         // 移除旧的token
-        removeByUserName(username, token);
+        removeCacheTokenByUserName(username, token);
         return newUserDetails;
     }
 
     @Override
     public void remove(String token) {
-        // 更新数据库的token记录
         String username = this.getUsername(token);
-        removeByUserName(username, token);
+        T user = this.get(token);
+        if (user == null) {
+            return;
+        }
+        // 移除token
+        this.tryRemoveDbToken(user);
+        removeCacheTokenByUserName(username, token);
     }
 
     @Override
@@ -181,7 +185,7 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
 
 
     /**
-     * 获取数据库中的token
+     * 获取数据库有效的(未过期)token
      *
      * @param userName   用户名
      * @param clientCode 客户端code
@@ -279,7 +283,13 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     }
 
 
-    private void removeByUserName(String username, String token) {
+    /**
+     * 通过用户名移除中缓存的 token
+     *
+     * @param username 用户名
+     * @param token    token
+     */
+    private void removeCacheTokenByUserName(String username, String token) {
         if (username == null) {
             return;
         }

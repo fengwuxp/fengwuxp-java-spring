@@ -22,7 +22,6 @@ public abstract class AbstractSessionLimitStrategy implements SessionLimitStrate
     public void tryAcquire(UserDetails userDetails) {
 
         PasswordUserDetails user = (PasswordUserDetails) userDetails;
-
         String username = userDetails.getUsername();
         int maximumSessions = authenticateProperties.getMaximumSessions(user.getClientCode());
         int currentSessions = authenticateSessionManager.getCurrentSessions(username, user.getClientCode());

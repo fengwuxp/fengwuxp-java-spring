@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -112,6 +113,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
                 // 用户被踢出的信息存在
                 ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(authorizationHeader);
                 if (kickOutResp != null) {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     this.writeJson(response, kickOutResp);
                     return;
                 }
@@ -133,6 +135,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
             // 用户被踢出的信息存在
             ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(authorizationHeader);
             if (kickOutResp != null) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 this.writeJson(response, kickOutResp);
                 return;
             }
