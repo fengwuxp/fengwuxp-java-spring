@@ -24,4 +24,6 @@ spring:
 #  level:
 #    org.springframework: debug
 #    org.hibernate: debug
-
+wuxp:
+  api:
+    enabled-api-signature: false

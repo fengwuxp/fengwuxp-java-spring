@@ -3,10 +3,7 @@ package com.wuxp.api.interceptor;
 import com.wuxp.api.ApiRequest;
 import com.wuxp.api.context.ApiRequestContextFactory;
 import com.wuxp.api.context.InjectField;
-import com.wuxp.api.log.ApiLog;
-import com.wuxp.api.log.ApiLogModel;
-import com.wuxp.api.log.ApiLogRecorder;
-import com.wuxp.api.log.SimpleApiAction;
+import com.wuxp.api.log.*;
 import com.wuxp.api.signature.*;
 import com.wuxp.basic.utils.IpAddressUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -118,6 +115,8 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
     protected ApiOperationExpressionEvaluator evaluator = new ApiOperationExpressionEvaluator();
 
     protected Validator validator;
+
+    protected TemplateExpressionParser templateExpressionParser;
 
 
     /**
@@ -324,29 +323,30 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
                                 Object result,
                                 EvaluationContext evaluationContext,
                                 Throwable throwable) {
-        ApiLogRecorder apiLogRecorder = this.apiLogRecorder;
+        final ApiLogRecorder apiLogRecorder = this.apiLogRecorder;
         if (apiLogRecorder == null) {
             return;
         }
-        ApiOperationCacheKey cacheKey = new ApiOperationCacheKey(method, targetClass);
-        ApiOperationMetadata apiOperationMetadata = this.metadataCache.get(cacheKey);
-        ApiLog apiLog = apiOperationMetadata.targetMethod.getAnnotation(ApiLog.class);
-        if (apiLog == null) {
-            return;
-        }
-        if (result != null) {
-            ((ApiEvaluationContext) evaluationContext).setEvaluationContextMethodResult(result);
-        }
+        final HttpServletRequest httpServletRequest = getHttpServletRequest();
+        final Map<ApiOperationCacheKey, ApiOperationMetadata> metadataCache = this.metadataCache;
 
-        HttpServletRequest httpServletRequest = getHttpServletRequest();
-        //使用异步队列记录日志
+        // 异步记录日志
         this.logExecutor.execute(() -> {
+            ApiOperationCacheKey cacheKey = new ApiOperationCacheKey(method, targetClass);
+            ApiOperationMetadata apiOperationMetadata = metadataCache.get(cacheKey);
+            ApiLog apiLog = apiOperationMetadata.targetMethod.getAnnotation(ApiLog.class);
+            if (apiLog == null) {
+                return;
+            }
+            if (result != null) {
+                ((ApiEvaluationContext) evaluationContext).setEvaluationContextMethodResult(result);
+            }
             ApiLogModel apiLogModel = genApiLogModel(apiLog, httpServletRequest, apiOperationMetadata, evaluationContext);
             SimpleApiAction simpleApiAction = SimpleApiAction.valueOfByMethod(method);
             if (simpleApiAction != null) {
                 apiLogModel.setAction(simpleApiAction.name());
             }
-            AbstractApiAspectSupport.this.apiLogRecorder.log(apiLogModel, evaluationContext, throwable);
+            apiLogRecorder.log(apiLogModel, evaluationContext, throwable);
         });
     }
 
@@ -546,7 +546,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         AnnotatedElementKey methodKey = apiOperationMetadata.methodKey;
 
         ApiLogModel apiLogModel = new ApiLogModel();
-        apiLogModel.setContent(evaluator.log(apiLog.value(), methodKey, evaluationContext));
+        TemplateExpressionParser templateExpressionParser = this.templateExpressionParser;
+        String logContent = templateExpressionParser.parse(apiLog.value(), methodKey, evaluationContext);
+        apiLogModel.setContent(logContent);
         if (StringUtils.hasText(apiLog.targetResourceId())) {
             apiLogModel.setTargetResourceId(evaluator.log(apiLog.targetResourceId(), methodKey, evaluationContext));
         }
@@ -728,6 +730,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
                 this.validator = Validation.buildDefaultValidatorFactory().getValidator();
             }
         }
+        this.templateExpressionParser = new SimpleTemplateExpressionParser(this.evaluator);
     }
 
     /**

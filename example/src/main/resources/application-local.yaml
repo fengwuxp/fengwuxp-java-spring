@@ -26,4 +26,4 @@ logging:
 #    org.hibernate: debug
 wuxp:
   api:
-    enabled-api-signature: true
+    enabled-api-signature: false

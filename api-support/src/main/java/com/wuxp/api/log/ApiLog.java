@@ -15,7 +15,7 @@ public @interface ApiLog {
 
     /**
      * support spel
-     *
+     * 支持模板字符串 {@link com.wuxp.api.log.TemplateExpressionParser}
      * <p>
      * <p>
      * #result

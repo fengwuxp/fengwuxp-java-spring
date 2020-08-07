@@ -14,5 +14,6 @@ public class MockApiLogRecorder implements ApiLogRecorder {
     @Override
     public void log(ApiLogModel apiLogModel, EvaluationContext evaluationContext, Throwable throwable) {
         log.info("模拟日志记录 {}", apiLogModel);
+
     }
 }

@@ -49,8 +49,8 @@ public class ApiLogController {
             }
     )
     @GetMapping("/test2")
-    @ApiLog(value = "#name")
-    public ApiResp<String> test2(@NotNull(message = "姓名不能为空") @InjectField(value = "#ip") String name) {
+    @ApiLog(value = "这是一个测试请求，访问者:{name} ip：{ip}")
+    public ApiResp<String> test2(@NotNull(message = "姓名不能为空")@InjectField(value = "#name") String name, @InjectField(value = "#ip") String ip) {
 
         log.info("--{}-->", name);
 

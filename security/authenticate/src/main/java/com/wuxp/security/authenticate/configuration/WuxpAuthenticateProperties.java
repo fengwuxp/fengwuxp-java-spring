@@ -4,7 +4,6 @@ import com.wuxp.security.authenticate.form.FormLoginProperties;
 import com.wuxp.security.authenticate.mobile.MobileCaptchaLoginProperties;
 import com.wuxp.security.authenticate.scancode.ScanCodeLoginProperties;
 import com.wuxp.security.authenticate.session.SessionLimitStrategy;
-import com.wuxp.security.authenticate.session.SessionSecurityStrategy;
 import com.wuxp.security.openid.OpenIdLoginProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

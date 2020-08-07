@@ -6,6 +6,7 @@ import com.wuxp.api.signature.AppInfoStore;
 import com.wuxp.basic.uuid.JdkUUIDGenerateStrategy;
 import com.wuxp.basic.uuid.UUIDGenerateStrategy;
 import com.wuxp.security.example.context.MockApiRequestContextFactory;
+import com.wuxp.security.example.log.MockApiLogRecorder;
 import com.wuxp.security.example.signature.MockAppInfoStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
@@ -67,4 +68,8 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
         return new MockAppInfoStore();
     }
 
+    @Bean
+    public MockApiLogRecorder mockApiLogRecorder(){
+        return new MockApiLogRecorder();
+    }
 }
