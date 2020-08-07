@@ -547,8 +547,14 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
 
         ApiLogModel apiLogModel = new ApiLogModel();
         TemplateExpressionParser templateExpressionParser = this.templateExpressionParser;
-        String logContent = templateExpressionParser.parse(apiLog.value(), methodKey, evaluationContext);
+        String templateContent = apiLog.value();
+        String logContent = templateExpressionParser.parse(templateContent, methodKey, evaluationContext);
+        if (templateContent.equals(logContent) && templateContent.length() > 0) {
+            // 没有存在模板变量
+            logContent = this.evaluator.log(templateContent, methodKey, evaluationContext);
+        }
         apiLogModel.setContent(logContent);
+
         if (StringUtils.hasText(apiLog.targetResourceId())) {
             apiLogModel.setTargetResourceId(evaluator.log(apiLog.targetResourceId(), methodKey, evaluationContext));
         }
@@ -556,7 +562,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         if (ip == null) {
             ip = IpAddressUtils.try2GetUserRealIPAddr(request);
         }
-        apiLogModel.setIp(ip.toString());
+        if (ip != null) {
+            apiLogModel.setIp(ip.toString());
+        }
         apiLogModel.setClientUserAgent(request.getHeader(USER_AGENT_HEADER));
 
         Operation operation = targetMethod.getAnnotation(Operation.class);
