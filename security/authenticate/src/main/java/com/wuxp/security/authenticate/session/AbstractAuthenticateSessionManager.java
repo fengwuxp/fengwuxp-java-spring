@@ -8,12 +8,16 @@ import com.wuxp.security.jwt.JwtTokenPair;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * @author wuxp
  */
+@Slf4j
 public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserDetails> implements AuthenticateSessionManager<T>, InitializingBean, BeanFactoryAware {
 
     /**
@@ -51,11 +56,17 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     @Override
     public T get(String token) {
         Cache cache = this.cacheManager.getCache(this.getUserCacheName());
+        assert cache != null;
         T user = cache.get(token, userClassType);
         if (user != null) {
             return user;
         }
-        user = this.findUserByToken(token);
+        try {
+            user = this.findUserByToken(token);
+        } catch (UsernameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
         cache.put(token, user);
         return user;
     }
@@ -67,6 +78,7 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         assert token != null;
         // 把用户登录信息加入缓存
         Cache userCache = this.cacheManager.getCache(this.getUserCacheName());
+        assert userCache != null;
         userCache.put(token, userDetails);
 
         // 增加一条缓存条目
@@ -109,14 +121,18 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
 
     @Override
     public void remove(String token) {
-        String username = this.getUsername(token);
         T user = this.get(token);
         if (user == null) {
             return;
         }
         // 移除token
         this.tryRemoveDbToken(user);
+        String username = this.getUsername(token);
+        if (username == null) {
+            return;
+        }
         removeCacheTokenByUserName(username, token);
+
     }
 
     @Override
@@ -176,8 +192,9 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
      *
      * @param token token
      * @return 用户登录信息。包括token信息
+     * @throws UsernameNotFoundException token解析失败或用户不存在
      */
-    protected abstract T findUserByToken(String token);
+    protected abstract T findUserByToken(String token) throws UsernameNotFoundException;
 
     /**
      * 移除当前用户的token,并尝试移除掉数据库中该用户已过期的token
@@ -246,7 +263,7 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
      * 解析token 获取用户名
      *
      * @param token
-     * @return
+     * @return <code>null</code> token parse error
      */
     protected String getUsername(String token) {
         Jws<Claims> jws = null;
@@ -254,6 +271,9 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
             jws = jwtTokenProvider.parse(token);
         } catch (Exception e) {
             e.printStackTrace();
+            if (log.isDebugEnabled()) {
+                log.debug("token解析异常，token = " + token);
+            }
             return null;
         }
         return jws.getBody().getAudience();
