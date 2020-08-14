@@ -13,6 +13,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -85,7 +86,14 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
         response.setStatus(HttpStatus.FORBIDDEN.value());
         String message = exception.getMessage();
         if (exception instanceof UsernameNotFoundException || exception instanceof InternalAuthenticationServiceException) {
-            message = "用户不存在";
+            Throwable cause = exception.getCause();
+            if (cause instanceof LockedException) {
+                // 用户被锁定
+                message = exception.getMessage();
+            } else {
+                message = "用户不存在";
+            }
+
         } else if (exception instanceof BadCredentialsException) {
             message = "用户名或密码错误";
         } else {

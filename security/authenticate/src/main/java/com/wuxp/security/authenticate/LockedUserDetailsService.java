@@ -7,6 +7,7 @@ import java.time.Duration;
 
 /**
  * 临时锁定用户
+ * @author wuxp
  */
 public interface LockedUserDetailsService {
 
