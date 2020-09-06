@@ -2,6 +2,7 @@ package com.wuxp.security.captcha;
 
 /**
  * Used to save the captcha
+ * @author wuxp
  */
 public interface CaptchaStore {
 

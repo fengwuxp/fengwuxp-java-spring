@@ -11,6 +11,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.Locale;
+
+/**
+ * @author wuxp
+ */
 @Slf4j
 @Setter
 public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implements MobileCaptcha {
@@ -24,7 +29,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
      *
      * @param useType     captcha scenes to be used
      * @param mobilePhone mobile hone
-     * @return
+     * @return mobile captcha generate result
      */
     @Override
     public MobileCaptchaGenerateResult generate(String useType, String mobilePhone) {
@@ -60,7 +65,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
                     messageSource.getMessage(MessageKeyConstant.MOBILE_CAPTCHA_EMPTY,
                             null,
                             "验证码不能为空",
-                            null));
+                            Locale.CHINESE));
         }
         String captchaType = captchaValue.getCaptchaType();
         MobileCaptchaValue mobileCaptchaValue = captchaStore.readCaptcha(key, captchaType);
@@ -69,7 +74,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
                     messageSource.getMessage(MessageKeyConstant.MOBILE_CAPTCHA_NOT_EXIST,
                             null,
                             "验证码不存在或已失效",
-                            null));
+                            Locale.CHINESE));
         }
 
         if (mobileCaptchaValue.getExpireTime() <= System.currentTimeMillis()) {
@@ -78,7 +83,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
                     messageSource.getMessage(MessageKeyConstant.PICTURE_CAPTCHA_NOT_EXIST,
                             null,
                             "该验证码不存在",
-                            null));
+                            Locale.CHINESE));
         }
 
         MobileCaptchaProperties mobileCaptchaProperties = wuxpCaptchaProperties.getMobileCaptchaProperties(captchaValue.getUseType());
@@ -95,7 +100,7 @@ public abstract class AbstractMobileCaptcha extends AbstractCaptchaBean implemen
                     messageSource.getMessage(MessageKeyConstant.MOBILE_CAPTCHA_CHECK_ERROR,
                             null,
                             "验证码输入错误",
-                            null));
+                            Locale.CHINESE));
         }
         captchaStore.removeCaptcha(key, captchaType);
         return CaptchaVerifyResult.success();

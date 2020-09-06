@@ -2,6 +2,7 @@ package com.wuxp.security.captcha.qrcode;
 
 /**
  * 二维码状态
+ * @author wuxp
  */
 public enum QrCodeState {
 

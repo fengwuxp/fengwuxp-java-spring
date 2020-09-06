@@ -3,23 +3,27 @@ package com.wuxp.security.captcha;
 import com.wuxp.security.captcha.mobile.MobileCaptchaValue;
 import com.wuxp.security.captcha.picture.PictureCaptchaValue;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptchaValue;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * combination captcha
+ *
+ * @author wuxp
+ */
 @Slf4j
 public class CombinationCaptcha extends AbstractCaptchaBean implements Captcha {
 
-    private Map<CaptchaType, Captcha> captchaMap;
+    private final Map<CaptchaType, Captcha> captchaMap;
 
 
     public CombinationCaptcha(List<Captcha> captchaList) {
         Map<CaptchaType, Captcha> captchaMap = new HashMap<>(captchaList.size());
-        captchaList.forEach(captcha -> {
-            captchaMap.put(captcha.getCaptchaType(), captcha);
-        });
+        captchaList.forEach(captcha -> captchaMap.put(captcha.getCaptchaType(), captcha));
         this.captchaMap = captchaMap;
     }
 
@@ -28,8 +32,9 @@ public class CombinationCaptcha extends AbstractCaptchaBean implements Captcha {
         return null;
     }
 
+
     @Override
-    public CaptchaGenerateResult generate(String useType, String key) {
+    public CaptchaGenerateResult generate(@NonNull String useType, @NonNull String key) {
 
         return this.getCaptchaByKey(key).generate(useType, key);
     }

@@ -1,13 +1,22 @@
 package com.wuxp.security.captcha;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 /**
  * Used to generate verification codes and verification
+ *
+ * @param <V> {@link CaptchaValue}
+ * @param <T> {@link CaptchaGenerateResult}
+ * @author wuxp
  */
-public interface Captcha {
+public interface Captcha<V extends CaptchaValue, T extends CaptchaGenerateResult<V>> {
 
-
+    /**
+     * generate captcha type
+     *
+     * @return
+     */
     CaptchaType getCaptchaType();
 
 
@@ -15,26 +24,39 @@ public interface Captcha {
      * generate captcha
      *
      * @param useType captcha scenes to be used
-     * @param key     captcha key   key="CaptchaType_useType_uuid"
-     * @return
+     * @param key     captcha store key,example: key="CaptchaType_useType_uuid"
+     * @return generate result
      */
-    CaptchaGenerateResult generate(String useType, String key);
+    T generate(@NonNull String useType, @NonNull String key);
+
+    /**
+     * generate captcha
+     *
+     * @param useType {@link CaptchaUseType}
+     * @param key     captcha store key
+     * @return generate result
+     */
+    default T generate(@NonNull CaptchaUseType useType, @NonNull String key) {
+        return generate(useType.name(), key);
+    }
+
 
     /**
      * 验证码是否有效
      *
-     * @param key
-     * @return
+     * @param key captcha store key
+     * @return if return <code>true</code> {@param key} is effective
      */
-    boolean isEffective(String key);
+    boolean isEffective(@NonNull String key);
 
     /**
      * verify captcha
      *
-     * @param captchaValue
-     * @return
+     * @param key          captcha store key
+     * @param captchaValue captcha value
+     * @return verify result
      */
-    CaptchaVerifyResult verify(String key, CaptchaValue captchaValue);
+    CaptchaVerifyResult verify(@NonNull String key, @NonNull CaptchaValue captchaValue);
 
 
     /**

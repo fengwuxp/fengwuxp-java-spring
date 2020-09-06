@@ -1,8 +1,8 @@
 package com.wuxp.security.authenticate.mobile;
 
 import com.wuxp.security.captcha.Captcha;
+import com.wuxp.security.captcha.SimpleCaptchaUseType;
 import com.wuxp.security.captcha.mobile.MobileCaptcha;
-import com.wuxp.security.captcha.mobile.MobileCaptchaType;
 import com.wuxp.security.captcha.mobile.MobileCaptchaValue;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class MobileCaptchaAuthenticationProvider implements AuthenticationProvid
         //验证手机验证码
         MobileCaptchaValue mobileCaptchaValue = new MobileCaptchaValue(
                 mobilePoneCaptcha,
-                MessageFormat.format("{0}_{1}", MobileCaptchaType.LOGIN.name(),
+                MessageFormat.format("{0}_{1}", SimpleCaptchaUseType.LOGIN.name(),
                         mobilePhone),
                 -1
         );

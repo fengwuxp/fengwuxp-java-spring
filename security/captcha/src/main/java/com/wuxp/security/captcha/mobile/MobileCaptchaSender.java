@@ -1,5 +1,6 @@
 package com.wuxp.security.captcha.mobile;
 
+import com.wuxp.security.captcha.SimpleCaptchaUseType;
 import lombok.Getter;
 
 
@@ -11,7 +12,7 @@ public interface MobileCaptchaSender {
 
     /**
      * send mobile captcha
-     * {@link MobileCaptchaType}
+     * {@link SimpleCaptchaUseType}
      *
      * @param useType     captcha scenes to be used
      * @param mobilePhone captcha key

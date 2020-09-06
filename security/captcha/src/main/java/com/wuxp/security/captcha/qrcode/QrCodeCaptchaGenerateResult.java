@@ -5,8 +5,11 @@ import lombok.Getter;
 
 import java.text.MessageFormat;
 
+/**
+ * @author wuxp
+ */
 @Getter
-public class QrCodeCaptchaGenerateResult implements CaptchaGenerateResult {
+public class QrCodeCaptchaGenerateResult implements CaptchaGenerateResult<QrCodeCaptchaValue> {
 
     private final String key;
 

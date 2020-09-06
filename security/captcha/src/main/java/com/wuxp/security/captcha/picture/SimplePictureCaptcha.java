@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * simple picture captcha
+ * @author wuxp
  */
 @Slf4j
 public class SimplePictureCaptcha extends AbstractPictureCaptcha {
@@ -76,6 +77,12 @@ public class SimplePictureCaptcha extends AbstractPictureCaptcha {
         return content.toString();
     }
 
+    /**
+     * 获取随机计算表达式
+     *
+     * @param len 计算表达式中的数字的个数
+     * @return
+     */
     protected String getRandomArithmetic(int len) {
 
         StringBuilder sb = new StringBuilder();

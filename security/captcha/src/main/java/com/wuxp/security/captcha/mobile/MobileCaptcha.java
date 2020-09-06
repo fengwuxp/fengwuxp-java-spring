@@ -5,8 +5,10 @@ import com.wuxp.security.captcha.CaptchaType;
 
 /**
  * mobile phone captcha
+ *
+ * @author wuxp
  */
-public interface MobileCaptcha extends Captcha {
+public interface MobileCaptcha extends Captcha<MobileCaptchaValue, MobileCaptchaGenerateResult> {
 
 
     @Override
@@ -14,13 +16,5 @@ public interface MobileCaptcha extends Captcha {
         return CaptchaType.MOBILE;
     }
 
-    /**
-     *
-     * @param useType captcha scenes to be used
-     * @param mobilePhone mobilePhone
-     * @return
-     */
-    @Override
-    MobileCaptchaGenerateResult generate(String useType, String mobilePhone);
 
 }

@@ -4,6 +4,7 @@ import java.awt.*;
 
 /**
  * picture captcha generator
+ * @author wuxp
  */
 public interface PictureCaptchaGenerator {
 

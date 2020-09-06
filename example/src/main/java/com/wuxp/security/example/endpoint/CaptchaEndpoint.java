@@ -4,12 +4,12 @@ import com.wuxp.api.ApiResp;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.captcha.CaptchaGenerateResult;
 import com.wuxp.security.captcha.CombinationCaptcha;
+import com.wuxp.security.captcha.SimpleCaptchaUseType;
 import com.wuxp.security.captcha.configuration.PictureCaptchaProperties;
 import com.wuxp.security.captcha.configuration.QrCodeCaptchaProperties;
 import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.mobile.MobileCaptcha;
-import com.wuxp.security.captcha.mobile.MobileCaptchaGenerateResult;
-import com.wuxp.security.captcha.mobile.MobileCaptchaType;
+import com.wuxp.security.captcha.mobile.MobileCaptchaValue;
 import com.wuxp.security.captcha.picture.PictureCaptcha;
 import com.wuxp.security.captcha.picture.PictureCaptchaGenerateResult;
 import com.wuxp.security.captcha.picture.PictureCaptchaGenerator;
@@ -67,8 +67,8 @@ public class CaptchaEndpoint {
 
     @RequestMapping("/combination/{useType}")
     @ResponseBody
-    public void captcha(@PathVariable String useType, @NotNull(message = "key不能为空") String key) {
-        CaptchaGenerateResult captchaGenerateResult = combinationCaptcha.generate(useType, key);
+    public CaptchaGenerateResult captcha(@PathVariable String useType, @NotNull(message = "key不能为空") String key) {
+        return combinationCaptcha.generate(useType, key);
     }
 
 
@@ -82,8 +82,8 @@ public class CaptchaEndpoint {
      */
     @RequestMapping("/picture/{useType}")
     @ResponseBody
-    public ApiResp<Map<String, String>> pictureCaptcha(@PathVariable String useType, String type) throws Exception {
-        PictureCaptchaGenerateResult captchaGenerateResult = pictureCaptcha.generate(type, useType);
+    public ApiResp<Map<String, String>> pictureCaptcha(@PathVariable PictureCaptchaType useType, String type) throws Exception {
+        PictureCaptchaGenerateResult captchaGenerateResult = pictureCaptcha.generate(useType.name(), type);
         if (!captchaGenerateResult.isSuccess()) {
             return RestfulApiRespFactory.error(captchaGenerateResult.getErrorMessage());
         }
@@ -107,16 +107,16 @@ public class CaptchaEndpoint {
     /**
      * 获取手机验证码
      *
-     * @param useType
+     * @param useType {@Link SimpleCaptchaUseType}
      * @param mobile
-     * @see MobileCaptchaType
+     * @see SimpleCaptchaUseType
      */
     @RequestMapping("/mobile/{useType}")
     @ResponseBody
-    public ApiResp<Map<String, String>> mobileCaptcha(@PathVariable String useType, String mobile) {
+    public ApiResp<Map<String, String>> mobileCaptcha(@PathVariable SimpleCaptchaUseType useType, String mobile) {
         assert mobile != null;
 
-        MobileCaptchaGenerateResult mobileCaptchaGenerateResult = mobileCaptcha.generate(useType, mobile);
+        CaptchaGenerateResult<MobileCaptchaValue> mobileCaptchaGenerateResult = mobileCaptcha.generate(useType, mobile);
         log.info("获取手机验证码{} {}", useType, mobile);
         if (!mobileCaptchaGenerateResult.isSuccess()) {
             return RestfulApiRespFactory.error(mobileCaptchaGenerateResult.getErrorMessage());
@@ -129,23 +129,23 @@ public class CaptchaEndpoint {
     /**
      * 获取二维码
      *
-     * @param useType {@Link QrCodeCaptchaType}
+     * @param useType {@Link SimpleCaptchaUseType}
      */
     @RequestMapping("/qr_code/{useType}")
     @ResponseBody
-    public ApiResp<Map<String, Object>> qrCodeCaptcha(@PathVariable String useType) throws Exception {
-        QrCodeCaptchaGenerateResult qrCodeCaptchaGenerateResult = qrCodeCaptcha.generate(useType, UUID.randomUUID().toString());
+    public ApiResp<Map<String, Object>> qrCodeCaptcha(@PathVariable SimpleCaptchaUseType useType) throws Exception {
+        QrCodeCaptchaGenerateResult result = qrCodeCaptcha.generate(useType, UUID.randomUUID().toString());
 //        if (true) {
 //            throw new RuntimeException("测试异常");
 //        }
         log.info("获取二维码{}", useType);
-        if (!qrCodeCaptchaGenerateResult.isSuccess()) {
-            return RestfulApiRespFactory.error(qrCodeCaptchaGenerateResult.getErrorMessage());
+        if (!result.isSuccess()) {
+            return RestfulApiRespFactory.error(result.getErrorMessage());
         }
         //convert base64
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        QrCodeCaptchaValue qrCodeCaptchaValue = qrCodeCaptchaGenerateResult.getValue();
-        QrCodeCaptchaProperties qrCodeCaptchaProperties = wuxpCaptchaProperties.getQrCodeCaptchaProperties(useType);
+        QrCodeCaptchaValue qrCodeCaptchaValue = result.getValue();
+        QrCodeCaptchaProperties qrCodeCaptchaProperties = wuxpCaptchaProperties.getQrCodeCaptchaProperties(useType.name());
         String path = CaptchaEndpoint.class.getResource("/logo.png").getPath();
         ImageIO.write((BufferedImage) qrCodeCaptchaGenerator.generate(
                 qrCodeCaptchaValue.getValue(),
@@ -159,9 +159,9 @@ public class CaptchaEndpoint {
         ), "png", outputStream);
         String value = Base64.getEncoder().encodeToString(outputStream.toByteArray());
         Map<String, Object> map = new HashMap<>(2);
-        map.put("key", qrCodeCaptchaGenerateResult.getKey());
+        map.put("key", result.getKey());
         map.put("value", value);
-        map.put("expireTime", qrCodeCaptchaGenerateResult.getValue().getExpireTime());
+        map.put("expireTime", result.getValue().getExpireTime());
         return RestfulApiRespFactory.ok(map);
 
     }

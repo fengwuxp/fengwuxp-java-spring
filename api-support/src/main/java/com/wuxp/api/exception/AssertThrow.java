@@ -4,16 +4,18 @@ import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
-import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CODE;
-
 /**
  * 用于断言抛出异常
+ * {@link BusinessExceptionFactory}
+ * {@link #fail(Throwable, String, BusinessErrorCode)}
  *
  * @author wxup
  */
 @Slf4j
 public final class AssertThrow extends Assert {
 
+
+    private static BusinessExceptionFactory BUSINESS_EXCEPTION_FACTORY = DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
 
     private AssertThrow() {
     }
@@ -55,55 +57,57 @@ public final class AssertThrow extends Assert {
     /**
      * Fails a test with the given message.
      *
-     * @see BusinessServiceException
+     * @see BusinessException
      */
     static public void fail() {
-        fail(null, BUSINESS_FAILURE_CODE);
+        fail(null);
     }
 
     /**
      * Fails a test with the given message.
      *
-     * @param message the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message the identifying message for the {@link BusinessException} (<code>null</code>
      *                okay)
-     * @see BusinessServiceException
+     * @see BusinessException
      */
     static public void fail(String message) {
-        fail(message, BUSINESS_FAILURE_CODE);
+        fail(message, BUSINESS_EXCEPTION_FACTORY.getErrorCode());
     }
 
     /**
      * Fails a test with the given message.
      *
-     * @param message   the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message   the identifying message for the {@link BusinessException} (<code>null</code>
      *                  okay)
      * @param errorCode business failure code
-     * @see BusinessServiceException
+     * @see BusinessException
      */
-    static void fail(String message, int errorCode) {
-        throw new BusinessServiceException(message, errorCode);
+    static void fail(String message, BusinessErrorCode errorCode) {
+        fail(null, message, errorCode);
     }
 
     /**
      * Fails a test with the given message.
      *
      * @param cause     business failure code
-     * @param message   the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message   the identifying message for the {@link BusinessException} (<code>null</code>
      *                  okay)
-     * @param errorCode business failure code
-     * @see BusinessServiceException
+     * @param errorCode business failure code {@link BusinessErrorCode}
+     * @see BusinessException
      */
-    static void fail(Throwable cause, String message, int errorCode) {
-        throw new BusinessServiceException(message, cause, errorCode);
+    static void fail(Throwable cause, String message, BusinessErrorCode errorCode) {
+
+        BUSINESS_EXCEPTION_FACTORY.factory(cause, message, errorCode);
+
     }
 
     /**
      * Asserts that two objects are equal. If they are not, an
-     * {@link BusinessServiceException} is thrown with the given message. If
+     * {@link BusinessException} is thrown with the given message. If
      * <code>expected</code> and <code>actual</code> are <code>null</code>,
      * they are considered equal.
      *
-     * @param message  the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message  the identifying message for the {@link BusinessException} (<code>null</code>
      *                 okay)
      * @param expected expected value
      * @param actual   actual value
@@ -132,7 +136,7 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two objects are equal. If they are not, an
-     * {@link BusinessServiceException} without a message is thrown. If
+     * {@link BusinessException} without a message is thrown. If
      * <code>expected</code> and <code>actual</code> are <code>null</code>,
      * they are considered equal.
      *
@@ -145,11 +149,11 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two objects are <b>not</b> equals. If they are, an
-     * {@link BusinessServiceException} is thrown with the given message. If
+     * {@link BusinessException} is thrown with the given message. If
      * <code>unexpected</code> and <code>actual</code> are <code>null</code>,
      * they are considered equal.
      *
-     * @param message    the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message    the identifying message for the {@link BusinessException} (<code>null</code>
      *                   okay)
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
@@ -163,7 +167,7 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two objects are <b>not</b> equals. If they are, an
-     * {@link BusinessServiceException} without a message is thrown. If
+     * {@link BusinessException} without a message is thrown. If
      * <code>unexpected</code> and <code>actual</code> are <code>null</code>,
      * they are considered equal.
      *
@@ -186,9 +190,9 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two longs are <b>not</b> equals. If they are, an
-     * {@link BusinessServiceException} is thrown with the given message.
+     * {@link BusinessException} is thrown with the given message.
      *
-     * @param message    the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message    the identifying message for the {@link BusinessException} (<code>null</code>
      *                   okay)
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
@@ -201,7 +205,7 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two longs are <b>not</b> equals. If they are, an
-     * {@link BusinessServiceException} without a message is thrown.
+     * {@link BusinessException} without a message is thrown.
      *
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
@@ -212,12 +216,12 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two doubles are <b>not</b> equal to within a positive delta.
-     * If they are, an {@link BusinessServiceException} is thrown with the given
+     * If they are, an {@link BusinessException} is thrown with the given
      * message. If the unexpected value is infinity then the delta value is
      * ignored. NaNs are considered equal:
      * <code>assertNotEquals(Double.NaN, Double.NaN, *)</code> fails
      *
-     * @param message    the identifying message for the {@link BusinessServiceException} (<code>null</code>
+     * @param message    the identifying message for the {@link BusinessException} (<code>null</code>
      *                   okay)
      * @param unexpected unexpected value
      * @param actual     the value to check against <code>unexpected</code>
@@ -234,7 +238,7 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two doubles are <b>not</b> equal to within a positive delta.
-     * If they are, an {@link BusinessServiceException} is thrown. If the unexpected
+     * If they are, an {@link BusinessException} is thrown. If the unexpected
      * value is infinity then the delta value is ignored.NaNs are considered
      * equal: <code>assertNotEquals(Double.NaN, Double.NaN, *)</code> fails
      *
@@ -250,7 +254,7 @@ public final class AssertThrow extends Assert {
 
     /**
      * Asserts that two floats are <b>not</b> equal to within a positive delta.
-     * If they are, an {@link BusinessServiceException} is thrown. If the unexpected
+     * If they are, an {@link BusinessException} is thrown. If the unexpected
      * value is infinity then the delta value is ignored.NaNs are considered
      * equal: <code>assertNotEquals(Float.NaN, Float.NaN, *)</code> fails
      *
@@ -284,4 +288,8 @@ public final class AssertThrow extends Assert {
         return true;
     }
 
+
+    public static void setBusinessExceptionFactory(BusinessExceptionFactory<?, ?> businessExceptionFactory) {
+        AssertThrow.BUSINESS_EXCEPTION_FACTORY = businessExceptionFactory;
+    }
 }

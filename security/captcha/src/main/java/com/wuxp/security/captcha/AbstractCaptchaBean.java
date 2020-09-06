@@ -10,6 +10,8 @@ import org.springframework.context.MessageSource;
 
 /**
  * 抽象的验证码Bean
+ *
+ * @author wuxp
  */
 @Slf4j
 @Setter

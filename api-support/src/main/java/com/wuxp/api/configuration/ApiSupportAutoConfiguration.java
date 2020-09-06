@@ -1,7 +1,12 @@
 package com.wuxp.api.configuration;
 
+import com.wuxp.api.exception.AssertThrow;
+import com.wuxp.api.exception.BusinessExceptionFactory;
+import com.wuxp.api.exception.DefaultBusinessExceptionFactory;
 import com.wuxp.api.helper.SpringContextHolder;
 import com.wuxp.api.interceptor.*;
+import com.wuxp.api.restful.DefaultRestfulApiRespImpl;
+import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.api.signature.ApiSignatureStrategy;
 import com.wuxp.api.signature.AppInfoStore;
 import com.wuxp.api.signature.Md5ApiSignatureStrategy;
@@ -9,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -18,7 +24,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import org.springframework.core.Ordered;
+import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -120,4 +128,24 @@ public class ApiSupportAutoConfiguration {
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
+
+    @Bean
+    @ConditionalOnMissingBean(BusinessExceptionFactory.class)
+    public BusinessExceptionFactory<?, ?> businessExceptionFactory() {
+        return DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
+    }
+
+    /**
+     * 初始化异常相关处理信息
+     *
+     * @param businessExceptionFactory 业务异常工厂
+     */
+    @PostConstruct
+    public void init(@Autowired BusinessExceptionFactory<?, ?> businessExceptionFactory) {
+        Assert.notNull(businessExceptionFactory, "BusinessExceptionFactory is null");
+        AssertThrow.setBusinessExceptionFactory(businessExceptionFactory);
+        RestfulApiRespFactory.setBusinessExceptionFactory(businessExceptionFactory);
+        DefaultRestfulApiRespImpl.setBusinessSuccessCode(businessExceptionFactory.getErrorCode());
+    }
+
 }

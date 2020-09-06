@@ -2,14 +2,14 @@ package com.wuxp.security.authenticate.session;
 
 
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.exception.BusinessErrorCode;
+import com.wuxp.api.exception.DefaultBusinessErrorCode;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.security.authenticate.PasswordUserDetails;
 import com.wuxp.security.jwt.JwtTokenPair;
 import com.wuxp.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -33,10 +33,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserDetails> implements AuthenticateSessionManager<T>, InitializingBean, BeanFactoryAware {
 
-    /**
-     * 踢出用户的业务错误编码
-     */
-    protected final static int KICK_OUT_USER_ERROR_CODE = 200001;
 
     protected BeanFactory beanFactory;
 
@@ -285,8 +281,8 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
      *
      * @return
      */
-    protected int getKickOutUserErrorCode() {
-        return KICK_OUT_USER_ERROR_CODE;
+    protected BusinessErrorCode getKickOutUserErrorCode() {
+        return DefaultBusinessErrorCode.KICK_OUT_USER_ERROR_CODE;
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.wuxp.api.exception;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CODE;
 
 
 /**
@@ -11,13 +8,12 @@ import static com.wuxp.api.restful.DefaultRestfulApiRespImpl.BUSINESS_FAILURE_CO
  *
  * @author wxup
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class BusinessServiceException extends RuntimeException {
+@EqualsAndHashCode(of = "errorCode", callSuper = true)
+public class BusinessServiceException extends RuntimeException implements BusinessException<Integer> {
 
     private static final long serialVersionUID = 7030081082091890804L;
 
-    private Integer errorCode = BUSINESS_FAILURE_CODE;
+    private Integer errorCode = DefaultBusinessErrorCode.BUSINESS_FAILURE_CODE.getErrorCode();
 
     public BusinessServiceException() {
     }
@@ -61,4 +57,15 @@ public class BusinessServiceException extends RuntimeException {
     public BusinessServiceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
+    @Override
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return getMessage();
+    }
+
 }

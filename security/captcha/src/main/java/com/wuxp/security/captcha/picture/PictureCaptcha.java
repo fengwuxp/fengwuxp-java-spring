@@ -6,8 +6,10 @@ import com.wuxp.security.captcha.CaptchaType;
 /**
  * picture captcha
  * support type {@link PictureCaptchaType}
+ *
+ * @author wuxp
  */
-public interface PictureCaptcha extends Captcha {
+public interface PictureCaptcha extends Captcha<PictureCaptchaValue, PictureCaptchaGenerateResult> {
 
     @Override
     default CaptchaType getCaptchaType() {
@@ -24,7 +26,6 @@ public interface PictureCaptcha extends Captcha {
      */
     @Override
     default PictureCaptchaGenerateResult generate(String type, String useType) {
-//        String[] types = useType.split("_");
         return generate(type, useType, null);
     }
 
@@ -45,6 +46,7 @@ public interface PictureCaptcha extends Captcha {
      *
      * @param type
      * @param useType
+     * @param key
      * @param value
      * @return
      */

@@ -8,8 +8,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.text.MessageFormat;
 
 
+/**
+ * @author wuxp
+ */
 @Getter
-public class MobileCaptchaGenerateResult implements CaptchaGenerateResult {
+public class MobileCaptchaGenerateResult implements CaptchaGenerateResult<MobileCaptchaValue> {
 
     private final String key;
 

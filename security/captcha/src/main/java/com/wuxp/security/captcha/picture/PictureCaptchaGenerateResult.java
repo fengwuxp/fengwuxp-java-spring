@@ -11,9 +11,10 @@ import java.util.UUID;
 
 /**
  * picture captcha
+ * @author wuxp
  */
 @Getter
-public class PictureCaptchaGenerateResult implements CaptchaGenerateResult {
+public class PictureCaptchaGenerateResult implements CaptchaGenerateResult<PictureCaptchaValue> {
 
     private final String key;
 

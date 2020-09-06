@@ -1,6 +1,8 @@
 package com.wuxp.api.restful;
 
 import com.wuxp.api.ApiResp;
+import com.wuxp.api.exception.BusinessErrorCode;
+import com.wuxp.api.exception.DefaultBusinessErrorCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
@@ -10,26 +12,22 @@ import java.io.Serializable;
 
 
 /**
- * @author wxup
  * @param <T>
+ * @author wxup
  */
 @Getter
 @ToString(exclude = "httpStatus")
 public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializable {
 
 
+    private static final long serialVersionUID = -7557721954943132992L;
+
+
     /**
      * 业务成功响应码
      */
-    public static final int BUSINESS_SUCCESS_CODE = 0;
+    private static Object BUSINESS_SUCCESS_CODE = DefaultBusinessErrorCode.BUSINESS_SUCCESS_CODE.getErrorCode();
 
-    /**
-     * 业务失败响应码
-     */
-    public static final int BUSINESS_FAILURE_CODE = -1;
-
-
-    private static final long serialVersionUID = -7557721954943132992L;
 
     /**
      * 响应数据
@@ -49,13 +47,13 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
     /**
      * 业务失败时的错误响应码
      */
-    private final int errorCode;
+    private final Object errorCode;
 
-    protected DefaultRestfulApiRespImpl(T data, HttpStatus httpStatus, String errorMessage, int errorCode) {
+    protected DefaultRestfulApiRespImpl(T data, HttpStatus httpStatus, String errorMessage, BusinessErrorCode<?> errorCode) {
         this.data = data;
         this.httpStatus = httpStatus;
         this.errorMessage = errorMessage;
-        this.errorCode = errorCode;
+        this.errorCode = errorCode.getErrorCode();
     }
 
     @Override
@@ -71,6 +69,11 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
 
     @Override
     public boolean isSuccess() {
-        return BUSINESS_SUCCESS_CODE == errorCode;
+        return BUSINESS_SUCCESS_CODE.equals(errorCode);
+    }
+
+
+    public static void setBusinessSuccessCode(BusinessErrorCode businessSuccessCode) {
+        BUSINESS_SUCCESS_CODE = businessSuccessCode.getErrorCode();
     }
 }

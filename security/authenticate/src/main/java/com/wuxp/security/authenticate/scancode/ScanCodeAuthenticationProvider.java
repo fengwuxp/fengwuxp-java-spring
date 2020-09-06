@@ -2,8 +2,8 @@ package com.wuxp.security.authenticate.scancode;
 
 import com.wuxp.security.authenticate.session.AuthenticateSessionManager;
 import com.wuxp.security.captcha.Captcha;
+import com.wuxp.security.captcha.SimpleCaptchaUseType;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptcha;
-import com.wuxp.security.captcha.qrcode.QrCodeCaptchaType;
 import com.wuxp.security.captcha.qrcode.QrCodeCaptchaValue;
 import com.wuxp.security.captcha.qrcode.QrCodeState;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 扫码鉴权
+ *
  * @author wuxp
  */
 @Slf4j
@@ -37,7 +38,7 @@ public class ScanCodeAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 验证扫码内容
-        Captcha.CaptchaVerifyResult verifyResult = qrCodeCaptcha.verify(credentials, new QrCodeCaptchaValue(QrCodeCaptchaType.LOGIN.name(), credentials, -1));
+        Captcha.CaptchaVerifyResult verifyResult = qrCodeCaptcha.verify(credentials, new QrCodeCaptchaValue(SimpleCaptchaUseType.LOGIN.name(), credentials, -1));
         if (!verifyResult.isSuccess()) {
             throw new InternalAuthenticationServiceException(verifyResult.getErrorMessage());
         }

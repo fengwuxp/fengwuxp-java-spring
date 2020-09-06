@@ -5,18 +5,38 @@ import java.io.Serializable;
 
 
 /**
+ * {@link CaptchaStore}
+ *
  * @author wxup
  * 验证码值
  */
 public interface CaptchaValue extends Serializable {
 
+    /**
+     * captcha type  {@link CaptchaType}
+     *
+     * @return
+     */
     String getCaptchaType();
 
+    /**
+     * captcha user type {@link CaptchaUseType}
+     *
+     * @return
+     */
     String getUseType();
 
+    /**
+     * captcha value
+     *
+     * @return
+     */
     String getValue();
 
-//    long getExpireTime();
-
+    /**
+     * captcha is expired
+     *
+     * @return
+     */
     boolean isExpired();
 }

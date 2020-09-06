@@ -11,14 +11,15 @@ import org.springframework.util.StringUtils;
 
 /**
  * 抽象的二维码验证码
+ * @author wuxp
  */
 @Slf4j
 public class AbstractQrCodeCaptcha extends AbstractCaptchaBean implements QrCodeCaptcha {
 
 
+
     @Override
     public QrCodeCaptchaGenerateResult generate(String useType, String key) {
-
         QrCodeCaptchaProperties qrCodeCaptchaProperties = wuxpCaptchaProperties.getQrCodeCaptchaProperties(useType);
         QrCodeCaptchaGenerateResult qrCodeCaptchaGenerateResult = QrCodeCaptchaGenerateResult.newInstance(useType, key, System.currentTimeMillis() + qrCodeCaptchaProperties.getExpired().toMillis());
         captchaStore.storeCaptcha(qrCodeCaptchaGenerateResult.getKey(), qrCodeCaptchaGenerateResult.getValue());
@@ -35,7 +36,7 @@ public class AbstractQrCodeCaptcha extends AbstractCaptchaBean implements QrCode
     }
 
     @Override
-    public void updateQrCodeState(String key, QrCodeState targetState) throws QrCodeUpdateStateCaptchaRuntimeException {
+    public void updateQrCodeState(String key, QrCodeState targetState) throws QrCodeUpdateStateCaptchaException {
         String captchaType = CaptchaType.QR_CODE.name();
         QrCodeCaptchaValue qrCodeCaptchaValue = captchaStore.readCaptcha(key, captchaType);
         if (qrCodeCaptchaValue == null) {
@@ -53,7 +54,7 @@ public class AbstractQrCodeCaptcha extends AbstractCaptchaBean implements QrCode
 //        }
         if (qrCodeCaptchaValue.getQrCodeState().equals(targetState)) {
             // 状态已经被更新
-            throw new QrCodeUpdateStateCaptchaRuntimeException("不允许重复更新状态");
+            throw new QrCodeUpdateStateCaptchaException("不允许重复更新状态");
         }
         // TODO 同一个key串行支持
         // 更新缓存状态
