@@ -8,6 +8,7 @@ import com.wuxp.basic.uuid.UUIDGenerateStrategy;
 import com.wuxp.security.example.context.MockApiRequestContextFactory;
 import com.wuxp.security.example.log.MockApiLogRecorder;
 import com.wuxp.security.example.signature.MockAppInfoStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -27,6 +28,10 @@ import javax.persistence.EntityManagerFactory;
 @Configuration
 @EnableCaching
 public class ApplicationConfiguration implements WebMvcConfigurer {
+
+
+    @Value("${wuxp.db.enabled:false}")
+    private boolean dbEnvEnabled;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -58,6 +63,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
+        boolean dbEnvEnabled = this.dbEnvEnabled;
         return threadPoolTaskScheduler;
     }
 
@@ -69,7 +75,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public MockApiLogRecorder mockApiLogRecorder(){
+    public MockApiLogRecorder mockApiLogRecorder() {
         return new MockApiLogRecorder();
     }
 }

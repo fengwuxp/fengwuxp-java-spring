@@ -1,6 +1,7 @@
 package test.com.wuxp.security.captcha.picture;
 
 import com.wuxp.security.captcha.Captcha;
+import com.wuxp.security.captcha.SimpleCaptchaUseType;
 import com.wuxp.security.captcha.configuration.PictureCaptchaProperties;
 import com.wuxp.security.captcha.configuration.WuxpCaptchaProperties;
 import com.wuxp.security.captcha.constant.MessageKeyConstant;
@@ -77,7 +78,7 @@ public class PictureCaptchaTest {
 
     @Test
     public void testQrCodeCaptcha() {
-        QrCodeCaptchaGenerateResult qrCodeCaptchaGenerateResult = qrCodeCaptcha.generate("login");
+        QrCodeCaptchaGenerateResult qrCodeCaptchaGenerateResult = qrCodeCaptcha.generate(SimpleCaptchaUseType.LOGIN);
         String key = qrCodeCaptchaGenerateResult.getKey();
         Assert.assertTrue(qrCodeCaptcha.isEffective(key));
         QrCodeState qrCodeState = qrCodeCaptcha.getQrCodeState(key);

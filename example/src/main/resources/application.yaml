@@ -7,10 +7,13 @@ wuxp:
     -test:
       length: 4
       width: 140
-      height: 60
+      height: 6
+  env:
+    jdbc-provider: com.wuxp.security.example.env.MyJdbcPropertyProvider
 spring:
   profiles:
     active: local
   jackson:
     serialization:
       write-dates-as-timestamps: true
+

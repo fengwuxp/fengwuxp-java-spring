@@ -137,11 +137,11 @@ public class ApiSupportAutoConfiguration {
 
     /**
      * 初始化异常相关处理信息
-     *
-     * @param businessExceptionFactory 业务异常工厂
+
      */
     @PostConstruct
-    public void init(@Autowired BusinessExceptionFactory<?, ?> businessExceptionFactory) {
+    public void init() {
+        BusinessExceptionFactory<?, ?> businessExceptionFactory = this.businessExceptionFactory();
         Assert.notNull(businessExceptionFactory, "BusinessExceptionFactory is null");
         AssertThrow.setBusinessExceptionFactory(businessExceptionFactory);
         RestfulApiRespFactory.setBusinessExceptionFactory(businessExceptionFactory);

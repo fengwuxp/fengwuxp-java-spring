@@ -74,6 +74,7 @@
         <module>third-party</module>
         <module>wechat-multiple</module>
         <module>example</module>
+        <module>configuration-support</module>
 
     </modules>
 
