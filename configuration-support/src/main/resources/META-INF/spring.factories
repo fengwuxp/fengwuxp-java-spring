@@ -1,3 +1,3 @@
 
 org.springframework.context.ApplicationListener=\
-com.wuxp.env.database.DatabaseEnvironmentApplicationListener
+com.wuxp.env.EnvironmentProviderApplicationListener
