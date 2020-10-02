@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.wuxp</groupId>
             <artifactId>fengwuxp-api-support</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>com.wuxp</groupId>
             <artifactId>fengwuxp-configuration-support</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>

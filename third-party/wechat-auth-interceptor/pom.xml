@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-mp</artifactId>
-            <version>3.6.0</version>
+            <version>${weixin.java.version}</version>
             <scope>provided</scope>
         </dependency>
 

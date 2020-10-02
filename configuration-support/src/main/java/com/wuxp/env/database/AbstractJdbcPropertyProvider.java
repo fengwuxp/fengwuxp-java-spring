@@ -112,7 +112,7 @@ public abstract class AbstractJdbcPropertyProvider extends AbstractPropertyProvi
         }
 
         for (DataSourceProvider dataSourceProvider : loadDataSourceProviders()) {
-            return dataSourceProvider.build(environment, dataSourceProperties);
+            return dataSourceProvider.dataSource(environment, dataSourceProperties);
         }
         Assert.notNull(dataSourceProperties, "DataSourceProperties  must not null");
         return dataSourceProperties.initializeDataSourceBuilder().build();

@@ -12,7 +12,7 @@
     <artifactId>fengwuxp-wechat-multiple</artifactId>
     <packaging>pom</packaging>
     <properties>
-        <weixin-java-mp.version>3.6.0</weixin-java-mp.version>
+        <weixin-java-mp.version>${weixin.java.version}</weixin-java-mp.version>
     </properties>
     <modules>
         <module>wechat-mp-multiple</module>

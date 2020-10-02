@@ -21,5 +21,5 @@ public interface DataSourceProvider {
      * @param dataSourceProperties 数据源配置，可能为空
      * @return 数据源
      */
-    DataSource build(Environment environment, @Nullable DataSourceProperties dataSourceProperties);
+    DataSource dataSource(Environment environment, @Nullable DataSourceProperties dataSourceProperties);
 }
