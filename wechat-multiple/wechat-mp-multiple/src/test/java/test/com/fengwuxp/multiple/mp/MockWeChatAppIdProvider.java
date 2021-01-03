@@ -16,10 +16,11 @@ public class MockWeChatAppIdProvider implements WeChatAppIdProvider {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
         if (requestAttributes == null) {
-            return   RandomStringUtils.randomAlphabetic(32);
+            return RandomStringUtils.randomAlphabetic(32);
         }
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
 
-        return request.getParameter("appId");
+        String appId = request.getParameter("appId");
+        return appId == null ? "mockk_appId" : appId;
     }
 }

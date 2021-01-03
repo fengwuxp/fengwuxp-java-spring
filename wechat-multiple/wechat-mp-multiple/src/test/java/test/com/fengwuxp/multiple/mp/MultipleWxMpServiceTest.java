@@ -21,6 +21,9 @@ public class MultipleWxMpServiceTest {
     private WxMpService wxMpService;
 
     @Autowired
+    private ExampleService exampleService;
+
+    @Autowired
     private WeChatMultipleProperties weChatMultipleProperties;
 
     @Test
@@ -29,6 +32,7 @@ public class MultipleWxMpServiceTest {
         log.debug("wxMpConfigStorage 1 {}", wxMpConfigStorage);
         wxMpConfigStorage = wxMpService.getWxMpConfigStorage();
         log.debug("wxMpConfigStorage 2 {}", wxMpConfigStorage);
+        exampleService.examole();
 
     }
 }

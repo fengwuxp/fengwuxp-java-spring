@@ -13,7 +13,6 @@ import java.io.File;
         scanBasePackages = {"com.fengwuxp", "test.com.fengwuxp"})
 @Import(TestConfig.class)
 @Configuration
-//@EnableWebMvc
 public class MultipleWeChatMpApplicationTest {
 
     public static void main(String[] args) {
