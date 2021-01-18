@@ -159,27 +159,31 @@
             </plugin>
 
 
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.gmaven</groupId>-->
-<!--                <artifactId>gmaven-plugin</artifactId>-->
-<!--                <version>1.5</version>-->
-<!--                <configuration>-->
-<!--                    <providerSelection>${maven.compiler.target}</providerSelection>-->
-<!--                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>-->
-<!--                    &lt;!&ndash; 用maven编译时需要加encoding：mvn -Dfile.encoding=UTF-8 compile  &ndash;&gt;-->
-<!--                    <source/>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>generateStubs</goal>-->
-<!--                            <goal>compile</goal>-->
-<!--                            <goal>generateTestStubs</goal>-->
-<!--                            <goal>testCompile</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <!--    是否更新pom文件 -->
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
 
             <plugin>

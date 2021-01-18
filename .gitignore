@@ -6,3 +6,4 @@ node_modules
 yarn.lock
 service-support-processor.utf8.properties
 codegen-result
+*.flattened-pom.xml
