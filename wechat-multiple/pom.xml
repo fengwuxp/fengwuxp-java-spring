@@ -17,6 +17,7 @@
     <modules>
         <module>wechat-mp-multiple</module>
         <module>wechat-applet-multiple</module>
+        <module>wechat-multiple-starter</module>
         <module>wechat-multiple-basic</module>
         <module>wechat-open-multiple</module>
     </modules>

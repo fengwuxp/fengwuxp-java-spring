@@ -24,8 +24,11 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public class WeChatMpMultipleAutoConfiguration {
 
 
-    @Autowired
-    private WeChatMultipleProperties weChatMultipleProperties;
+    private final WeChatMultipleProperties weChatMultipleProperties;
+
+    public WeChatMpMultipleAutoConfiguration(WeChatMultipleProperties weChatMultipleProperties) {
+        this.weChatMultipleProperties = weChatMultipleProperties;
+    }
 
     /**
      * only test

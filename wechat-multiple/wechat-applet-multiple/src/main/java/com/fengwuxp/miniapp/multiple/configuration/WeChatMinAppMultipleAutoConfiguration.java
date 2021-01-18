@@ -18,14 +18,20 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
 
+/**
+ * @author wuxp
+ */
 @Configuration
 @EnableConfigurationProperties(WeChatMultipleProperties.class)
 @ConditionalOnProperty(prefix = WeChatMultipleProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class WeChatMinAppMultipleAutoConfiguration {
 
 
-    @Autowired
-    private WeChatMultipleProperties weChatMultipleProperties;
+    private final WeChatMultipleProperties weChatMultipleProperties;
+
+    public WeChatMinAppMultipleAutoConfiguration(WeChatMultipleProperties weChatMultipleProperties) {
+        this.weChatMultipleProperties = weChatMultipleProperties;
+    }
 
     /**
      * only test

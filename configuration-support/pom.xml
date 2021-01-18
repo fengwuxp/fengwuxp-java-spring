@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fengwuxp-configuration-support</artifactId>
+
+    <properties>
+        <spring.cloud.version>2.2.6.RELEASE</spring.cloud.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,7 +42,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-context</artifactId>
-            <version>2.2.2.RELEASE</version>
+            <version>${spring.cloud.version}</version>
         </dependency>
     </dependencies>
 

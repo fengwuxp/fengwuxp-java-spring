@@ -1,12 +1,14 @@
 package com.wuxp.env;
 
-import com.wuxp.env.refresh.EnvironmentChangeEvent;
+
 import com.wuxp.env.util.SpringFactoriesLoaderUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
+import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
+import org.springframework.cloud.context.refresh.ContextRefresher;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -126,7 +128,8 @@ public class EnvironmentProviderApplicationListener implements SmartApplicationL
     }
 
     private void onApplicationEnvironmentChangeEvent(EnvironmentChangeEvent event) {
-
+        ContextRefresher contextRefresher = applicationContext.getBean(ContextRefresher.class);
+        contextRefresher.refresh();
     }
 
     /**

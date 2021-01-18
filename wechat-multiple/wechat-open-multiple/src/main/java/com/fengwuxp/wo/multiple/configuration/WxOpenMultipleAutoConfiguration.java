@@ -24,14 +24,16 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
  * @Date 2020/3/16 19:58
  * @Created by 44487
  */
-
 @Configuration
 @EnableConfigurationProperties(WeChatMultipleProperties.class)
 @ConditionalOnProperty(prefix = WeChatMultipleProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class WxOpenMultipleAutoConfiguration {
 
-    @Autowired
-    private WeChatMultipleProperties weChatMultipleProperties;
+    private final WeChatMultipleProperties weChatMultipleProperties;
+
+    public WxOpenMultipleAutoConfiguration(WeChatMultipleProperties weChatMultipleProperties) {
+        this.weChatMultipleProperties = weChatMultipleProperties;
+    }
 
     @Bean
     @ConditionalOnProperty(
