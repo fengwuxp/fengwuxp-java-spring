@@ -18,12 +18,13 @@
 
     <properties>
         <revision>1.2.0-SNAPSHOT</revision>
-        <java.version>1.8</java.version>
+        <wuxp-codegen.version>1.1.0-SNAPSHOT</wuxp-codegen.version>
         <springdoc.version>1.5.2</springdoc.version>
         <fastjson.version>1.2.75</fastjson.version>
         <weixin.java.version>4.0.0</weixin.java.version>
 
         <!--1.8编译参数 保留方法名称-->
+        <java.version>1.8</java.version>
         <compilerArgument>-parameters</compilerArgument>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
