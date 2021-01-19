@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
  * https://blog.csdn.net/jiangshanwe/article/details/73842143
  * https://longfeizheng.github.io/2018/01/14/Spring-Security%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%BA%94-Spring-Security%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95/
  * https://cloud.tencent.com/developer/article/1040105
+ * @author wuxp
  */
 @Component
 @Slf4j

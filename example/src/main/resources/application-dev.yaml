@@ -4,6 +4,8 @@ server:
     context-path: /api
 
 spring:
+  liquibase:
+    enabled: false
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: sa

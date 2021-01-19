@@ -12,7 +12,7 @@
     <artifactId>fengwuxp-configuration-support</artifactId>
 
     <properties>
-        <spring.cloud.version>2.2.6.RELEASE</spring.cloud.version>
+        <spring.cloud.version>3.0.0</spring.cloud.version>
     </properties>
 
     <dependencies>

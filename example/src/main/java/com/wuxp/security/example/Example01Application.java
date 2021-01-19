@@ -3,6 +3,7 @@ package com.wuxp.security.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
@@ -12,7 +13,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
         scanBasePackages = {
                 "com.levin.commons.dao",
                 "com.wuxp"
-        }
+        },
+        exclude = {LiquibaseAutoConfiguration.class}
 )
 @EntityScan(basePackages = {"com.wuxp", "com.oak", "com.oaknt"})
 @EnableAspectJAutoProxy()

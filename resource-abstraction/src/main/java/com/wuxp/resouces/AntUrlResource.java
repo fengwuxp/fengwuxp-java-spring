@@ -5,6 +5,7 @@ import com.wuxp.resouces.enums.ResourceType;
 
 /**
  * ant url 资源
+ * @author wuxp
  */
 public interface AntUrlResource<ID> extends SystemResource<ID> {
 
