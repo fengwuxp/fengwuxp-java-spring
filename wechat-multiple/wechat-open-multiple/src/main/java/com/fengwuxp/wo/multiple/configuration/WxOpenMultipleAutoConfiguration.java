@@ -6,7 +6,6 @@ import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import com.fengwuxp.wo.multiple.DefaultMultipleWxOpenServiceManager;
 import com.fengwuxp.wo.multiple.WxOpenServiceManager;
 import me.chanjar.weixin.open.api.WxOpenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

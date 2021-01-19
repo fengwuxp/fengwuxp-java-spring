@@ -5,7 +5,7 @@
     <parent>
         <artifactId>fengwuxp-security</artifactId>
         <groupId>com.wuxp.security</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,36 +29,32 @@
         <dependency>
             <groupId>com.wuxp.security</groupId>
             <artifactId>fengwuxp-security-captcha</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
             <artifactId>fengwuxp-security-jwt</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.wuxp.security</groupId>
             <artifactId>fengwuxp-security-social</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.wuxp.basic</groupId>
             <artifactId>fengwuxp-java-basic</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.wuxp</groupId>
             <artifactId>fengwuxp-api-support</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
-
 
     </dependencies>
 

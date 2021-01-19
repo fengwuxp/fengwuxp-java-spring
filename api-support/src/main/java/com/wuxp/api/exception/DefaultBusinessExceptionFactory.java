@@ -7,7 +7,7 @@ package com.wuxp.api.exception;
  */
 public class DefaultBusinessExceptionFactory implements BusinessExceptionFactory<Integer, BusinessServiceException> {
 
-  public static final BusinessExceptionFactory DEFAULT_EXCEPTION_FACTORY=new DefaultBusinessExceptionFactory();
+    public static final BusinessExceptionFactory DEFAULT_EXCEPTION_FACTORY = new DefaultBusinessExceptionFactory();
 
     @Override
     public void factory(Throwable cause, String message, BusinessErrorCode<Integer> errorCode) throws BusinessServiceException {

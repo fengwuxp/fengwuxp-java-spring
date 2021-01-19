@@ -2,7 +2,6 @@ package com.wuxp.security.example.env;
 
 import com.wuxp.env.database.AbstractJdbcPropertyProvider;
 import org.springframework.core.env.PropertiesPropertySource;
-import org.springframework.jdbc.core.JdbcOperations;
 
 import java.util.*;
 

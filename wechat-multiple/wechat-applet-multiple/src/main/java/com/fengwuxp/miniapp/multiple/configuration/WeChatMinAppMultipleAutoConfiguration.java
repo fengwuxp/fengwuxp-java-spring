@@ -6,7 +6,6 @@ import com.fengwuxp.miniapp.multiple.WeChatMiniAppServiceManager;
 import com.fengwuxp.wechat.multiple.HttpRequestWeChatServiceAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

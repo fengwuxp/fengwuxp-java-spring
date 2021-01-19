@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.wuxp</groupId>
         <artifactId>fengwuxp-java</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,19 +15,13 @@
         <dependency>
             <groupId>com.wuxp.codegen</groupId>
             <artifactId>wuxp-codegen-swagger3</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
-    <!--    <dependency>
-            <groupId>com.wuxp.codegen</groupId>
-            <artifactId>wuxp-codegen-spring</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>-->
         <dependency>
             <groupId>com.wuxp</groupId>
             <artifactId>fengwuxp-api-support</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>

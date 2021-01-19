@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -137,7 +136,6 @@ public class ApiSupportAutoConfiguration {
 
     /**
      * 初始化异常相关处理信息
-
      */
     @PostConstruct
     public void init() {
@@ -145,7 +143,7 @@ public class ApiSupportAutoConfiguration {
         Assert.notNull(businessExceptionFactory, "BusinessExceptionFactory is null");
         AssertThrow.setBusinessExceptionFactory(businessExceptionFactory);
         RestfulApiRespFactory.setBusinessExceptionFactory(businessExceptionFactory);
-        DefaultRestfulApiRespImpl.setBusinessSuccessCode(businessExceptionFactory.getErrorCode());
+        DefaultRestfulApiRespImpl.setBusinessSuccessCode(businessExceptionFactory.getSuccessCode());
     }
 
 }

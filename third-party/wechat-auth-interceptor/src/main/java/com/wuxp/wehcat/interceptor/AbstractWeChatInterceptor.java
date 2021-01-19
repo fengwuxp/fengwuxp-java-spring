@@ -4,9 +4,10 @@ import com.wuxp.basic.utils.IpAddressUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -15,7 +16,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +35,7 @@ import java.util.Map;
 @Slf4j
 @Setter
 @Getter
-public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapter
-        implements WeChatAuthInterceptor, InitializingBean, BeanFactoryAware {
+public abstract class AbstractWeChatInterceptor implements HandlerInterceptor, WeChatAuthInterceptor, InitializingBean, BeanFactoryAware {
 
     public enum WxAuthScope {
 
@@ -110,7 +110,7 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (this.wxAuthScope == null) {
             this.wxAuthScope = WxAuthScope.snsapi_userinfo;
         }
@@ -139,7 +139,6 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-
         if (userAction == null) {
             if (log.isWarnEnabled()) {
                 log.warn("userAction is null");
@@ -149,7 +148,6 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
 
         //用户已经登录了,或者是忽略验证的url 直接过
         if (userAction.isLogin(request) || isIgnore(request)) {
-//            log.debug("已登录或被忽略，登录状态："+userAction.isLogin(request)+"  忽略："+isIgnore(request));
             return true;
         }
 
@@ -222,7 +220,7 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
             // 2 第二步：通过code换取网页授权access_token
             int n = maxAuthRetries;
             //尝试重复获取
-            WxMpOAuth2AccessToken accessToken = null;
+            WxOAuth2AccessToken accessToken = null;
             while (n-- > 0 && accessToken == null) {
                 accessToken = requestToken(request, session, wxCallbackCode);
             }
@@ -422,12 +420,12 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
         }
     }
 
-    private WxMpOAuth2AccessToken requestToken(HttpServletRequest request, HttpSession session, String code) {
+    private WxOAuth2AccessToken requestToken(HttpServletRequest request, HttpSession session, String code) {
 
-        WxMpOAuth2AccessToken accessToken = null;
+        WxOAuth2AccessToken accessToken = null;
 
         try {
-            accessToken = wxService.oauth2getAccessToken(code);
+            accessToken = wxService.getOAuth2Service().getAccessToken(code);
         } catch (WxErrorException ex) {
             log.error(getAddrInfo(request) + " oauth2getAccessToken error, code:" + code, ex);
         }
@@ -441,19 +439,31 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
         //如果是用户已经关注服务号，或是授权模式用户信息
         if (Boolean.TRUE.equals(session.getAttribute(WX_APP_INSTALLED))
                 || WxAuthScope.snsapi_userinfo.equals(this.getWxAuthScope())) {
+            WxOAuth2UserInfo wxOAuth2UserInfo = null;
             try {
-                WxMpUser wxMpUser = wxService.oauth2getUserInfo(accessToken, null);
-                setWxMpUserToCache(request, wxMpUser);
-                if (log.isDebugEnabled()) {
-                    log.debug(getAddrInfo(request) + " oauth2getUserInfo, openid:" + openId + ",user:" + wxMpUser);
-                }
+                wxOAuth2UserInfo = wxService.getOAuth2Service().getUserInfo(accessToken, "zh_CN");
             } catch (WxErrorException ex) {
                 //获取微信用户信息失败则清除缓存中的openId
                 clearCache(request);
                 log.error(getAddrInfo(request) + "oauth2getUserInfo error, accessToken:" + accessToken, ex);
             }
+            if (wxOAuth2UserInfo != null) {
+                WxMpUser wxMpUser = new WxMpUser();
+                wxMpUser.setProvince(wxOAuth2UserInfo.getProvince());
+                wxMpUser.setCity(wxOAuth2UserInfo.getCity());
+                wxMpUser.setCountry(wxOAuth2UserInfo.getCountry());
+                wxMpUser.setSex(wxOAuth2UserInfo.getSex());
+                wxMpUser.setHeadImgUrl(wxOAuth2UserInfo.getHeadImgUrl());
+                wxMpUser.setNickname(wxOAuth2UserInfo.getNickname());
+                wxMpUser.setOpenId(wxOAuth2UserInfo.getOpenid());
+                wxMpUser.setUnionId(wxOAuth2UserInfo.getUnionId());
+                wxMpUser.setPrivileges(wxOAuth2UserInfo.getPrivileges());
+                setWxMpUserToCache(request, wxMpUser);
+                if (log.isDebugEnabled()) {
+                    log.debug(getAddrInfo(request) + " oauth2getUserInfo, openid:" + openId + ",user:" + wxMpUser);
+                }
+            }
         }
-
 
         if (log.isDebugEnabled()) {
             log.debug(getAddrInfo(request) + " openid:" + openId + ",accessToken:" + accessToken);
@@ -482,16 +492,16 @@ public abstract class AbstractWeChatInterceptor extends HandlerInterceptorAdapte
 
         //  if (UriUtils.)
         //应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
-        String toWeChatOAuth2Url = wxService.oauth2buildAuthorizationUrl(srcUrl, wxAuthScope.toString(), getCurrentStateValue());
+        String authorizationUrl = wxService.getOAuth2Service().buildAuthorizationUrl(srcUrl, wxAuthScope.toString(), getCurrentStateValue());
 
         if (log.isDebugEnabled()) {
-            log.debug(getAddrInfo(request) + " " + request.getRequestURL() + " send redirect to weixin auth url:" + toWeChatOAuth2Url);
+            log.debug(getAddrInfo(request) + " " + request.getRequestURL() + " send redirect to weixin auth url:" + authorizationUrl);
         }
 
         //使用301重定向
         response.setStatus(301);
 
-        response.sendRedirect(toWeChatOAuth2Url);
+        response.sendRedirect(authorizationUrl);
     }
 
     private String buildUrl(HttpServletRequest request, String... excludeNames) throws UnsupportedEncodingException {
