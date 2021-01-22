@@ -63,7 +63,6 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
-        boolean dbEnvEnabled = this.dbEnvEnabled;
         return threadPoolTaskScheduler;
     }
 

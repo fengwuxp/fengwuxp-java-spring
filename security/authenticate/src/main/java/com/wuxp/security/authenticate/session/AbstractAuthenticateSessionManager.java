@@ -18,6 +18,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
@@ -52,17 +53,12 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     @Override
     public T get(String token) {
         Cache cache = this.cacheManager.getCache(this.getUserCacheName());
-        assert cache != null;
+        Assert.notNull(cache,"user cache must not null");
         T user = cache.get(token, userClassType);
         if (user != null) {
             return user;
         }
-        try {
-            user = this.findUserByToken(token);
-        } catch (UsernameNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        user = this.findUserByToken(token);
         cache.put(token, user);
         return user;
     }

@@ -8,6 +8,7 @@ import com.wuxp.resouces.enums.ResourceType;
  * <p>
  * all can be considered as resources, this is a logical abstraction
  * </p>
+ * @author wuxp
  */
 public interface SystemResource<ID> {
 

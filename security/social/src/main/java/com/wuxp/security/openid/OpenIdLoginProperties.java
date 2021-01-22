@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * openid 登录相关
+ * @author wuxp
  */
 @Data
 public class OpenIdLoginProperties {
@@ -11,5 +12,5 @@ public class OpenIdLoginProperties {
     /**
      * 登录处理url
      */
-    private String loginProcessingUrl = "/social_openid/login";
+    private String loginProcessingUrl = "/social_openid/{social_type}/login";
 }

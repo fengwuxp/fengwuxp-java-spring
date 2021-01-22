@@ -17,6 +17,7 @@ import java.util.Date;
 
 /**
  * jwt token provider
+ * @author wuxp
  */
 @Slf4j
 @Data
@@ -70,7 +71,7 @@ public class JwtTokenProvider implements BeanFactoryAware, InitializingBean {
 
     public Jws<Claims> parse(String token) throws UnsupportedJwtException {
         String prefix = jwtProperties.getHeaderPrefix();
-        if (StringUtils.isEmpty(token)) {
+        if (!StringUtils.hasLength(token)) {
             log.warn("Token is empty!");
             throw new UnsupportedJwtException("Token is empty!");
         }

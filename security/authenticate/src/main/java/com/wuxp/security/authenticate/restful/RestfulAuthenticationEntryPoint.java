@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,9 +17,9 @@ import java.io.IOException;
  * 在认证失败的时候返回401
  * <p>
  * 如果是匿名用户权限不足
+ * </p>
  *
  * @author wxup
- * @see ExceptionTranslationFilter#doFilter
  */
 @Slf4j
 public class RestfulAuthenticationEntryPoint implements AuthenticationEntryPoint, HttpMessageResponseWriter {
