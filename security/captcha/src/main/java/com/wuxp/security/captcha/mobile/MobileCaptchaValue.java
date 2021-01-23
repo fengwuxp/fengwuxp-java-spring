@@ -4,6 +4,9 @@ import com.wuxp.security.captcha.CaptchaType;
 import com.wuxp.security.captcha.CaptchaValue;
 import lombok.Getter;
 
+/**
+ * @author wuxp
+ */
 @Getter
 public class MobileCaptchaValue implements CaptchaValue {
 

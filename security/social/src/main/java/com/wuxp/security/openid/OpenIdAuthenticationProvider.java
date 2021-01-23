@@ -37,7 +37,7 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
 
         OpenIdAuthenticationToken authenticationToken = (OpenIdAuthenticationToken) authentication;
 
-        Set<String> providerUserIds = new HashSet<String>();
+        Set<String> providerUserIds = new HashSet<>();
         providerUserIds.add((String) authenticationToken.getPrincipal());
         // 根据第三方开放平台获取用的id
         Set<String> userIds = usersConnectionRepository.findUserIdsConnectedTo(authenticationToken.getProviderId(), providerUserIds);

@@ -20,7 +20,7 @@ import java.text.MessageFormat;
 @Slf4j
 public class MobileCaptchaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private String mobileParameter = "mobile";
+    private String mobileParameter = "mobilePhone";
 
     private String mobileCaptchaParameter = "captcha";
 

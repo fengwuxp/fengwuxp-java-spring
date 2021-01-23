@@ -52,16 +52,16 @@ public class MobileCaptchaAuthenticationSecurityConfig extends SecurityConfigure
             return;
         }
         MobileCaptchaLoginProperties mobileCaptchaLoginProperties = wuxpSecurityProperties.getMobileCaptcha();
-        MobileCaptchaAuthenticationFilter smsCaptchaAuthenticationFilter = new MobileCaptchaAuthenticationFilter(mobileCaptchaLoginProperties.getLoginProcessingUrl());
-        smsCaptchaAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        smsCaptchaAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
-        smsCaptchaAuthenticationFilter.setAuthenticationFailureHandler(mobileCaptchaAuthenticationFailureHandler);
-        smsCaptchaAuthenticationFilter.setCaptchaWebAuthenticationDetailsSource(captchaWebAuthenticationDetailsSource);
+        MobileCaptchaAuthenticationFilter mobileCaptchaAuthenticationFilter = new MobileCaptchaAuthenticationFilter(mobileCaptchaLoginProperties.getLoginProcessingUrl());
+        mobileCaptchaAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
+        mobileCaptchaAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        mobileCaptchaAuthenticationFilter.setAuthenticationFailureHandler(mobileCaptchaAuthenticationFailureHandler);
+        mobileCaptchaAuthenticationFilter.setCaptchaWebAuthenticationDetailsSource(captchaWebAuthenticationDetailsSource);
 
         MobileCaptchaAuthenticationProvider smsCaptchaAuthenticationProvider = new MobileCaptchaAuthenticationProvider();
         smsCaptchaAuthenticationProvider.setUserDetailsService(mobilePhoneUserDetailsService);
         smsCaptchaAuthenticationProvider.setMobileCaptcha(mobileCaptcha);
         http.authenticationProvider(smsCaptchaAuthenticationProvider)
-                .addFilterAfter(smsCaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(mobileCaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

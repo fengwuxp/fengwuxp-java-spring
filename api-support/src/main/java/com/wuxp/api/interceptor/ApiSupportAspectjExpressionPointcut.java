@@ -29,6 +29,7 @@ public class ApiSupportAspectjExpressionPointcut extends AspectJExpressionPointc
     static {
         CACHE_CONTROLLER_ANNOTATIONS.add(Controller.class);
         CACHE_CONTROLLER_ANNOTATIONS.add(RestController.class);
+
         CACHE_MAPPING_ANNOTATIONS.add(RequestMapping.class);
         CACHE_MAPPING_ANNOTATIONS.add(GetMapping.class);
         CACHE_MAPPING_ANNOTATIONS.add(PostMapping.class);
@@ -45,8 +46,6 @@ public class ApiSupportAspectjExpressionPointcut extends AspectJExpressionPointc
         if (CACHE_CONTROLLER_ANNOTATIONS.stream().noneMatch(targetClass::isAnnotationPresent)) {
             return false;
         }
-
-
         return super.matches(targetClass);
     }
 

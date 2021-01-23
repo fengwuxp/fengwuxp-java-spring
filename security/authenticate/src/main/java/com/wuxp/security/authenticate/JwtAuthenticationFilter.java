@@ -16,6 +16,8 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.web.util.WebUtils.ERROR_EXCEPTION_ATTRIBUTE;
 
@@ -52,12 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
 
     private AuthenticateSessionManager authenticateSessionManager;
 
-    /**
-     * 尝试获取鉴权信息的路径
-     * 必须是完整的路径（不包含contentPath）,
-     * 暂时不支持有存在路径参数
-     */
-    private List<String> tryAuthenticationPaths;
+
+    private List<RequestMatcher> tryAuthenticationRequestMatchers;
 
 
     /**
@@ -83,55 +82,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        if (chain instanceof ApplicationFilterChain){
+        if (chain instanceof ApplicationFilterChain) {
             // 如果是在tomcat的过滤器链中，不处理
             chain.doFilter(request, response);
             return;
         }
-        // 如果已经通过认证
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (context.getAuthentication() != null) {
+        if (this.isTryAuthenticationPath(request)) {
             chain.doFilter(request, response);
             return;
         }
-        if (!this.isTryAuthenticationPath(request)){
+
+        // 必须认证的路径
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context.getAuthentication() == null) {
+            // 认证失败
+            if (context instanceof TokenSecurityContextImpl) {
+                String token = ((TokenSecurityContextImpl) context).getToken();
+                // 存在用户被踢出的信息
+                ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(token);
+                if (kickOutResp != null) {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    this.writeJson(response, kickOutResp);
+                    return;
+                }
+            }
+            // 如果已经未认证
             authenticationEntryPoint.commence(request, response,
                     new AuthenticationCredentialsNotFoundException("request must authentication",
-                    (Exception)request.getAttribute(ERROR_EXCEPTION_ATTRIBUTE)));
+                            (Exception) request.getAttribute(ERROR_EXCEPTION_ATTRIBUTE)));
             return;
         }
-
-        if (context instanceof TokenSecurityContextImpl){
-            String token = ((TokenSecurityContextImpl) context).getToken();
-            // 存在用户被踢出的信息
-            ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(token);
-            if (kickOutResp != null) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                this.writeJson(response, kickOutResp);
-                return;
-            }
-        }
-
-        // 其他情况
+        // 认证通过或其他情况
         chain.doFilter(request, response);
     }
 
 
     /**
+     * 匹配是否为尝试鉴权的路径
      *
-     * @param request
-     * @return 是否只是尝试做鉴权
+     * @param request http 请求对象
+     * @return if return<code>true</code> 表示该路径只需要尝试做鉴权
      */
     protected boolean isTryAuthenticationPath(HttpServletRequest request) {
-        if (this.tryAuthenticationPaths == null) {
+        List<RequestMatcher> tryAuthenticationRequestMatchers = this.tryAuthenticationRequestMatchers;
+        if (tryAuthenticationRequestMatchers == null || this.tryAuthenticationRequestMatchers.isEmpty()) {
             return false;
         }
-        String uri = request.getRequestURI().replace(request.getContextPath(), "");
-        return this.tryAuthenticationPaths.stream()
-                .map((item) -> item.equals(uri))
-                .filter(r -> r)
-                .findFirst()
-                .orElse(false);
+        return tryAuthenticationRequestMatchers
+                .stream()
+                .anyMatch(requestMatcher -> requestMatcher.matches(request));
     }
 
     @Override
@@ -151,6 +150,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
         if (this.authenticateSessionManager == null) {
             this.authenticateSessionManager = beanFactory.getBean(AuthenticateSessionManager.class);
         }
-        Assert.notNull(authenticateSessionManager,"authenticateSessionManager must not null");
+        Assert.notNull(authenticateSessionManager, "authenticateSessionManager must not null");
+    }
+
+    /**
+     * @param tryAuthenticationPaths 尝试用于认证的路径
+     */
+    public void setTryAuthenticationPaths(List<String> tryAuthenticationPaths) {
+        this.tryAuthenticationRequestMatchers = tryAuthenticationPaths.stream()
+                .map(AntPathRequestMatcher::new)
+                .collect(Collectors.toList());
     }
 }

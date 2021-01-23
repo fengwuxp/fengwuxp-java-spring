@@ -24,7 +24,7 @@ public class MobileCaptchaAuthenticationToken extends AbstractAuthenticationToke
         this.setAuthenticated(false);
     }
 
-    //构造已认证用户信息
+    // 构造已认证用户信息
     MobileCaptchaAuthenticationToken(Object principal,
                                      Object credentials,
                                      Collection<? extends GrantedAuthority> authorities) {

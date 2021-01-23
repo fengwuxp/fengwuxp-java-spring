@@ -10,6 +10,7 @@ import org.springframework.cache.CacheManager;
 
 /**
  * use spring cache store captcha
+ * @author wuxp
  */
 @Slf4j
 @Setter
