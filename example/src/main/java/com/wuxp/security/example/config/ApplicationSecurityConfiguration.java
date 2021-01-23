@@ -121,21 +121,21 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
         //静态资源不拦截
         // http://localhost:8090/api/swagger-ui.html
         web.ignoring().antMatchers(
-                 "/captcha/**",
-
-                "/js/**",
-                "/css/**",
-                "/images/**",
-                "/v3/api-docs",
-                "/v3/api-docs/**",
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/configuration/ui",
-                "/swagger-resources",
-                "/configuration/security",
-                "/swagger-ui.html",
-                "/webjars/**",
-                "/webjars/**"
+//                 "/captcha/**",
+                 "/example/**"
+//                "/js/**",
+//                "/css/**",
+//                "/images/**",
+//                "/v3/api-docs",
+//                "/v3/api-docs/**",
+//                "/swagger-ui/**",
+//                "/v3/api-docs/**",
+//                "/configuration/ui",
+//                "/swagger-resources",
+//                "/configuration/security",
+//                "/swagger-ui.html",
+//                "/webjars/**",
+//                "/webjars/**"
                 );
     }
 

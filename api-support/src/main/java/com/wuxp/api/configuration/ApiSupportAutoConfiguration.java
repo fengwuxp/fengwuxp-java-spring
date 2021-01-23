@@ -58,9 +58,8 @@ public class ApiSupportAutoConfiguration {
     @ConditionalOnBean(value = {ApiOperationSource.class, ApiInterceptor.class})
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public BeanFactoryApiOperationSourceAdvisor beanFactoryApiOperationSourceAdvisor(ApiInterceptor apiInterceptor, ApiOperationSource apiOperationSource) {
-        BeanFactoryApiOperationSourceAdvisor advisor = new BeanFactoryApiOperationSourceAdvisor();
+        BeanFactoryApiOperationSourceAdvisor advisor = new BeanFactoryApiOperationSourceAdvisor(apiOperationSource);
         advisor.setAdvice(apiInterceptor);
-        advisor.setApiOperationSource(apiOperationSource);
         return advisor;
     }
 
@@ -80,7 +79,7 @@ public class ApiSupportAutoConfiguration {
 //    @ConditionalOnBean(ApiInterceptor.class)
     public DefaultPointcutAdvisor logAopPointCutAdvice() {
         //声明一个AspectJ切点
-        AspectJExpressionPointcut pointcut = new ApiSupportAspectJExpressionPointcut();
+        AspectJExpressionPointcut pointcut = new ApiSupportAspectjExpressionPointcut();
         //设置切点表达式
         pointcut.setExpression(DEFAULT_POINT_CUT);
 

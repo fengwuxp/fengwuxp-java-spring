@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * @author wxup
  */
-public class ApiSupportAspectJExpressionPointcut extends AspectJExpressionPointcut {
+public class ApiSupportAspectjExpressionPointcut extends AspectJExpressionPointcut {
 
     private static final Set<Class<? extends Annotation>> CACHE_CONTROLLER_ANNOTATIONS = new LinkedHashSet<>(2);
 

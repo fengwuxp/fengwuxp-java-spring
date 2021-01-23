@@ -41,10 +41,6 @@ public class AnnotationApiOperationSource implements ApiOperationSource {
     );
 
 
-//    protected Class<?> injectSupperClazz = ApiRequest.class;
-
-//    protected Class<?> checkSignatureSupperClazz = ApiSignatureRequest.class;
-
     @Override
     public boolean isCandidateClass(Method method, Class<?> targetClass) {
         if (IGNORE_PACKAGES.stream().anyMatch((packageName -> targetClass.getName().startsWith(packageName)))) {

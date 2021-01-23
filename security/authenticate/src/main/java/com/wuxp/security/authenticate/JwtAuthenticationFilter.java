@@ -6,22 +6,17 @@ import com.wuxp.security.authenticate.context.TokenSecurityContextImpl;
 import com.wuxp.security.authenticate.session.AuthenticateSessionManager;
 import com.wuxp.security.jwt.JwtProperties;
 import com.wuxp.security.jwt.JwtTokenProvider;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.core.ApplicationFilterChain;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -47,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
     private BeanFactory beanFactory;
 
     /**
-     * 认证如果失败由该端点进行响应
+     * 认证如果失败由该端点响应错误信息
      */
     private AuthenticationEntryPoint authenticationEntryPoint;
 
@@ -73,6 +68,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
      * 2：携带token的路径不是必须鉴权的，只是做尝试性的获取，则进行跳过
      * 3：判断用户是否被踢出
      * </>
+     * 注意：
+     * 由于 {@link org.springframework.boot.web.servlet.ServletContextInitializerBeans#addServletContextInitializerBean}方法会将
+     * 类型为{@link javax.servlet.Filter} {@link javax.servlet.Servlet} {@link java.util.EventListener} 类型的bean注册到
+     * {@link javax.servlet.ServletContext}中
+     * 这样导致的结果是在某些情况下 {@link javax.servlet.Filter}可能会被执行2次
      *
      * @param request
      * @param response
@@ -82,6 +82,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        if (chain instanceof ApplicationFilterChain){
+            // 如果是在tomcat的过滤器链中，不处理
+            chain.doFilter(request, response);
+            return;
+        }
         // 如果已经通过认证
         SecurityContext context = SecurityContextHolder.getContext();
         if (context.getAuthentication() != null) {
@@ -97,7 +103,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Bea
 
         if (context instanceof TokenSecurityContextImpl){
             String token = ((TokenSecurityContextImpl) context).getToken();
-            // 用户被踢出的信息存在
+            // 存在用户被踢出的信息
             ApiResp<Void> kickOutResp = authenticateSessionManager.tryGetKickOutReason(token);
             if (kickOutResp != null) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
