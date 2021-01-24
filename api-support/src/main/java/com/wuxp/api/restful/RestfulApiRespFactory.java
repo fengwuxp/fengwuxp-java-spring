@@ -13,36 +13,48 @@ import org.springframework.http.HttpStatus;
  */
 public final class RestfulApiRespFactory {
 
+    /**
+     * 业务异常工厂
+     */
     private static BusinessExceptionFactory BUSINESS_EXCEPTION_FACTORY = DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
 
 
     /*-------------------- 2xx -------------------*/
-
-    public static <T> ApiResp<T> ok() {
-
-        return newInstance(HttpStatus.OK, null, getSuccessCode(), null);
-    }
 
     public static <T> ApiResp<T> ok(T data) {
 
         return newInstance(HttpStatus.OK, null, getSuccessCode(), data);
     }
 
+    public static <T> ApiResp<T> ok() {
+
+        return ok(null);
+    }
+
     /**
      * 返回查询成功
      *
-     * @param list
+     * @param pagination 分页信息
+     * @param <T>        分页内容类型
+     * @return
+     */
+    public static <T> ApiResp<Pagination<T>> queryOk(Pagination<T> pagination) {
+        return ok(pagination);
+    }
+
+    /**
+     * 创建操作处理成功
+     *
+     * @param data 需要返回的数据
      * @param <T>
      * @return
      */
-    public static <T> ApiResp<Pagination<T>> queryOk(Pagination<T> list) {
-
-        return newInstance(HttpStatus.OK, null, getSuccessCode(), list);
+    public static <T> ApiResp<T> created(T data) {
+        return newInstance(HttpStatus.CREATED, null, getSuccessCode(), data);
     }
 
-    public static <T> ApiResp<T> created(T data) {
-
-        return newInstance(HttpStatus.CREATED, null, getSuccessCode(), data);
+    public static <T> ApiResp<T> created() {
+        return created(null);
     }
 
 

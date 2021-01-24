@@ -20,7 +20,11 @@ public final class SpringContextHolder implements ApplicationContextAware {
         }
     }
 
-    //获取applicationContext
+    /**
+     * 获取applicationContext
+     *
+     * @return ApplicationContext
+     */
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }

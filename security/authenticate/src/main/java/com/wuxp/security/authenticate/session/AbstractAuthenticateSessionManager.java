@@ -295,6 +295,9 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         if (this.userDetailsService == null) {
             this.userDetailsService = beanFactory.getBean(UserDetailsService.class);
         }
+        Assert.notNull(cacheManager,"cacheManager is not null");
+        Assert.notNull(jwtTokenProvider,"jwtTokenProvider is not null");
+        Assert.notNull(userDetailsService,"userDetailsService is not null");
     }
 
 

@@ -20,11 +20,4 @@ public @interface ApiSignature {
      * @return
      */
     String name() default "";
-
-    /**
-//     * 字段是否参与签名
-//     *
-//     * @return
-//     */
-//    String condition() default "#_val==null";
 }

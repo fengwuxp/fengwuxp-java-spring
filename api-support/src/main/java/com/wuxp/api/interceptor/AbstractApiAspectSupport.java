@@ -12,9 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.core.BridgeMethodResolver;
+import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.lang.NonNull;
@@ -37,10 +42,7 @@ import javax.validation.executable.ExecutableValidator;
 import javax.validation.groups.Default;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.wuxp.api.ApiRequest.APP_ID_KEY;
 import static com.wuxp.api.context.ApiRequestContextFactory.AUTHENTICATE;
@@ -99,7 +101,9 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
 
     protected BeanFactory beanFactory;
 
-    // 用于写入操作日志的线程池
+    /**
+     * 用于写入操作日志的线程池
+     */
     protected Executor logExecutor;
 
     protected ApiRequestContextFactory apiRequestContextFactory;
@@ -118,6 +122,10 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
 
     protected TemplateExpressionParser templateExpressionParser;
 
+    /**
+     * spring的方法参数发现者
+     */
+    protected final static ParameterNameDiscoverer PARAMETER_NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
 
     /**
      * 尝试对参数注入
@@ -165,7 +173,7 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         }
 
         if (InjectType.NONE.equals(injectType)) {
-            return evaluationContext;
+            return null;
         }
 
         AnnotatedElementKey methodKey = null;
@@ -203,10 +211,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
                                        Class<?> targetClass,
                                        Method method,
                                        Object[] arguments) throws ConstraintViolationException {
-        // Avoid Validator invocation on FactoryBean.getObjectType/isSingleton
-        if (isFactoryBeanMetadataMethod(method)) {
-            return;
-        }
 
         Optional<Object> optional = Arrays.stream(arguments)
                 .filter(Objects::nonNull)
@@ -227,15 +231,13 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         Method methodToValidate = method;
 
         try {
-            result = execVal.validateParameters(
-                    target, methodToValidate, arguments, groups);
+            result = execVal.validateParameters(target, methodToValidate, arguments, groups);
         } catch (IllegalArgumentException ex) {
             // Probably a generic type mismatch between interface and impl as reported in SPR-12237 / HV-1011
             // Let's try to find the bridged method on the implementation class...
             methodToValidate = BridgeMethodResolver.findBridgedMethod(
                     ClassUtils.getMostSpecificMethod(method, targetClass));
-            result = execVal.validateParameters(
-                    target, methodToValidate, arguments, groups);
+            result = execVal.validateParameters(target, methodToValidate, arguments, groups);
         }
         if (!result.isEmpty()) {
             throw new ConstraintViolationException(result);
@@ -273,7 +275,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             return;
         }
 
-//        Object request = getClazzTypeObject(args, this.checkSignatureSupperClazz);
         // 非签名对象的子类或聚合参数列表
         HttpServletRequest httpServletRequest = getHttpServletRequest();
         if (httpServletRequest == null) {
@@ -289,23 +290,13 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
                 continue;
             }
             String name = apiSignature.name();
-            if (StringUtils.isEmpty(name)) {
-                name = parameter.getName();
+            if (!StringUtils.hasLength(name)) {
+                name = getParameterName(parameter);
             }
             apiSignatureValues.put(name, args[i]);
         }
-
-//        signatureRequest.setAppId(httpServletRequest.getHeader(APP_ID_HEADER_KEY));
-//        signatureRequest.setNonceStr(httpServletRequest.getHeader(NONCE_STR_HEADER_KEY));
-//        signatureRequest.setApiSignature(httpServletRequest.getHeader(APP_SIGN_HEADER_KEY));
-//        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
-//        if (StringUtils.hasText(timeStamp)) {
-//            signatureRequest.setTimeStamp(Long.parseLong(timeStamp));
-//        }
-//        signatureRequest.setChannelCode(httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY));
         signatureRequest.setApiSignatureValues(apiSignatureValues);
         apiSignatureStrategy.check(signatureRequest);
-
     }
 
 
@@ -417,30 +408,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
     }
 
 
-    /**
-     * 获取签名需要 map
-     *
-     * @param request 签名请求对象
-     * @return 用于签名的Map（经过字典排序）
-     */
-    private Map<String, Object> getSignatureMap(ApiSignatureRequest request) {
-        Class<? extends ApiSignatureRequest> aClass = request.getClass();
-        final Map<String, Object> map = new HashMap<>();
-        Field[] fields = this.getFields(aClass);
-
-        Arrays.stream(fields)
-                .filter(field -> field.isAnnotationPresent(ApiSignature.class))
-                .sorted()
-                .forEach(field -> {
-                    ApiSignature apiSignature = field.getAnnotation(ApiSignature.class);
-                    String name = apiSignature.name();
-                    if (StringUtils.isEmpty(name)) {
-                        name = field.getName();
-                    }
-                    map.put(name, ReflectionUtils.getField(field, this));
-                });
-        return map;
-    }
 
     /**
      * 尝试注入继承了 {@code injectSupperClazz}的子类
@@ -570,11 +537,11 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         Operation operation = targetMethod.getAnnotation(Operation.class);
         boolean operationIsNotNull = operation != null;
         String type = apiLog.type();
-        if (StringUtils.isEmpty(type) && operationIsNotNull) {
+        if (!StringUtils.hasLength(type) && operationIsNotNull) {
             type = operation.method();
         }
         String action = apiLog.action();
-        if (StringUtils.isEmpty(action) && operationIsNotNull) {
+        if (!StringUtils.hasLength(action) && operationIsNotNull) {
             action = operation.summary();
         }
         String uri = request.getRequestURI();
@@ -659,27 +626,6 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
     }
 
 
-    private boolean isFactoryBeanMetadataMethod(Method method) {
-        Class<?> clazz = method.getDeclaringClass();
-
-        // Call from interface-based proxy handle, allowing for an efficient check?
-        if (clazz.isInterface()) {
-            return ((clazz == FactoryBean.class || clazz == SmartFactoryBean.class) &&
-                    !"getObject".equals(method.getName()));
-        }
-
-        // Call from CGLIB proxy handle, potentially implementing a FactoryBean method?
-        Class<?> factoryBeanType = null;
-        if (SmartFactoryBean.class.isAssignableFrom(clazz)) {
-            factoryBeanType = SmartFactoryBean.class;
-        } else if (FactoryBean.class.isAssignableFrom(clazz)) {
-            factoryBeanType = FactoryBean.class;
-        }
-        return (factoryBeanType != null && !"getObject".equals(method.getName()) &&
-                ClassUtils.hasMethod(factoryBeanType, method.getName(), method.getParameterTypes()));
-    }
-
-
     @Override
     public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
@@ -693,6 +639,12 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
     @Override
     public void destroy() {
         this.clearMetadataCache();
+        Executor logExecutor = this.logExecutor;
+        if (logExecutor != null) {
+            if (logExecutor instanceof ExecutorService) {
+                ((ExecutorService) logExecutor).shutdown();
+            }
+        }
     }
 
     private void lazyInit() throws BeansException {
@@ -720,14 +672,15 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
         }
 
         if (this.logExecutor == null) {
-            //初始化日志的线程池
-
+            // 初始化日志的线程池
+            CustomizableThreadFactory threadFactory = new CustomizableThreadFactory(OPERATING_LOG_THREAD_PREFIX);
+            threadFactory.setDaemon(true);
             this.logExecutor = new ThreadPoolExecutor(
                     1,
                     2,
                     30,
                     TimeUnit.SECONDS,
-                    new ArrayBlockingQueue<>(1024), new CustomizableThreadFactory(OPERATING_LOG_THREAD_PREFIX));
+                    new ArrayBlockingQueue<>(1024), threadFactory);
         }
 
         if (this.validator == null) {
@@ -739,6 +692,23 @@ public abstract class AbstractApiAspectSupport implements BeanFactoryAware, Smar
             }
         }
         this.templateExpressionParser = new SimpleTemplateExpressionParser(this.evaluator);
+    }
+
+    /**
+     * 获取参数的真实名称
+     *
+     * @param parameter 方法参数对象
+     * @return 参数的名称
+     */
+    private static String getParameterName(Parameter parameter) {
+        Method method = (Method) parameter.getDeclaringExecutable();
+        int index = Arrays.asList(method.getParameters()).indexOf(parameter);
+        try {
+            return Objects.requireNonNull(PARAMETER_NAME_DISCOVERER.getParameterNames(method))[index];
+        } catch (Exception e) {
+            log.warn("获取方法{}的参数名称列表失败：{}", method, e.getMessage(), e);
+        }
+        return parameter.getName();
     }
 
     /**

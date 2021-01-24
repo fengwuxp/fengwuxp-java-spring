@@ -10,6 +10,10 @@ wuxp:
       height: 6
   env:
     jdbc-provider: com.wuxp.security.example.env.MyJdbcPropertyProvider
+
+  api:
+    enabled-restful: false
+
 spring:
   profiles:
     active: local

@@ -11,12 +11,12 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
 
 
 /**
  * 用于测试服务层时拦截
+ *
  * @author wxup
  */
 @Slf4j
@@ -58,27 +58,15 @@ public class TestAnnotationApiOperationSource implements ApiOperationSource {
 
         Parameter[] parameters = method.getParameters();
 
-        Arrays.stream(parameters).map(parameter -> {
-
+        return Arrays.stream(parameters).anyMatch(parameter -> {
             Annotation[] annotations = parameter.getAnnotations();
-            Optional<Boolean> optional = Arrays.stream(annotations).map(CACHE_MAPPING_ANNOTATIONS::contains)
-                    .filter(contains -> contains)
-                    .findFirst();
-            if (optional.isPresent()) {
+            if (Arrays.stream(annotations).anyMatch(CACHE_MAPPING_ANNOTATIONS::contains)) {
                 // 存在验证注解
                 return true;
             }
-
             Type type = parameter.getParameterizedType();
-            if (ApiRequest.class.isAssignableFrom((Class<?>) type)) {
-                return true;
-            }
-
-            return false;
+            return ApiRequest.class.isAssignableFrom((Class<?>) type);
         });
-
-
-        return false;
     }
 
     public static void setValidationAnnotationType(Class<? extends Annotation> annotationType) {

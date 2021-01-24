@@ -2,6 +2,7 @@ package com.wuxp.api.interceptor;
 
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
@@ -24,6 +25,7 @@ import java.util.Set;
  *
  * <p>To limit the creation of objects, an ugly constructor is used
  * (rather then a dedicated 'closure'-like class for deferred execution).
+ * @author wuxp
  */
 public class ApiEvaluationContext extends StandardEvaluationContext {
 
@@ -80,10 +82,11 @@ public class ApiEvaluationContext extends StandardEvaluationContext {
 
     /**
      * Load the param information only when needed.
+     * @param name variable name
      */
     @Override
     @Nullable
-    public Object lookupVariable(String name) {
+    public Object lookupVariable(@NonNull String name) {
         if (this.unavailableVariables.contains(name)) {
             throw new RuntimeException(MessageFormat.format("variable not available{0}", name));
         }
@@ -134,8 +137,6 @@ public class ApiEvaluationContext extends StandardEvaluationContext {
                 // Actual argument found - otherwise left as null
                 value = this.arguments[i];
             }
-//            setVariable("a" + i, value);
-//            setVariable("p" + i, value);
             if (paramNames != null && paramNames[i] != null && value != null) {
                 setVariable(paramNames[i], value);
             }

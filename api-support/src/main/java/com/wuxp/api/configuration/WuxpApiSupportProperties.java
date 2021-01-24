@@ -27,4 +27,9 @@ public class WuxpApiSupportProperties {
      * 一般应用在生产正常部署后可以考虑关闭该配置
      */
     private Boolean enabledInitiator = true;
+
+    /**
+     * 启用restful 风格的api支持
+     */
+    private Boolean enabledRestful = false;
 }

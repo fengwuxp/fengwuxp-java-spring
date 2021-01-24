@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 用于匹配拦截控制器的切入点
+ * 默认拦截所有的控制器方法
+ *
  * @author wxup
  */
 public class ApiSupportAspectjExpressionPointcut extends AspectJExpressionPointcut {
