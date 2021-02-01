@@ -11,6 +11,8 @@ import static com.fengwuxp.wechat.multiple.WeChatMultipleProperties.WE_CHAT_APP_
 
 /**
  * 用于http请求时提供微信appId的提供者
+ *
+ * @author wuxp
  */
 @Slf4j
 public class HttpRequestWeChatServiceAppIdProvider implements WeChatAppIdProvider {
@@ -35,7 +37,6 @@ public class HttpRequestWeChatServiceAppIdProvider implements WeChatAppIdProvide
             throw new RuntimeException("requestAttributes is null");
         }
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-
         return request.getHeader(this.weChatAppIdName);
     }
 

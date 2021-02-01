@@ -11,6 +11,7 @@ import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.config.WxMpConfigStorage;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 
@@ -19,7 +20,7 @@ import org.springframework.beans.factory.InitializingBean;
  */
 @Slf4j
 @Setter
-public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceManager, BeanFactoryAware, InitializingBean {
+public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceManager, BeanFactoryAware, InitializingBean, DisposableBean {
 
 
     private Cache<String, WxMpService> weChatMpServiceCache;
@@ -39,7 +40,7 @@ public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceMan
     @Override
     public WxMpService getWxMpService(String appId) {
 
-        return weChatMpServiceCache.get(appId, (key) -> {
+        return weChatMpServiceCache.get(appId, key -> {
             WxMpService service = new WxMpServiceImpl();
             WxMpConfigStorage wxMpConfigStorage = weChatMpConfigStorageProvider.getWxMpConfigStorage(key);
             service.setWxMpConfigStorage(wxMpConfigStorage);
@@ -60,19 +61,24 @@ public class DefaultMultipleWeChatMpServiceManager implements WeChatMpServiceMan
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        BeanFactory beanFactory = this.beanFactory;
+        BeanFactory factory = this.beanFactory;
         if (this.weChatAppIdProvider == null) {
-            this.weChatAppIdProvider = beanFactory.getBean(WeChatAppIdProvider.class);
+            this.weChatAppIdProvider = factory.getBean(WeChatAppIdProvider.class);
         }
         if (this.weChatMpConfigStorageProvider == null) {
-            this.weChatMpConfigStorageProvider = beanFactory.getBean(WeChatMpConfigStorageProvider.class);
+            this.weChatMpConfigStorageProvider = factory.getBean(WeChatMpConfigStorageProvider.class);
         }
 
-        WeChatMultipleProperties weChatMultipleProperties = beanFactory.getBean(WeChatMultipleProperties.class);
+        WeChatMultipleProperties weChatMultipleProperties = factory.getBean(WeChatMultipleProperties.class);
 
         this.weChatMpServiceCache = Caffeine.newBuilder()
                 .maximumSize(weChatMultipleProperties.getMaxCacheSize())
                 .build();
 
+    }
+
+    @Override
+    public void destroy() {
+        this.clearAll();
     }
 }

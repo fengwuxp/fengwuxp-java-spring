@@ -8,6 +8,8 @@ import org.springframework.web.context.annotation.SessionScope;
 
 /**
  * 微信小程序服务管理
+ *
+ * @author wuxp
  */
 public interface WeChatMiniAppServiceManager {
 
@@ -15,14 +17,14 @@ public interface WeChatMiniAppServiceManager {
     /**
      * 获取当前请求上下文的小程序服务
      *
-     * @return
+     * @return WxMaService
      * @see RequestScope
      * @see SessionScope
      * @see HttpRequestWeChatServiceAppIdProvider
      */
-    WxMaService getWxMpService();
+    WxMaService getWxMaService();
 
-    WxMaService getWxMpService(String appId);
+    WxMaService getWxMaService(String appId);
 
     void removeWxMpService(String appId);
 

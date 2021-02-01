@@ -43,7 +43,7 @@ public class WeChatMinAppMultipleAutoConfiguration {
     )
     @ConditionalOnMissingBean
     public WxMaService weChatMiniAppSingletonScopeService() {
-        return this.weChatServiceManager().getWxMpService();
+        return this.weChatServiceManager().getWxMaService();
     }
 
     @Bean
@@ -54,13 +54,15 @@ public class WeChatMinAppMultipleAutoConfiguration {
     )
     @RequestScope()
     public WxMaService weChatMiniAppRequestScopeService() {
-        return this.weChatServiceManager().getWxMpService();
+        return this.weChatServiceManager().getWxMaService();
     }
 
     /**
      * 默认使用 SCOPE_SESSION
+     * 由于此处的Bean实际上是从 {@link WeChatMiniAppServiceManager#getWxMaService()}中获取的
+     * 因为目前 {@link WxMaService} 没有提供销毁的方法{@link Bean#destroyMethod()}，所有不会有问题
      *
-     * @return
+     * @return WxMaBean
      */
     @Bean
     @ConditionalOnProperty(
@@ -70,7 +72,7 @@ public class WeChatMinAppMultipleAutoConfiguration {
             matchIfMissing = true)
     @SessionScope()
     public WxMaService weChatMiniAppSessionScopeService() {
-        return this.weChatServiceManager().getWxMpService();
+        return this.weChatServiceManager().getWxMaService();
     }
 
     @ConditionalOnMissingBean
@@ -82,7 +84,6 @@ public class WeChatMinAppMultipleAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public WeChatMiniAppServiceManager weChatServiceManager() {
-
         return new DefaultMultipleWeChatMiniAppServiceManager();
     }
 }

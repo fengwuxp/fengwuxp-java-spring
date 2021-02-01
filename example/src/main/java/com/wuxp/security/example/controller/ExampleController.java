@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author wuxp
@@ -18,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/example")
 @Tag(name = "example", description = "example")
 @Slf4j
-public class ExampleController {
+public class ExampleController implements Serializable {
 
 
     @GetMapping("get_num")
@@ -29,10 +27,9 @@ public class ExampleController {
 
     @GetMapping("get_maps")
     public List<Map<Integer, String>> getMaps(Integer num) {
-
         Map<Integer, String> map = new HashMap<>();
         map.put(num, "num");
-        return Arrays.asList(map);
+        return Collections.singletonList(map);
     }
 
     @GetMapping("get_map")

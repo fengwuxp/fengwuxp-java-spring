@@ -11,6 +11,7 @@ import me.chanjar.weixin.open.api.WxOpenService;
 import me.chanjar.weixin.open.api.impl.WxOpenServiceImpl;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -21,9 +22,9 @@ import org.springframework.beans.factory.InitializingBean;
  */
 @Slf4j
 @Setter
-public class DefaultMultipleWxOpenServiceManager implements WxOpenServiceManager, BeanFactoryAware, InitializingBean {
+public class DefaultMultipleWxOpenServiceManager implements WxOpenServiceManager, BeanFactoryAware, InitializingBean, DisposableBean {
 
-    private Cache<String,WxOpenService> wxOpenServiceCache;
+    private Cache<String, WxOpenService> wxOpenServiceCache;
 
     protected BeanFactory beanFactory;
 
@@ -40,13 +41,12 @@ public class DefaultMultipleWxOpenServiceManager implements WxOpenServiceManager
     @Override
     public WxOpenService getWxOpenService(String appId) {
 
-        return wxOpenServiceCache.get( appId,(key)->{
-
+        return wxOpenServiceCache.get(appId, key -> {
             WxOpenService wxOpenService = new WxOpenServiceImpl();
             WxOpenConfigStorage wxOpenConfigStorage = wxOpenConfigStorageProvider.getWxOpenConfigStorage(key);
             wxOpenService.setWxOpenConfigStorage(wxOpenConfigStorage);
             return wxOpenService;
-        } );
+        });
     }
 
     @Override
@@ -62,19 +62,24 @@ public class DefaultMultipleWxOpenServiceManager implements WxOpenServiceManager
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        BeanFactory beanFactory = this.beanFactory;
-        if( this.weChatAppIdProvider == null ){
-            this.weChatAppIdProvider = beanFactory.getBean(WeChatAppIdProvider.class);
+        BeanFactory factory = this.beanFactory;
+        if (this.weChatAppIdProvider == null) {
+            this.weChatAppIdProvider = factory.getBean(WeChatAppIdProvider.class);
         }
 
-        if( this.wxOpenConfigStorageProvider == null){
-            this.wxOpenConfigStorageProvider = beanFactory.getBean(WxOpenConfigStorageProvider.class);
+        if (this.wxOpenConfigStorageProvider == null) {
+            this.wxOpenConfigStorageProvider = factory.getBean(WxOpenConfigStorageProvider.class);
         }
 
-        WeChatMultipleProperties weChatMultipleProperties = beanFactory.getBean(WeChatMultipleProperties.class);
+        WeChatMultipleProperties weChatMultipleProperties = factory.getBean(WeChatMultipleProperties.class);
 
         this.wxOpenServiceCache = Caffeine.newBuilder()
                 .maximumSize(weChatMultipleProperties.getMaxCacheSize())
                 .build();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        this.clearAll();
     }
 }

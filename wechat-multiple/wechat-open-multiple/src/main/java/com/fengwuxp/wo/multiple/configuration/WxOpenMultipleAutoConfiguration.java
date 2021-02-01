@@ -5,6 +5,7 @@ import com.fengwuxp.wechat.multiple.WeChatAppIdProvider;
 import com.fengwuxp.wechat.multiple.WeChatMultipleProperties;
 import com.fengwuxp.wo.multiple.DefaultMultipleWxOpenServiceManager;
 import com.fengwuxp.wo.multiple.WxOpenServiceManager;
+import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.open.api.WxOpenService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -58,8 +59,9 @@ public class WxOpenMultipleAutoConfiguration {
 
     /**
      * 默认使用 SCOPE_SESSION
-     *
-     * @return
+     * 由于此处的Bean实际上是从 {@link WxOpenServiceManager#getWxOpenService()}中获取的
+     * 因为目前 {@link WxOpenService} 没有提供销毁的方法{@link Bean#destroyMethod()}，所有不会有问题
+     * @return WxOpenService
      */
     @Bean
     @ConditionalOnProperty(

@@ -8,6 +8,8 @@ import org.springframework.web.context.annotation.SessionScope;
 
 /**
  * 微信公众号服务管理
+ *
+ * @author wuxp
  */
 public interface WeChatMpServiceManager {
 

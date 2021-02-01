@@ -56,8 +56,9 @@ public class WeChatMpMultipleAutoConfiguration {
 
     /**
      * 默认使用 SCOPE_SESSION
-     *
-     * @return
+     * 由于此处的Bean实际上是从 {@link WeChatMpServiceManager#getWxMpService()}中获取的
+     * 因为目前 {@link WxMpService} 没有提供销毁的方法{@link Bean#destroyMethod()}，所有不会有问题
+     * @return WxMpService
      */
     @Bean
     @ConditionalOnProperty(

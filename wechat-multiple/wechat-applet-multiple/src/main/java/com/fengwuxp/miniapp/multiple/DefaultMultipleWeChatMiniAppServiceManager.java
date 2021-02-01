@@ -10,15 +10,18 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 
 /**
  * 用于支持多个小程序的服务
+ *
+ * @author wuxp
  */
 @Slf4j
 @Setter
-public class DefaultMultipleWeChatMiniAppServiceManager implements WeChatMiniAppServiceManager, BeanFactoryAware, InitializingBean {
+public class DefaultMultipleWeChatMiniAppServiceManager implements WeChatMiniAppServiceManager, BeanFactoryAware, InitializingBean, DisposableBean {
 
 
     protected Cache<String, WxMaService> weChatMaServiceCache;
@@ -31,14 +34,14 @@ public class DefaultMultipleWeChatMiniAppServiceManager implements WeChatMiniApp
 
 
     @Override
-    public WxMaService getWxMpService() {
-        return this.getWxMpService(weChatAppIdProvider.getTargetAppId());
+    public WxMaService getWxMaService() {
+        return this.getWxMaService(weChatAppIdProvider.getTargetAppId());
     }
 
     @Override
-    public WxMaService getWxMpService(String appId) {
+    public WxMaService getWxMaService(String appId) {
 
-        return weChatMaServiceCache.get(appId, (key) -> {
+        return weChatMaServiceCache.get(appId, key -> {
             WxMaService service = new WxMaServiceImpl();
             service.setWxMaConfig(this.weChatMaConfigProvider.getWxMpConfigStorage(key));
             return service;
@@ -58,16 +61,21 @@ public class DefaultMultipleWeChatMiniAppServiceManager implements WeChatMiniApp
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        BeanFactory beanFactory = this.beanFactory;
+        BeanFactory factory = this.beanFactory;
         if (this.weChatAppIdProvider == null) {
-            this.weChatAppIdProvider = beanFactory.getBean(WeChatAppIdProvider.class);
+            this.weChatAppIdProvider = factory.getBean(WeChatAppIdProvider.class);
         }
         if (this.weChatMaConfigProvider == null) {
-            this.weChatMaConfigProvider = beanFactory.getBean(WeChatMaConfigProvider.class);
+            this.weChatMaConfigProvider = factory.getBean(WeChatMaConfigProvider.class);
         }
-        WeChatMultipleProperties weChatMultipleProperties = beanFactory.getBean(WeChatMultipleProperties.class);
+        WeChatMultipleProperties weChatMultipleProperties = factory.getBean(WeChatMultipleProperties.class);
         this.weChatMaServiceCache = Caffeine.newBuilder()
                 .maximumSize(weChatMultipleProperties.getMaxCacheSize())
                 .build();
+    }
+
+    @Override
+    public void destroy() {
+        this.clearAll();
     }
 }
