@@ -26,18 +26,20 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
     /**
      * 业务成功响应码
      */
-    private static Object BUSINESS_SUCCESS_CODE = DefaultBusinessErrorCode.BUSINESS_SUCCESS_CODE.getErrorCode();
+    private static Serializable businessSuccessCodeErrorCode = DefaultBusinessErrorCode.BUSINESS_SUCCESS_CODE.getErrorCode();
 
 
     /**
      * 响应数据
+     *
+     * @serialField
      */
     private final T data;
 
     /**
      * 响应的http status
      */
-    private transient final HttpStatus httpStatus;
+    private final transient HttpStatus httpStatus;
 
     /**
      * 业务失败时的响应消息
@@ -47,9 +49,9 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
     /**
      * 业务失败时的错误响应码
      */
-    private final Object errorCode;
+    private final Serializable errorCode;
 
-    protected DefaultRestfulApiRespImpl(T data, HttpStatus httpStatus, String errorMessage, BusinessErrorCode<?> errorCode) {
+    protected DefaultRestfulApiRespImpl(T data, HttpStatus httpStatus, String errorMessage, BusinessErrorCode<? extends Serializable> errorCode) {
         this.data = data;
         this.httpStatus = httpStatus;
         this.errorMessage = errorMessage;
@@ -69,11 +71,11 @@ public final class DefaultRestfulApiRespImpl<T> implements ApiResp<T>, Serializa
 
     @Override
     public boolean isSuccess() {
-        return BUSINESS_SUCCESS_CODE.equals(errorCode);
+        return businessSuccessCodeErrorCode.equals(errorCode);
     }
 
 
-    public static void setBusinessSuccessCode(BusinessErrorCode businessSuccessCode) {
-        BUSINESS_SUCCESS_CODE = businessSuccessCode.getErrorCode();
+    public static void setBusinessSuccessCode(BusinessErrorCode<? extends Serializable> businessSuccessCodeErrorCode) {
+        DefaultRestfulApiRespImpl.businessSuccessCodeErrorCode = businessSuccessCodeErrorCode.getErrorCode();
     }
 }

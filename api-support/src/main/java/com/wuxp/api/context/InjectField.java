@@ -25,13 +25,14 @@ public @interface InjectField {
      * 注入字段的spel表达式
      *
      * @return
+     * @see InjectFieldExpressionConstant
      */
     String value() default "";
 
 
     /**
      * 是否注入字段的条件
-     *
+     * 默认情况下，被注解标记的字段值为null是注入
      * @return
      */
     String condition() default "#_val==null";

@@ -1,5 +1,6 @@
 package com.wuxp.spring.codegen.antd;
 
+import com.wuxp.codegen.core.config.CodegenConfigHolder;
 import com.wuxp.codegen.core.event.CodeGenPublisher;
 import com.wuxp.codegen.core.parser.JavaClassParser;
 import com.wuxp.codegen.core.parser.LanguageParser;
@@ -38,7 +39,7 @@ public class AntdAdminPageCodeGenerator extends AbstractCodeGenerator {
         List<JavaClassMeta> classMetaList = this.scanPackages().stream()
                 .map(this.javaClassParser::parse)
                 .filter(Objects::nonNull)
-                .filter(JavaClassMeta::isApiServiceClass)
+                .filter(this::isApiServiceClass)
                 .filter(commonCodeGenClassMeta -> {
                     //过滤掉无效的数据
                     return commonCodeGenClassMeta.getMethodMetas() == null || commonCodeGenClassMeta.getMethodMetas().length == 0;
@@ -59,7 +60,10 @@ public class AntdAdminPageCodeGenerator extends AbstractCodeGenerator {
             return null;
         });
 
+    }
 
+    public boolean isApiServiceClass(JavaClassMeta javaClassMeta) {
+        return javaClassMeta.existAnnotation(CodegenConfigHolder.getConfig().getApiMarkedAnnotations().toArray(new Class[0]));
     }
 
 

@@ -1,6 +1,7 @@
 package com.wuxp.api;
 
 /**
+ * mark interface
  * 接口请求对象
  *
  * @author wxup
@@ -26,39 +27,4 @@ public interface ApiRequest extends java.io.Serializable{
     String INJECT_CHANNEL_CODE = "#channelCode";
 
 
-    /**
-     * 获取签名的AppId
-     */
-//    @Transient
-//    String getAppId();
-
-//    void setAppId(String appId);
-
-    /**
-     * 一次性随机字符
-     *
-     * @return
-     */
-//    @Transient
-//    String getNonceStr();
-
-//    void setNonceStr(String nonceStr);
-
-    /**
-     * 时间戳
-     *
-     * @return
-     */
-//    @Transient
-//    Long getTimeStamp();
-
-//    void setTimeStamp(Long timeStamp);
-
-    /**
-     * 获取渠道号
-     * @return
-     */
-//    String getChannelCode();
-
-//    void setChannelCode(String channelCode);
 }

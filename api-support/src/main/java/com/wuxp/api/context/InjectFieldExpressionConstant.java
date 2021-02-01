@@ -8,21 +8,9 @@ package com.wuxp.api.context;
  */
 public final class InjectFieldExpressionConstant {
 
-//    /**
-//     * rabc 用户在上下文的名称
-//     */
-//    public static final String RBAC_ADMIN_VARIABLE_NAME = "admin";
-//
-//    /**
-//     * 注入RBAC admin 账号的id
-//     */
-//    public static final String INJECT_RBAC_ADMIN_USER_ID = "#admin.id";
-//
-//    /**
-//     * 注入RBAC admin 账号的name
-//     */
-//    public static final String INJECT_RBAC_ADMIN_USER_NAME = "#admin.name";
 
+    private InjectFieldExpressionConstant() {
+    }
 
     /**
      * {@link javax.servlet.http.HttpServletRequest} 在spel上下文中的名称

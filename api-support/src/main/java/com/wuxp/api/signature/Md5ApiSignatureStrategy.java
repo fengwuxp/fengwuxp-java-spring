@@ -29,21 +29,20 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
 
     private BeanFactory beanFactory;
 
-    private AppInfoStore apiSignatureStore;
+    private AppInfoStore<? extends AppInfo> apiSignatureStore;
 
     public Md5ApiSignatureStrategy() {
     }
 
-    public Md5ApiSignatureStrategy(AppInfoStore apiSignatureStore) {
+    public Md5ApiSignatureStrategy(AppInfoStore<? extends AppInfo> apiSignatureStore) {
         this.apiSignatureStore = apiSignatureStore;
     }
 
 
     @Override
-    public void check(@NotNull ApiSignatureRequest request) throws ApiSignatureException {
+    public void check(@NotNull ApiSignatureRequest request) {
 
         InternalApiSignatureRequest signatureRequest = (InternalApiSignatureRequest) request;
-
 
         String apiSignatureAppId = signatureRequest.getAppId();
         AppInfo apiSignatureInfo = this.apiSignatureStore.getAppInfo(apiSignatureAppId);
@@ -61,7 +60,7 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
         signature.add(new Object[]{NONCE_STR_KEY, signatureRequest.getNonceStr()});
         signature.add(new Object[]{TIME_STAMP, signatureRequest.getTimeStamp()});
 
-        String signText = signature.stream().map((items) -> items[0] + "=" + items[1]).collect(Collectors.joining("&"));
+        String signText = signature.stream().map(items -> String.format("%s=%s", items[0], items[1])).collect(Collectors.joining("&"));
         if (log.isDebugEnabled()) {
             log.debug("签名字符串：{}", signText);
         }
@@ -73,7 +72,7 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (this.apiSignatureStore == null) {
             this.apiSignatureStore = beanFactory.getBean(AppInfoStore.class);
         }
@@ -87,7 +86,7 @@ public class Md5ApiSignatureStrategy implements ApiSignatureStrategy, BeanFactor
         try {
             return DigestUtils.md5DigestAsHex(data.getBytes(encoding));
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new ApiSignatureException(e);
         }
     }
 }

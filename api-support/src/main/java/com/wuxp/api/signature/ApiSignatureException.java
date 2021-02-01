@@ -2,6 +2,8 @@ package com.wuxp.api.signature;
 
 /**
  * api 签名验证异常
+ *
+ * @author wuxp
  */
 public class ApiSignatureException extends RuntimeException {
 

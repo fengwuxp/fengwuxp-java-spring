@@ -32,4 +32,10 @@ public class WuxpApiSupportProperties {
      * 启用restful 风格的api支持
      */
     private Boolean enabledRestful = false;
+
+    /**
+     * 启用多版本api支持
+     * {@link com.wuxp.api.version.ApiVersion}
+     */
+    private Boolean enabledApiVersion = false;
 }

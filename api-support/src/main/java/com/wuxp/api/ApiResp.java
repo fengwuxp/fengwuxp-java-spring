@@ -5,6 +5,7 @@ import com.wuxp.api.restful.RestfulResponseBodyAdvice;
 import org.springframework.http.HttpStatus;
 
 import java.beans.Transient;
+import java.io.Serializable;
 
 /**
  * api 统一响应
@@ -14,7 +15,7 @@ import java.beans.Transient;
  * @see DefaultRestfulApiRespImpl
  * @see RestfulResponseBodyAdvice
  */
-public interface ApiResp<T> {
+public interface ApiResp<T> extends Serializable {
 
     /**
      * 获取本次请求响应的 http状态码

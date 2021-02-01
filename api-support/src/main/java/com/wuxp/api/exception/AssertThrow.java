@@ -4,6 +4,8 @@ import com.wuxp.api.ApiResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
+
 /**
  * 用于断言抛出异常
  * {@link BusinessExceptionFactory}
@@ -15,18 +17,18 @@ import org.springframework.util.Assert;
 public final class AssertThrow extends Assert {
 
 
-    private static BusinessExceptionFactory BUSINESS_EXCEPTION_FACTORY = DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
+    private static BusinessExceptionFactory<? extends Serializable> businessExceptionFactory = DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
 
     private AssertThrow() {
     }
 
 
-    public static void assertResp(ApiResp resp) {
+    public static void assertResp(ApiResp<?> resp) {
 
         assertTrue(resp.getErrorMessage(), resp.isSuccess());
     }
 
-    public static void assertResp(String message, ApiResp resp) {
+    public static void assertResp(String message, ApiResp<?> resp) {
 
         assertTrue(message, resp.isSuccess());
     }
@@ -50,7 +52,7 @@ public final class AssertThrow extends Assert {
         }
     }
 
-    static public void assertFalse(String message, boolean condition) {
+    public static void assertFalse(String message, boolean condition) {
         assertTrue(message, !condition);
     }
 
@@ -59,7 +61,7 @@ public final class AssertThrow extends Assert {
      *
      * @see BusinessException
      */
-    static public void fail() {
+    public static void fail() {
         fail(null);
     }
 
@@ -70,8 +72,8 @@ public final class AssertThrow extends Assert {
      *                okay)
      * @see BusinessException
      */
-    static public void fail(String message) {
-        fail(message, BUSINESS_EXCEPTION_FACTORY.getErrorCode());
+    public static void fail(String message) {
+        fail(message, businessExceptionFactory.getErrorCode());
     }
 
     /**
@@ -82,7 +84,7 @@ public final class AssertThrow extends Assert {
      * @param errorCode business failure code
      * @see BusinessException
      */
-    static void fail(String message, BusinessErrorCode errorCode) {
+    static void fail(String message, BusinessErrorCode<?> errorCode) {
         fail(null, message, errorCode);
     }
 
@@ -97,7 +99,7 @@ public final class AssertThrow extends Assert {
      */
     static void fail(Throwable cause, String message, BusinessErrorCode errorCode) {
 
-        BUSINESS_EXCEPTION_FACTORY.factory(cause, message, errorCode);
+        businessExceptionFactory.factory(cause, message, errorCode);
 
     }
 
@@ -112,11 +114,8 @@ public final class AssertThrow extends Assert {
      * @param expected expected value
      * @param actual   actual value
      */
-    static public void assertEquals(String message, Object expected,
-                                    Object actual) {
-        if (equalsRegardingNull(expected, actual)) {
-            return;
-        } else {
+    public static void assertEquals(String message, Object expected, Object actual) {
+        if (!equalsRegardingNull(expected, actual)) {
             failNotEquals(message, expected, actual);
         }
     }
@@ -143,7 +142,7 @@ public final class AssertThrow extends Assert {
      * @param expected expected value
      * @param actual   the value to check against <code>expected</code>
      */
-    static public void assertEquals(Object expected, Object actual) {
+    public static void assertEquals(Object expected, Object actual) {
         assertEquals(null, expected, actual);
     }
 
@@ -158,7 +157,7 @@ public final class AssertThrow extends Assert {
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
      */
-    static public void assertNotEquals(String message, Object unexpected,
+    public static void assertNotEquals(String message, Object unexpected,
                                        Object actual) {
         if (equalsRegardingNull(unexpected, actual)) {
             failEquals(message, actual);
@@ -174,7 +173,7 @@ public final class AssertThrow extends Assert {
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
      */
-    static public void assertNotEquals(Object unexpected, Object actual) {
+    public static void assertNotEquals(Object unexpected, Object actual) {
         assertNotEquals(null, unexpected, actual);
     }
 
@@ -197,7 +196,7 @@ public final class AssertThrow extends Assert {
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
      */
-    static public void assertNotEquals(String message, long unexpected, long actual) {
+    public static void assertNotEquals(String message, long unexpected, long actual) {
         if (unexpected == actual) {
             failEquals(message, Long.valueOf(actual));
         }
@@ -210,7 +209,7 @@ public final class AssertThrow extends Assert {
      * @param unexpected unexpected value to check
      * @param actual     the value to check against <code>unexpected</code>
      */
-    static public void assertNotEquals(long unexpected, long actual) {
+    public static void assertNotEquals(long unexpected, long actual) {
         assertNotEquals(null, unexpected, actual);
     }
 
@@ -229,7 +228,7 @@ public final class AssertThrow extends Assert {
      *                   <code>actual</code> for which both numbers are still
      *                   considered equal.
      */
-    static public void assertNotEquals(String message, double unexpected,
+    public static void assertNotEquals(String message, double unexpected,
                                        double actual, double delta) {
         if (!doubleIsDifferent(unexpected, actual, delta)) {
             failEquals(message, Double.valueOf(actual));
@@ -248,7 +247,7 @@ public final class AssertThrow extends Assert {
      *                   <code>actual</code> for which both numbers are still
      *                   considered equal.
      */
-    static public void assertNotEquals(double unexpected, double actual, double delta) {
+    public static void assertNotEquals(double unexpected, double actual, double delta) {
         assertNotEquals(null, unexpected, actual, delta);
     }
 
@@ -264,32 +263,26 @@ public final class AssertThrow extends Assert {
      *                   <code>actual</code> for which both numbers are still
      *                   considered equal.
      */
-    static public void assertNotEquals(float unexpected, float actual, float delta) {
+    public static void assertNotEquals(float unexpected, float actual, float delta) {
         assertNotEquals(null, unexpected, actual, delta);
     }
 
-    static private void failNotEquals(String message,
-                                      Object expected,
-                                      Object actual) {
+    private static void failNotEquals(String message, Object expected, Object actual) {
         if (!expected.equals(actual)) {
             fail(message);
         }
     }
 
 
-    static private boolean doubleIsDifferent(double d1, double d2, double delta) {
+    private static boolean doubleIsDifferent(double d1, double d2, double delta) {
         if (Double.compare(d1, d2) == 0) {
             return false;
         }
-        if ((Math.abs(d1 - d2) <= delta)) {
-            return false;
-        }
-
-        return true;
+        return !(Math.abs(d1 - d2) <= delta);
     }
 
 
-    public static void setBusinessExceptionFactory(BusinessExceptionFactory<?, ?> businessExceptionFactory) {
-        AssertThrow.BUSINESS_EXCEPTION_FACTORY = businessExceptionFactory;
+    public static void setBusinessExceptionFactory(BusinessExceptionFactory<? extends Serializable> businessExceptionFactory) {
+        AssertThrow.businessExceptionFactory = businessExceptionFactory;
     }
 }

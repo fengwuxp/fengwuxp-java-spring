@@ -31,14 +31,11 @@ public class RestfulResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public Object beforeBodyWrite(Object body,
-                                  MethodParameter returnType,
-                                  MediaType selectedContentType,
-                                  Class selectedConverterType,
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
         if (body instanceof ApiResp) {
-            ApiResp resp = (ApiResp) body;
+            ApiResp<?> resp = (ApiResp<?>) body;
             response.setStatusCode(resp.getHttpStatus());
             if (resp.isSuccess()) {
                 return resp.getData();

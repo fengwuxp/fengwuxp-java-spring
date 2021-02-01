@@ -3,14 +3,15 @@ package com.wuxp.spring.codegen.annotations;
 
 import com.alibaba.fastjson.JSON;
 import com.wuxp.api.signature.ApiSignature;
-import com.wuxp.codegen.annotation.processor.AbstractAnnotationProcessor;
-import com.wuxp.codegen.annotation.processor.AnnotationMate;
+import com.wuxp.codegen.annotation.processors.AbstractAnnotationProcessor;
+import com.wuxp.codegen.annotation.processors.AnnotationMate;
 import com.wuxp.codegen.model.CommonCodeGenAnnotation;
 
 import java.util.*;
 
 
 /**
+ * @author wuxp
  * @see ApiSignature
  */
 public class ApiSignatureProcessor extends AbstractAnnotationProcessor<ApiSignature, ApiSignatureProcessor.ApiSignatureMate> {
@@ -24,7 +25,7 @@ public class ApiSignatureProcessor extends AbstractAnnotationProcessor<ApiSignat
     }
 
 
-    public abstract static class ApiSignatureMate implements AnnotationMate<ApiSignature>, ApiSignature {
+    public abstract static class ApiSignatureMate implements AnnotationMate, ApiSignature {
 
         public ApiSignatureMate() {
         }

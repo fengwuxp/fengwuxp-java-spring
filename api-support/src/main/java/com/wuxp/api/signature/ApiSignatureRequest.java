@@ -21,7 +21,7 @@ public interface ApiSignatureRequest extends ApiRequest {
     /**
      * 获取api签名的键值对
      *
-     * @return
+     * @return 签名的键值对
      */
     @Transient
     default Map<String, Object> getApiSignatureValues() {

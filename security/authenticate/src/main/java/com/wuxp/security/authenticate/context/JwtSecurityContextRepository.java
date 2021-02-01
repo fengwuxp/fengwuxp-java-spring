@@ -18,7 +18,10 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 import static org.springframework.web.util.WebUtils.ERROR_EXCEPTION_ATTRIBUTE;
 
 /**
+ * 用于jwt模式下的 {@link SecurityContextRepository}
+ *
  * @author wuxp
+ * @see org.springframework.security.web.context.SecurityContextPersistenceFilter
  */
 public class JwtSecurityContextRepository implements SecurityContextRepository {
 

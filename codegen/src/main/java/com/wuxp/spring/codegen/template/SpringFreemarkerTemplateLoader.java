@@ -1,18 +1,16 @@
 package com.wuxp.spring.codegen.template;
 
-import com.wuxp.codegen.model.LanguageDescription;
-import com.wuxp.codegen.templates.FreemarkerTemplateLoader;
+import com.wuxp.codegen.templates.TemplateLoader;
 
-import java.util.Map;
+/**
+ * @author wuxp
+ */
+public class SpringFreemarkerTemplateLoader implements TemplateLoader {
 
-public class SpringFreemarkerTemplateLoader extends FreemarkerTemplateLoader {
 
-
-    public SpringFreemarkerTemplateLoader(LanguageDescription language) {
-        super(language);
-    }
-
-    public SpringFreemarkerTemplateLoader(LanguageDescription language, Map<String, Object> sharedVariables) {
-        super(language, sharedVariables);
+    @Override
+    public Object load(String templateName) {
+        // TODO
+        return null;
     }
 }

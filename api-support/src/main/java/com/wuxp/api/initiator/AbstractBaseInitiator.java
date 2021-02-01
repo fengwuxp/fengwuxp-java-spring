@@ -43,11 +43,11 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
      * 用于初始化某一个表对象或者是持久化对象
      */
     public void init() {
-        List<T> initData = this.initData;
-        if (initData == null || initData.isEmpty()) {
+        List<T> data = this.initData;
+        if (data == null || data.isEmpty()) {
             return;
         }
-        long count = initData.stream().map(this::initSingleItem).filter(success -> success).count();
+        long count = data.stream().map(this::initSingleItem).filter(success -> success).count();
         log.info("{}：初始化成功{}条记录", this.getClass().getSimpleName(), count);
     }
 
@@ -62,7 +62,7 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         if (!Boolean.TRUE.equals(wuxpApiSupportProperties.getEnabledInitiator())) {
-            log.info("initiator not enabld");
+            log.info("initiator not enabled");
             return;
         }
         if (this.isInit) {
@@ -79,17 +79,17 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
 
     @Override
     public void afterPropertiesSet() {
-        BeanFactory beanFactory = this.beanFactory;
+        BeanFactory factory = this.beanFactory;
         if (this.threadPoolTaskScheduler == null) {
             try {
-                this.threadPoolTaskScheduler = beanFactory.getBean(ThreadPoolTaskScheduler.class);
+                this.threadPoolTaskScheduler = factory.getBean(ThreadPoolTaskScheduler.class);
             } catch (BeansException e) {
                 e.printStackTrace();
                 this.isAsync = false;
             }
         }
         if (this.wuxpApiSupportProperties == null) {
-            this.wuxpApiSupportProperties = beanFactory.getBean(WuxpApiSupportProperties.class);
+            this.wuxpApiSupportProperties = factory.getBean(WuxpApiSupportProperties.class);
         }
 
     }
@@ -100,10 +100,9 @@ public abstract class AbstractBaseInitiator<T> implements ApplicationListener<Ap
 
     /**
      * 提供给子类在 init 方法中使用
-     *
-     * @return
+     * @return 获取初始化数据
      */
-    public List<T> getInitData() {
+    protected List<T> getInitData() {
         return initData;
     }
 

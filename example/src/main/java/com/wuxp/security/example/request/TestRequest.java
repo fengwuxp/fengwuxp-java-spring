@@ -8,6 +8,8 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 
+import static com.wuxp.api.context.InjectFieldExpressionConstant.INJECT_IP;
+
 /**
  * @author wxup
  */
@@ -19,6 +21,6 @@ public class TestRequest implements ApiSignatureRequest {
     @NotNull(message = "名称不能为空")
     private String name;
 
-    @InjectField(value = "#ip")
+    @InjectField(value = INJECT_IP)
     private String ip;
 }

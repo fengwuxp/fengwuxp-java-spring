@@ -2,12 +2,12 @@ package com.wuxp.api.model;
 
 
 /**
- * 安全的 order by field，屏蔽具体的order by 字段
+ * 较为安全的 order by field，屏蔽具体的order by 字段
  * 建议使用枚举实现
  *
  * example:
  * <code>
- *     enum GoodsOrderField{
+ *     enum GoodsOrderField implements QueryOrderField{
  *
  *         DEFAULT("id"),
  *

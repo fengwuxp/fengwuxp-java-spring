@@ -4,16 +4,16 @@ import com.wuxp.api.exception.AssertThrow;
 import com.wuxp.api.exception.BusinessExceptionFactory;
 import com.wuxp.api.exception.DefaultBusinessExceptionFactory;
 import com.wuxp.api.helper.SpringContextHolder;
-import com.wuxp.api.interceptor.*;
+import com.wuxp.api.interceptor.AnnotationApiOperationSource;
+import com.wuxp.api.interceptor.ApiInterceptor;
+import com.wuxp.api.interceptor.ApiOperationSource;
+import com.wuxp.api.interceptor.BeanFactoryApiOperationSourceAdvisor;
 import com.wuxp.api.restful.DefaultRestfulApiRespImpl;
 import com.wuxp.api.restful.RestfulApiRespFactory;
 import com.wuxp.api.signature.ApiSignatureStrategy;
 import com.wuxp.api.signature.AppInfoStore;
 import com.wuxp.api.signature.Md5ApiSignatureStrategy;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
-import org.springframework.aop.aspectj.AspectJExpressionPointcut;
-import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -22,13 +22,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
-import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.io.Serializable;
 
 
 /**
@@ -64,35 +64,6 @@ public class ApiSupportAutoConfiguration {
     }
 
 
-    /**
-     * 在多个表达式之间使用  || , or 表示  或 ，使用  && , and 表示  与 ， ！ 表示 非
-     */
-    private static final String DEFAULT_POINT_CUT = StringUtils.join(
-            "@annotation(org.springframework.web.bind.annotation.GetMapping) ",
-            "or @annotation(org.springframework.web.bind.annotation.PostMapping) ",
-            "or @annotation(org.springframework.web.bind.annotation.PutMapping) ",
-            "or @annotation(org.springframework.web.bind.annotation.DeleteMapping) ",
-            "or @annotation(org.springframework.web.bind.annotation.RequestMapping)"
-    );
-
-    //    @Bean
-//    @ConditionalOnBean(ApiInterceptor.class)
-    public DefaultPointcutAdvisor logAopPointCutAdvice() {
-        //声明一个AspectJ切点
-        AspectJExpressionPointcut pointcut = new ApiSupportAspectjExpressionPointcut();
-        //设置切点表达式
-        pointcut.setExpression(DEFAULT_POINT_CUT);
-
-        // 配置增强类advisor, 切面=切点+增强
-        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
-        //设置切点
-        advisor.setPointcut(pointcut);
-        //设置增强（Advice）
-        advisor.setAdvice(apiInterceptor());
-        //设置增强拦截器执行顺序
-        advisor.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return advisor;
-    }
 
 
     @Bean
@@ -129,7 +100,7 @@ public class ApiSupportAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BusinessExceptionFactory.class)
-    public BusinessExceptionFactory<?, ?> businessExceptionFactory() {
+    public BusinessExceptionFactory<Integer> businessExceptionFactory() {
         return DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
     }
 
@@ -138,7 +109,7 @@ public class ApiSupportAutoConfiguration {
      */
     @PostConstruct
     public void init() {
-        BusinessExceptionFactory<?, ?> businessExceptionFactory = this.businessExceptionFactory();
+        BusinessExceptionFactory<? extends Serializable> businessExceptionFactory = this.businessExceptionFactory();
         Assert.notNull(businessExceptionFactory, "BusinessExceptionFactory is null");
         AssertThrow.setBusinessExceptionFactory(businessExceptionFactory);
         RestfulApiRespFactory.setBusinessExceptionFactory(businessExceptionFactory);

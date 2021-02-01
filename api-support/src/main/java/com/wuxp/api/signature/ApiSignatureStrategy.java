@@ -10,10 +10,6 @@ import javax.validation.constraints.NotNull;
 public interface ApiSignatureStrategy {
 
 
-//    ApiSignatureStrategy NONE = (@NotNull ApiSignatureRequest request) -> {
-//    };
-
-
     /**
      * 签名检查
      *

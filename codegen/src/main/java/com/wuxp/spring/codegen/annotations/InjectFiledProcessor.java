@@ -1,11 +1,12 @@
 package com.wuxp.spring.codegen.annotations;
 
 import com.wuxp.api.context.InjectField;
-import com.wuxp.codegen.annotation.processor.AbstractAnnotationProcessor;
-import com.wuxp.codegen.annotation.processor.AnnotationMate;
+import com.wuxp.codegen.annotation.processors.AbstractAnnotationProcessor;
+import com.wuxp.codegen.annotation.processors.AnnotationMate;
 
 
 /**
+ * @author wuxp
  * @see InjectField
  */
 public class InjectFiledProcessor extends AbstractAnnotationProcessor<InjectField, InjectFiledProcessor.InjectFieldMate> {
@@ -18,10 +19,8 @@ public class InjectFiledProcessor extends AbstractAnnotationProcessor<InjectFiel
     }
 
 
-    public abstract static class InjectFieldMate implements AnnotationMate<InjectField>, InjectField {
+    public abstract static class InjectFieldMate implements AnnotationMate, InjectField {
 
-        public InjectFieldMate() {
-        }
 
 
     }

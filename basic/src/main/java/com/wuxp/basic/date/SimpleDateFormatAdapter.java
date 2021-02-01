@@ -17,6 +17,7 @@ import java.util.Date;
  */
 @Slf4j
 public class SimpleDateFormatAdapter extends SimpleDateFormat {
+
     private static final long serialVersionUID = 2002695469235850655L;
 
     private static final String[] PATTENS = new String[]{

@@ -7,16 +7,21 @@ import com.wuxp.api.exception.DefaultBusinessExceptionFactory;
 import com.wuxp.api.model.Pagination;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
+
 
 /**
  * @author wuxp
  */
 public final class RestfulApiRespFactory {
 
+    private RestfulApiRespFactory() {
+    }
+
     /**
      * 业务异常工厂
      */
-    private static BusinessExceptionFactory BUSINESS_EXCEPTION_FACTORY = DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
+    private static BusinessExceptionFactory<? extends Serializable> businessExceptionFactory = DefaultBusinessExceptionFactory.DEFAULT_EXCEPTION_FACTORY;
 
 
     /*-------------------- 2xx -------------------*/
@@ -36,7 +41,7 @@ public final class RestfulApiRespFactory {
      *
      * @param pagination 分页信息
      * @param <T>        分页内容类型
-     * @return
+     * @return ApiResp<T>
      */
     public static <T> ApiResp<Pagination<T>> queryOk(Pagination<T> pagination) {
         return ok(pagination);
@@ -46,8 +51,8 @@ public final class RestfulApiRespFactory {
      * 创建操作处理成功
      *
      * @param data 需要返回的数据
-     * @param <T>
-     * @return
+     * @param <T> 数据
+     * @return ApiResp<T>
      */
     public static <T> ApiResp<T> created(T data) {
         return newInstance(HttpStatus.CREATED, null, getSuccessCode(), data);
@@ -75,7 +80,7 @@ public final class RestfulApiRespFactory {
         return newInstance(HttpStatus.UNAUTHORIZED, errorMessage, getErrorCode(), null);
     }
 
-    public static <T> ApiResp<T> unAuthorized(String errorMessage, BusinessErrorCode code) {
+    public static <T> ApiResp<T> unAuthorized(String errorMessage, BusinessErrorCode<? extends Serializable> code) {
 
         return newInstance(HttpStatus.UNAUTHORIZED, errorMessage, code, null);
     }
@@ -92,7 +97,7 @@ public final class RestfulApiRespFactory {
 
     /*-------------------- business handle error -------------------*/
 
-    public static <T> ApiResp<T> error(String errorMessage, BusinessErrorCode code, T data) {
+    public static <T> ApiResp<T> error(String errorMessage, BusinessErrorCode<? extends Serializable> code, T data) {
 
         return newInstance(HttpStatus.OK, errorMessage, code, data);
     }
@@ -107,20 +112,20 @@ public final class RestfulApiRespFactory {
         return error(errorMessage, null);
     }
 
-    private static <T> ApiResp<T> newInstance(HttpStatus httpStatus, String errorMessage, BusinessErrorCode code, T data) {
-        return new DefaultRestfulApiRespImpl<T>(data, httpStatus, errorMessage, code);
+    private static <T> ApiResp<T> newInstance(HttpStatus httpStatus, String errorMessage, BusinessErrorCode<? extends Serializable> code, T data) {
+        return new DefaultRestfulApiRespImpl<>(data, httpStatus, errorMessage, code);
     }
 
 
-    private static BusinessErrorCode getErrorCode() {
-        return RestfulApiRespFactory.BUSINESS_EXCEPTION_FACTORY.getErrorCode();
+    private static BusinessErrorCode<? extends Serializable> getErrorCode() {
+        return RestfulApiRespFactory.businessExceptionFactory.getErrorCode();
     }
 
-    private static BusinessErrorCode getSuccessCode() {
-        return RestfulApiRespFactory.BUSINESS_EXCEPTION_FACTORY.getSuccessCode();
+    private static BusinessErrorCode<? extends Serializable> getSuccessCode() {
+        return RestfulApiRespFactory.businessExceptionFactory.getSuccessCode();
     }
 
-    public static void setBusinessExceptionFactory(BusinessExceptionFactory<?, ?> businessExceptionFactory) {
-        RestfulApiRespFactory.BUSINESS_EXCEPTION_FACTORY = businessExceptionFactory;
+    public static void setBusinessExceptionFactory(BusinessExceptionFactory<? extends Serializable> businessExceptionFactory) {
+        RestfulApiRespFactory.businessExceptionFactory = businessExceptionFactory;
     }
 }

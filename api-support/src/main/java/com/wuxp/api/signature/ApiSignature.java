@@ -17,7 +17,7 @@ public @interface ApiSignature {
     /**
      * 签名字段的实际名称, 默认使用字段名称
      *
-     * @return
+     * @return 签名字段名称
      */
     String name() default "";
 }

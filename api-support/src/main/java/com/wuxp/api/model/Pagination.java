@@ -2,6 +2,7 @@ package com.wuxp.api.model;
 
 
 import java.beans.Transient;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author wuxp
  */
-public interface Pagination<T> {
+public interface Pagination<T> extends Serializable {
 
     /**
      * @return 总记录数据
@@ -37,7 +38,9 @@ public interface Pagination<T> {
     QueryType getQueryType();
 
     /**
-     * @return 获取第一天数据
+     * 为了节省传输内容，该方法不参与序列化
+     *
+     * @return 获取第一条数据
      */
     @Transient
     T getFirst();

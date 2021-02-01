@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 
 /**
  * 多版本支持的 request mapping handler
+ * @author wuxp
  */
 @Slf4j
 public class MultiVersionRequestMappingHandlerMapping extends RequestMappingHandlerMapping {

@@ -7,12 +7,19 @@ import java.lang.reflect.Method;
  */
 public enum SimpleApiAction {
 
+    /**
+     * 创建
+     */
     CREATE,
 
-//    QUERY,
+    /**
+     * 更新
+     */
+    UPDATE,
 
-    EDIT,
-
+    /**
+     * 删除
+     */
     DELETED;
 
     public static SimpleApiAction valueOfByMethod(Method method) {
@@ -22,8 +29,8 @@ public enum SimpleApiAction {
         }
 
 
-        if (name.startsWith("edit")) {
-            return SimpleApiAction.DELETED;
+        if (name.startsWith("update")) {
+            return SimpleApiAction.UPDATE;
         }
 
         if (name.startsWith("delete")) {

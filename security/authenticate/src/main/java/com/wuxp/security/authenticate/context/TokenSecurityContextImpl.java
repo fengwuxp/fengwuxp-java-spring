@@ -6,10 +6,15 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import java.util.Objects;
 
 /**
+ * 基于token交换的 {@link org.springframework.security.core.context.SecurityContext}
  * @author wuxp
+ * @see JwtSecurityContextRepository
  */
 public class TokenSecurityContextImpl extends SecurityContextImpl {
 
+    /**
+     * authenticate token
+     */
     private String token;
 
     public TokenSecurityContextImpl() {

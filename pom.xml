@@ -18,7 +18,7 @@
 
     <properties>
         <revision>1.2.0-SNAPSHOT</revision>
-        <wuxp-codegen.version>1.1.0-SNAPSHOT</wuxp-codegen.version>
+        <wuxp-codegen.version>1.1.1-SNAPSHOT</wuxp-codegen.version>
         <springdoc.version>1.5.2</springdoc.version>
         <fastjson.version>1.2.75</fastjson.version>
         <weixin.java.version>4.0.0</weixin.java.version>

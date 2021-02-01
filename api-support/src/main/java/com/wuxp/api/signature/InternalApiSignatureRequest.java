@@ -45,19 +45,16 @@ public class InternalApiSignatureRequest implements ApiSignatureRequest {
     @NotNull(message = "渠道号不能为空")
     private String channelCode;
 
+    private transient Map<String, Object> apiSignatureValues;
 
-    private Map<String, Object> apiSignatureValues;
-
-    public InternalApiSignatureRequest() {
-    }
 
     public InternalApiSignatureRequest(HttpServletRequest httpServletRequest) {
         this.appId = httpServletRequest.getHeader(APP_ID_HEADER_KEY);
         this.nonceStr = httpServletRequest.getHeader(NONCE_STR_HEADER_KEY);
         this.apiSignature = httpServletRequest.getHeader(APP_SIGN_HEADER_KEY);
-        String timeStamp = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
-        if (StringUtils.hasText(timeStamp)) {
-            this.timeStamp = Long.parseLong(timeStamp);
+        String timeStampText = httpServletRequest.getHeader(TIME_STAMP_HEADER_KEY);
+        if (StringUtils.hasText(timeStampText)) {
+            this.timeStamp = Long.parseLong(timeStampText);
         }
         this.channelCode = httpServletRequest.getHeader(CHANNEL_CODE_HEADER_KEY);
     }
