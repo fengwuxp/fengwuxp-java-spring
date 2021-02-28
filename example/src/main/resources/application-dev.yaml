@@ -29,3 +29,6 @@ spring:
 wuxp:
   api:
     enabled-api-signature: false
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/doc.html

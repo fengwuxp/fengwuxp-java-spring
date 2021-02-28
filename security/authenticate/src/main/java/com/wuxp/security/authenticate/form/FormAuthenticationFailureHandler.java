@@ -111,7 +111,6 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        BeanFactory beanFactory = this.beanFactory;
         if (this.lockedUserDetailsService == null) {
             this.lockedUserDetailsService = this.beanFactory.getBean(LockedUserDetailsService.class);
         }

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.util.StringUtils;
@@ -26,8 +25,9 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 @Setter
 public class PasswordLoginEnvironmentHolder implements LoginEnvironmentHolder, BeanFactoryAware, InitializingBean {
 
-    @Autowired
-    private CacheManager cacheManager;
+    private static final String BROWSER_LOGIN_CONTEXT = "PASSWORD_LOGIN_CONTEXT";
+
+    private final CacheManager cacheManager;
 
     private BeanFactory beanFactory;
 
@@ -35,14 +35,14 @@ public class PasswordLoginEnvironmentHolder implements LoginEnvironmentHolder, B
 
     private int showCaptchaByFailureCount;
 
-
-    private static final String BROWSER_LOGIN_CONTEXT = "PASSWORD_LOGIN_CONTEXT";
+    public PasswordLoginEnvironmentHolder(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
 
     @Override
     public LoginEnvironmentContext getContext(HttpServletRequest request) {
         String username = request.getParameter(SPRING_SECURITY_FORM_USERNAME_KEY);
         if (!StringUtils.hasText(username)) {
-//            throw new AuthenticationException("用户名不能为空")
             username = "";
         }
         Cache cache = cacheManager.getCache(BROWSER_LOGIN_CONTEXT);
@@ -110,7 +110,6 @@ public class PasswordLoginEnvironmentHolder implements LoginEnvironmentHolder, B
     }
 
     private void setNeedPictureCaptcha(LoginEnvironmentContext loginEnvironmentContext) {
-        int showCaptchaByFailureCount = this.showCaptchaByFailureCount;
         loginEnvironmentContext.setNeedPictureCaptcha(loginEnvironmentContext.getFailureCount() >= showCaptchaByFailureCount);
     }
 }

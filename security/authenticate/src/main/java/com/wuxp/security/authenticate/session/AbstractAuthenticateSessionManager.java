@@ -16,9 +16,11 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -43,17 +47,24 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
 
     protected UserDetailsService userDetailsService;
 
-    protected Class<T> userClassType;
+    protected final Lock lock;
 
+    protected final Class<T> userClassType;
 
-    public AbstractAuthenticateSessionManager(Class<T> userClassType) {
+    protected AbstractAuthenticateSessionManager(Class<T> userClassType) {
+        this(new ReentrantLock(), userClassType);
+    }
+
+    protected AbstractAuthenticateSessionManager(Lock lock, Class<T> userClassType) {
+        this.lock = lock;
         this.userClassType = userClassType;
     }
+
 
     @Override
     public T get(String token) {
         Cache cache = this.cacheManager.getCache(this.getUserCacheName());
-        Assert.notNull(cache,"user cache must not null");
+        Assert.notNull(cache, "user cache must not null");
         T user = cache.get(token, userClassType);
         if (user != null) {
             return user;
@@ -74,13 +85,13 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         userCache.put(token, userDetails);
 
         // 增加一条缓存条目
-        Cache cache = this.getTokenCache(userDetails.getClientCode());
-        List<String> tokens = cache.get(userDetails.getUsername(), List.class);
+        Cache tokenCache = this.getTokenCache(userDetails.getClientCode());
+        List<String> tokens = tokenCache.get(userDetails.getUsername(), List.class);
         if (tokens == null) {
             tokens = new ArrayList<>(1);
         }
         tokens.add(token);
-        cache.put(userDetails.getUsername(), tokens);
+        tokenCache.put(userDetails.getUsername(), tokens);
         return userDetails;
     }
 
@@ -139,9 +150,16 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         List<String> tokens = cache.get(userName, List.class);
         if (tokens == null) {
             // 查询数据库
-            // TODO 同步处理
-            tokens = this.getTokensByDb(userName, clientCode);
-            cache.put(userName, tokens);
+            boolean tryLock = lock.tryLock();
+            if (!tryLock) {
+                throw new AuthenticationServiceException("从数据库获取tokens时加锁失败");
+            }
+            try {
+                tokens = this.getTokensByDb(userName, clientCode);
+                cache.put(userName, tokens);
+            } finally {
+                lock.unlock();
+            }
         }
         return tokens;
     }
@@ -158,6 +176,7 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         this.remove(token);
         // 写入用户被踢出的原因
         Cache cache = this.cacheManager.getCache(this.getKickOutReasonCacheName());
+        Assert.notNull(cache, " 踢出用户原因的缓存不能为null");
         cache.put(token, RestfulApiRespFactory.error(reason, this.getKickOutUserErrorCode(), null));
     }
 
@@ -165,6 +184,7 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     @Override
     public ApiResp<Void> tryGetKickOutReason(String token) {
         Cache cache = this.cacheManager.getCache(this.getKickOutReasonCacheName());
+        Assert.notNull(cache, " 踢出用户原因的缓存不能为null");
         return cache.get(token, ApiResp.class);
     }
 
@@ -275,7 +295,7 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
     /**
      * 获取账号被踢出的业务响应错误码
      *
-     * @return
+     * @return 账号被踢出的业务响应错误码
      */
     protected BusinessErrorCode getKickOutUserErrorCode() {
         return DefaultBusinessErrorCode.KICK_OUT_USER_ERROR_CODE;
@@ -283,7 +303,6 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        BeanFactory beanFactory = this.beanFactory;
         if (this.jwtTokenProvider == null) {
             this.jwtTokenProvider = beanFactory.getBean(JwtTokenProvider.class);
         }
@@ -295,9 +314,9 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         if (this.userDetailsService == null) {
             this.userDetailsService = beanFactory.getBean(UserDetailsService.class);
         }
-        Assert.notNull(cacheManager,"cacheManager is not null");
-        Assert.notNull(jwtTokenProvider,"jwtTokenProvider is not null");
-        Assert.notNull(userDetailsService,"userDetailsService is not null");
+        Assert.notNull(cacheManager, "cacheManager is not null");
+        Assert.notNull(jwtTokenProvider, "jwtTokenProvider is not null");
+        Assert.notNull(userDetailsService, "userDetailsService is not null");
     }
 
 
@@ -318,16 +337,18 @@ public abstract class AbstractAuthenticateSessionManager<T extends PasswordUserD
         }
         this.tryRemoveDbToken(user);
         Cache userCache = this.cacheManager.getCache(this.getUserCacheName());
+        Assert.notNull(userCache, "用户缓存不能为null");
         // 移除掉缓存中的用户
         userCache.evict(token);
         // 移除缓存中的token
-        Cache cache = this.getTokenCache(user.getClientCode());
-        List<String> tokens = cache.get(username, List.class);
-        if (tokens == null) {
+        Cache tokenCache = this.getTokenCache(user.getClientCode());
+        Assert.notNull(tokenCache, "token缓存不能为null");
+        List<String> tokens = tokenCache.get(username, List.class);
+        if (CollectionUtils.isEmpty(tokens)) {
             return;
         }
         tokens.remove(token);
-        cache.put(username, tokens);
+        tokenCache.put(username, tokens);
     }
 
 

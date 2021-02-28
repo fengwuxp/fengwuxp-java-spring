@@ -8,15 +8,26 @@ import java.util.Collection;
 /**
  * 短信验证码登录
  * 用户基本信息存储类
+ * @author wuxp
  */
 public class MobileCaptchaAuthenticationToken extends AbstractAuthenticationToken {
 
-    // 用户信息全部放在这里面
-    private final Object principal;
-    // 这里保存的证书信息
-    private Object credentials;
+    /**
+     * 用户信息全部放在这里面
+     */
+    private final transient Object principal;
 
-    //构造未认证之前用户信息
+    /**
+     * 这里保存的证书信息
+     */
+    private final transient Object credentials;
+
+    /**
+     * 构造未认证之前用户信息
+     *
+     * @param principal
+     * @param credentials
+     */
     MobileCaptchaAuthenticationToken(Object principal, Object credentials) {
         super(null);
         this.principal = principal;
@@ -53,8 +64,4 @@ public class MobileCaptchaAuthenticationToken extends AbstractAuthenticationToke
         super.setAuthenticated(false);
     }
 
-    @Override
-    public void eraseCredentials() {
-        super.eraseCredentials();
-    }
 }

@@ -14,6 +14,7 @@ import com.wuxp.security.openid.SocialOpenIdAuthenticationFailureHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -35,8 +36,8 @@ public class WuxpAuthenticateAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(PasswordLoginEnvironmentHolder.class)
-    public PasswordLoginEnvironmentHolder passwordLoginEnvironmentHolder() {
-        return new PasswordLoginEnvironmentHolder();
+    public PasswordLoginEnvironmentHolder passwordLoginEnvironmentHolder(CacheManager cacheManager) {
+        return new PasswordLoginEnvironmentHolder(cacheManager);
     }
 
     @Bean
